@@ -83,8 +83,8 @@ export default () => {
 
   return (
     <div className="container mb-5">
-      <h1 className="text-decoration-underline">THE FINALS - Leaderboard</h1>
-      <h5>Top 10,000 users from the current playtest. You can find the official leaderboard <a href="https://www.reachthefinals.com/leaderboard-beta" target="_blank" className="link-dark">here</a>.</h5>
+      <h1 className="text-decoration-underline">THE FINALS - Unofficial Beta Leaderboard</h1>
+      <h5>Top 10,000 users from the current playtest. You can find the official leaderboard <a href="https://www.reachthefinals.com/leaderboard-beta" target="_blank" className="link-dark">here</a>. Created by <a href="https://twitter.com/mozzyfx" target="_blank" className="link-dark">Mozzy</a>.</h5>
       <hr />
 
       <Space style={{ width: "100%" }} direction="vertical">
