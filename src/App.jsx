@@ -2,7 +2,7 @@ import { Button, Collapse, Divider, Input, Space, Table, Typography } from "antd
 import { useEffect, useState } from "react";
 import "./App.css";
 
-export default () => {
+const App = () => {
 
   const [users, setUsers] = useState([]);
   const [usersToShow, setUsersToShow] = useState(users);
@@ -147,3 +147,5 @@ export default () => {
     </div>
   );
 };
+
+export default App;
