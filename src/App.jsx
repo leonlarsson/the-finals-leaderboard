@@ -108,7 +108,10 @@ export default () => {
 
       <Space style={{ width: "100%" }} direction="vertical">
         <Input size="large" placeholder="Search for a user" onChange={e => filterUsers(e.target.value)} />
-        <Button disabled={loading} onClick={fetchData}>Refresh data</Button>
+        <Space>
+          <Button disabled={loading} onClick={fetchData}>Refresh data</Button>
+          <span>{usersToShow.length.toLocaleString("en-US")} {usersToShow.length === 1 ? "user" : "users"}</span>
+        </Space>
         {error ?
           <h1>Error</h1>
           :
