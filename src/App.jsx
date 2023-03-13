@@ -103,7 +103,7 @@ const App = () => {
   return (
     <div style={{ marginBottom: "3rem" }} className="container">
       <h1 style={{ textDecorationLine: "underline" }}>THE FINALS - Unofficial Beta Leaderboard</h1>
-      <h5>Top 10,000 users from the current playtest. You can find the official leaderboard <a href="https://www.reachthefinals.com/leaderboard-beta" target="_blank" className="link-dark">here</a>. Created by <a href="https://twitter.com/mozzyfx" target="_blank" className="link-dark">me</a>.</h5>
+      <h5>Top {users.length.toLocaleString("en-US")} players from the current playtest. You can find the official leaderboard <a href="https://www.reachthefinals.com/leaderboard-beta" target="_blank" className="link-dark">here</a>. Created by <a href="https://twitter.com/mozzyfx" target="_blank" className="link-dark">me</a>.</h5>
       <hr />
 
       <Space style={{ width: "100%" }} direction="vertical">
