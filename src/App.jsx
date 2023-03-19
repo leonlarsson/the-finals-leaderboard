@@ -97,6 +97,29 @@ const App = () => {
       title: "Fame",
       dataIndex: "fame",
       render: fame => <>{getRankIcon(fame)} {fame.toLocaleString("en-US")}</>,
+      filters: [
+        {
+          text: "Diamond",
+          value: "5000:9999999999"
+        },
+        {
+          text: "Gold",
+          value: "1000:4999"
+        },
+        {
+          text: "Silver",
+          value: "500:999"
+        },
+        {
+          text: "Bronze",
+          value: "0:499"
+        }
+      ],
+      onFilter: (value, record) => {
+        const min = value.match(/(.*):/)[1];
+        const max = value.match(/:(.*)/)[1];
+        return record.fame > min && record.fame < max
+      },
       sorter: (a, b) => a.fame - b.fame
     }
   ];
