@@ -1,4 +1,4 @@
-import { Button, Collapse, Divider, Input, Space, Table, Typography } from "antd";
+import { Button, Collapse, Divider, Image, Input, Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import "./App.css";
 
@@ -9,13 +9,14 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const getTrophy = fame => {
-    let league, color;
-    if (fame < 500) (league = "Bronze", color = "#ff9d3d");
-    if (fame >= 500) (league = "Silver", color = "#cbcbcb");
-    if (fame >= 1000) (league = "Gold", color = "#ffd700");
+  const getRankIcon = fame => {
+    let league;
+    if (fame < 500) league = "Bronze";
+    if (fame >= 500) league = "Silver";
+    if (fame >= 1000) league = "Gold";
+    if (fame >= 5000) league = "Diamond";
 
-    return <svg className="inline-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill={color} height="16" width="16"><path fillRule="evenodd" d="M10 1c-1.828 0-3.623.149-5.371.435a.75.75 0 00-.629.74v.387c-.827.157-1.642.345-2.445.564a.75.75 0 00-.552.698 5 5 0 004.503 5.152 6 6 0 002.946 1.822A6.451 6.451 0 017.768 13H7.5A1.5 1.5 0 006 14.5V17h-.75C4.56 17 4 17.56 4 18.25c0 .414.336.75.75.75h10.5a.75.75 0 00.75-.75c0-.69-.56-1.25-1.25-1.25H14v-2.5a1.5 1.5 0 00-1.5-1.5h-.268a6.453 6.453 0 01-.684-2.202 6 6 0 002.946-1.822 5 5 0 004.503-5.152.75.75 0 00-.552-.698A31.804 31.804 0 0016 2.562v-.387a.75.75 0 00-.629-.74A33.227 33.227 0 0010 1zM2.525 4.422C3.012 4.3 3.504 4.19 4 4.09V5c0 .74.134 1.448.38 2.103a3.503 3.503 0 01-1.855-2.68zm14.95 0a3.503 3.503 0 01-1.854 2.68C15.866 6.449 16 5.74 16 5v-.91c.496.099.988.21 1.475.332z" clipRule="evenodd"></path><title>{league} league</title></svg>
+    return <Image className="inline" title={`${league} league`} height={30} src={`/assets/images/${league.toLowerCase()}.png`} />
   };
 
   const fetchData = async () => {
@@ -95,7 +96,7 @@ const App = () => {
     {
       title: "Fame",
       dataIndex: "fame",
-      render: fame => <>{getTrophy(fame)} {fame.toLocaleString("en-US")}</>,
+      render: fame => <>{getRankIcon(fame)} {fame.toLocaleString("en-US")}</>,
       sorter: (a, b) => a.fame - b.fame
     }
   ];
@@ -128,9 +129,10 @@ const App = () => {
                 <Space className="w-full" direction="vertical">
 
                   <Divider className="!mb-0" orientation="left">Out of the top {users.length.toLocaleString("en-US")} players...</Divider>
-                  <span><Typography.Text code>{users.filter(user => user.fame >= 1000).length.toLocaleString("en-US")} ({(users.filter(user => user.fame > 1000).length / users.length).toLocaleString("en-US", { style: "percent" })})</Typography.Text> are in {getTrophy(1000)} Gold league</span>
-                  <span><Typography.Text code>{users.filter(user => user.fame < 1000 && user.fame >= 500).length.toLocaleString("en-US")} ({(users.filter(user => user.fame < 1000 && user.fame >= 500).length / users.length).toLocaleString("en-US", { style: "percent" })})</Typography.Text> are in {getTrophy(500)} Silver league</span>
-                  <span><Typography.Text code>{users.filter(user => user.fame < 500).length.toLocaleString("en-US")} ({(users.filter(user => user.fame < 500).length / users.length).toLocaleString("en-US", { style: "percent" })})</Typography.Text> are in {getTrophy(499)} Bronze league</span>
+                  <span><Typography.Text code>{users.filter(user => user.fame >= 5000).length.toLocaleString("en-US")} ({(users.filter(user => user.fame > 5000).length / users.length).toLocaleString("en-US", { style: "percent" })})</Typography.Text> are in {getRankIcon(5000)} Diamond league</span>
+                  <span><Typography.Text code>{users.filter(user => user.fame >= 1000 && user.fame < 5000).length.toLocaleString("en-US")} ({(users.filter(user => user.fame > 1000 && user.fame < 5000).length / users.length).toLocaleString("en-US", { style: "percent" })})</Typography.Text> are in {getRankIcon(1000)} Gold league</span>
+                  <span><Typography.Text code>{users.filter(user => user.fame < 1000 && user.fame >= 500).length.toLocaleString("en-US")} ({(users.filter(user => user.fame < 1000 && user.fame >= 500).length / users.length).toLocaleString("en-US", { style: "percent" })})</Typography.Text> are in {getRankIcon(500)} Silver league</span>
+                  <span><Typography.Text code>{users.filter(user => user.fame < 500).length.toLocaleString("en-US")} ({(users.filter(user => user.fame < 500).length / users.length).toLocaleString("en-US", { style: "percent" })})</Typography.Text> are in {getRankIcon(499)} Bronze league</span>
 
                   <Divider className="!mb-0" orientation="left">Averages</Divider>
                   <span>Average XP: <Typography.Text code>{(users.map(user => user.xp).reduce((a, b) => a + b, 0) / users.length).toLocaleString("en-US", { maximumFractionDigits: 0 })}</Typography.Text></span>
