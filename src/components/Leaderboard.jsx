@@ -46,9 +46,9 @@ const Leaderboard = ({ betaVersion }) => {
             if (fame >= 13750) league = "Gold 1";
         } else if (fame >= 5000) {
             league = "Silver 4";
-            if (fame >= 8750) league = "Silver 3";
+            if (fame >= 6250) league = "Silver 3";
             if (fame >= 7500) league = "Silver 2";
-            if (fame >= 6250) league = "Silver 1";
+            if (fame >= 8750) league = "Silver 1";
         } else {
             if (fame >= 1250) league = "Bronze 3";
             if (fame >= 2500) league = "Bronze 2";
@@ -126,10 +126,10 @@ const Leaderboard = ({ betaVersion }) => {
         { name: "Gold 2", min: 12500, max: 13749 },
         { name: "Gold 3", min: 11250, max: 12499 },
         { name: "Gold 4", min: 10000, max: 11249 },
-        { name: "Silver 1", min: 6250, max: 8749 },
-        { name: "Silver 2", min: 7500, max: 6249 },
-        { name: "Silver 3", min: 8750, max: 7499 },
-        { name: "Silver 4", min: 5000, max: 8749 },
+        { name: "Silver 1", min: 8750, max: 9999 },
+        { name: "Silver 2", min: 7500, max: 8749 },
+        { name: "Silver 3", min: 6250, max: 7499 },
+        { name: "Silver 4", min: 5000, max: 6249 },
         { name: "Bronze 1", min: 3750, max: 4999 },
         { name: "Bronze 2", min: 2500, max: 3749 },
         { name: "Bronze 3", min: 1250, max: 2499 },
