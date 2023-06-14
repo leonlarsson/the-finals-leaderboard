@@ -1,6 +1,6 @@
 import { Button, Collapse, Divider, Image, Input, Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
-import cb1Users from "../data/leaderboard-beta-1.json";
+import cb1Users from "../data/leaderboard-beta-1";
 
 const Leaderboard = ({ betaVersion }) => {
 
@@ -107,33 +107,33 @@ const Leaderboard = ({ betaVersion }) => {
     }, []);
 
     const cb1leagues = [
-        { league: "Diamond", min: 5000, max: Infinity },
-        { league: "Gold", min: 1000, max: 4999 },
-        { league: "Silver", min: 500, max: 999 },
-        { league: "Bronze", min: 0, max: 499 }
+        { name: "Diamond", min: 5000, max: Infinity },
+        { name: "Gold", min: 1000, max: 4999 },
+        { name: "Silver", min: 500, max: 999 },
+        { name: "Bronze", min: 0, max: 499 }
     ];
 
     const cb2leagues = [
-        { league: "Diamond 1", min: 23750, max: Infinity },
-        { league: "Diamond 2", min: 22500, max: 23749 },
-        { league: "Diamond 3", min: 21250, max: 22499 },
-        { league: "Diamond 4", min: 20000, max: 21249 },
-        { league: "Platinum 1", min: 18750, max: 19999 },
-        { league: "Platinum 2", min: 17500, max: 18749 },
-        { league: "Platinum 3", min: 16250, max: 17499 },
-        { league: "Platinum 4", min: 15000, max: 16249 },
-        { league: "Gold 1", min: 13750, max: 14999 },
-        { league: "Gold 2", min: 12500, max: 13749 },
-        { league: "Gold 3", min: 11250, max: 12499 },
-        { league: "Gold 4", min: 10000, max: 11249 },
-        { league: "Silver 1", min: 6250, max: 8749 },
-        { league: "Silver 2", min: 7500, max: 6249 },
-        { league: "Silver 3", min: 8750, max: 7499 },
-        { league: "Silver 4", min: 5000, max: 8749 },
-        { league: "Bronze 1", min: 3750, max: 4999 },
-        { league: "Bronze 2", min: 2500, max: 3749 },
-        { league: "Bronze 3", min: 1250, max: 2499 },
-        { league: "Bronze 4", min: 0, max: 1249 }
+        { name: "Diamond 1", min: 23750, max: Infinity },
+        { name: "Diamond 2", min: 22500, max: 23749 },
+        { name: "Diamond 3", min: 21250, max: 22499 },
+        { name: "Diamond 4", min: 20000, max: 21249 },
+        { name: "Platinum 1", min: 18750, max: 19999 },
+        { name: "Platinum 2", min: 17500, max: 18749 },
+        { name: "Platinum 3", min: 16250, max: 17499 },
+        { name: "Platinum 4", min: 15000, max: 16249 },
+        { name: "Gold 1", min: 13750, max: 14999 },
+        { name: "Gold 2", min: 12500, max: 13749 },
+        { name: "Gold 3", min: 11250, max: 12499 },
+        { name: "Gold 4", min: 10000, max: 11249 },
+        { name: "Silver 1", min: 6250, max: 8749 },
+        { name: "Silver 2", min: 7500, max: 6249 },
+        { name: "Silver 3", min: 8750, max: 7499 },
+        { name: "Silver 4", min: 5000, max: 8749 },
+        { name: "Bronze 1", min: 3750, max: 4999 },
+        { name: "Bronze 2", min: 2500, max: 3749 },
+        { name: "Bronze 3", min: 1250, max: 2499 },
+        { name: "Bronze 4", min: 0, max: 1249 }
     ];
 
     const columns = [
@@ -176,7 +176,7 @@ const Leaderboard = ({ betaVersion }) => {
             title: "Fame",
             dataIndex: "fame",
             render: fame => <>{getRankIcon(fame)} {fame.toLocaleString("en-US")}</>,
-            filters: betaVersion === "1" ? cb1leagues.map(league => ({ text: league.league, value: `${league.min}:${league.max}` })) : cb2leagues.map(league => ({ text: league.league, value: `${league.min}:${league.max}` })),
+            filters: (betaVersion === "1" ? cb1leagues : cb2leagues).map(league => ({ text: league.name, value: `${league.min}:${league.max}` })),
             onFilter: (value, record) => {
                 const min = value.match(/(.*):/)[1];
                 const max = value.match(/:(.*)/)[1];
@@ -211,11 +211,7 @@ const Leaderboard = ({ betaVersion }) => {
 
                                 <Divider className="!mb-0" orientation="left">Out of the top {users.length.toLocaleString("en-US")} players...</Divider>
 
-                                {betaVersion === "1" ?
-                                    cb1leagues.map(league => <span><Typography.Text code>{users.filter(user => user.fame >= league.min && user.fame <= league.max).length.toLocaleString("en-US")} ({(users.filter(user => user.fame >= league.min && user.fame <= league.max).length / users.length).toLocaleString("en-US", { style: "percent", maximumFractionDigits: 1 })})</Typography.Text> are in {getRankIcon(league.max)} {league.league} league</span>)
-                                    :
-                                    cb2leagues.map(league => <span><Typography.Text code>{users.filter(user => user.fame >= league.min && user.fame <= league.max).length.toLocaleString("en-US")} ({(users.filter(user => user.fame >= league.min && user.fame <= league.max).length / users.length).toLocaleString("en-US", { style: "percent", maximumFractionDigits: 1 })})</Typography.Text> are in {getRankIcon(league.max)} {league.league} league</span>)
-                                }
+                                {(betaVersion === "1" ? cb1leagues : cb2leagues).map(league => <span key={league.name}><Typography.Text code>{users.filter(user => user.fame >= league.min && user.fame <= league.max).length.toLocaleString("en-US")} ({(users.filter(user => user.fame >= league.min && user.fame <= league.max).length / users.length).toLocaleString("en-US", { style: "percent", maximumFractionDigits: 1 })})</Typography.Text> are in {getRankIcon(league.max)} {league.name} league</span>)}
 
                                 <Divider className="!mb-0" orientation="left">Averages</Divider>
                                 {betaVersion === "1" && <span>Average XP: <Typography.Text code>{(users.map(user => user.xp).reduce((a, b) => a + b, 0) / users.length).toLocaleString("en-US", { maximumFractionDigits: 0 })}</Typography.Text></span>}
