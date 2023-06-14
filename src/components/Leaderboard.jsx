@@ -9,7 +9,7 @@ const Leaderboard = ({ betaVersion }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
-    const getRankIcon = fame => {
+    const getRankIcon = (fame, height) => {
         let league;
         if (betaVersion === "1") {
             if (fame < 500) league = "Bronze";
@@ -22,7 +22,7 @@ const Leaderboard = ({ betaVersion }) => {
             league = fameToLeague_cb2(fame);
         }
 
-        return <Image className="inline" title={`${league} league`} height={30} src={`/assets/images/${league.toLowerCase().replace(" ", "-")}.png`} />;
+        return <Image className="inline" title={`${league} league`} height={height ?? 50} src={`/assets/images/${league.toLowerCase().replace(" ", "-")}.png`} />;
     };
 
     const fameToLeague_cb2 = fame => {
@@ -199,6 +199,7 @@ const Leaderboard = ({ betaVersion }) => {
                 <Space className="w-full" direction="vertical">
 
                     <Table
+                        size="small"
                         columns={columns}
                         dataSource={usersToShow}
                         scroll={{ x: true }}
@@ -207,11 +208,11 @@ const Leaderboard = ({ betaVersion }) => {
 
                     <Collapse>
                         <Collapse.Panel header="Stats">
-                            <Space className="w-full" direction="vertical">
+                            <Space className="w-full" direction="vertical" size={2}>
 
                                 <Divider className="!mb-0" orientation="left">Out of the top {users.length.toLocaleString("en-US")} players...</Divider>
 
-                                {(betaVersion === "1" ? cb1leagues : cb2leagues).map(league => <span key={league.name}><Typography.Text code>{users.filter(user => user.fame >= league.min && user.fame <= league.max).length.toLocaleString("en-US")} ({(users.filter(user => user.fame >= league.min && user.fame <= league.max).length / users.length).toLocaleString("en-US", { style: "percent", maximumFractionDigits: 1 })})</Typography.Text> are in {getRankIcon(league.max)} {league.name} league</span>)}
+                                {(betaVersion === "1" ? cb1leagues : cb2leagues).map(league => <span key={league.name}><Typography.Text code>{users.filter(user => user.fame >= league.min && user.fame <= league.max).length.toLocaleString("en-US")} ({(users.filter(user => user.fame >= league.min && user.fame <= league.max).length / users.length).toLocaleString("en-US", { style: "percent", maximumFractionDigits: 1 })})</Typography.Text> are in {league.name} league {getRankIcon(league.max)}</span>)}
 
                                 <Divider className="!mb-0" orientation="left">Averages</Divider>
                                 {betaVersion === "1" && <span>Average XP: <Typography.Text code>{(users.map(user => user.xp).reduce((a, b) => a + b, 0) / users.length).toLocaleString("en-US", { maximumFractionDigits: 0 })}</Typography.Text></span>}
