@@ -212,7 +212,7 @@ const Leaderboard = ({ betaVersion }) => {
 
                                 <Divider className="!mb-0" orientation="left">Out of the top {users.length.toLocaleString("en-US")} players...</Divider>
 
-                                {(betaVersion === "1" ? cb1leagues : cb2leagues).map(league => <span key={league.name}><Typography.Text code>{users.filter(user => user.fame >= league.min && user.fame <= league.max).length.toLocaleString("en-US")} ({(users.filter(user => user.fame >= league.min && user.fame <= league.max).length / users.length).toLocaleString("en-US", { style: "percent", maximumFractionDigits: 1 })})</Typography.Text> are in {league.name} league {getRankIcon(league.max)}</span>)}
+                                {(betaVersion === "1" ? cb1leagues : cb2leagues).map(league => <span key={league.name}><Typography.Text code>{users.filter(user => user.fame >= league.min && user.fame <= league.max).length.toLocaleString("en-US")} ({(users.filter(user => user.fame >= league.min && user.fame <= league.max).length / users.length).toLocaleString("en-US", { style: "percent", maximumFractionDigits: 1 })})</Typography.Text> {users.filter(user => user.fame >= league.min && user.fame <= league.max).length === 1 ? "is" : "are"} in {league.name} league {getRankIcon(league.max)}</span>)}
 
                                 <Divider className="!mb-0" orientation="left">Averages</Divider>
                                 {betaVersion === "1" && <span>Average XP: <Typography.Text code>{(users.map(user => user.xp).reduce((a, b) => a + b, 0) / users.length).toLocaleString("en-US", { maximumFractionDigits: 0 })}</Typography.Text></span>}
