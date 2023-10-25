@@ -1,6 +1,6 @@
 import { Button, Collapse, Divider, Image, Input, Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
-import cb1Users from "../data/leaderboard-beta-1";
+import cb1Data from "../data/leaderboard-beta-1";
 
 const Leaderboard = ({ betaVersion }) => {
 
@@ -11,19 +11,18 @@ const Leaderboard = ({ betaVersion }) => {
 
     const getRankIcon = (fame, height) => {
         let league;
-        if (betaVersion === "1") {
-            if (fame < 500) league = "Bronze";
-            if (fame >= 500) league = "Silver";
-            if (fame >= 1000) league = "Gold";
-            if (fame >= 5000) league = "Diamond";
-        }
-
-        if (betaVersion === "2") {
-            league = fameToLeague_cb2(fame);
-        }
-
-        return <Image className="inline" title={`${league} league`} height={height ?? 50} src={`/assets/images/${league.toLowerCase().replace(" ", "-")}.png`} />;
+        if (betaVersion === "1") league = fameToLeague_cb1(fame);
+        if (betaVersion === "2") league = fameToLeague_cb2(fame);
+        return <Image className="inline" title={`${league} league`} height={height ?? 50} src={`/images/${league.toLowerCase().replace(" ", "-")}.png`} />;
     };
+
+    const fameToLeague_cb1 = fame => {
+        let league = "bronze";
+        if (fame >= 500) league = "Silver";
+        if (fame >= 1000) league = "Gold";
+        if (fame >= 5000) league = "Diamond";
+        return league;
+    }
 
     const fameToLeague_cb2 = fame => {
         let league;
@@ -72,7 +71,7 @@ const Leaderboard = ({ betaVersion }) => {
         setLoading(true);
 
         if (betaVersion === "1") {
-            const initialUsers = transformData(cb1Users);
+            const initialUsers = transformData(cb1Data);
             setUsers(initialUsers);
             setUsersToShow(initialUsers);
             setLoading(false);
