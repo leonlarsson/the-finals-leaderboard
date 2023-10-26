@@ -115,7 +115,7 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
     }
   };
 
-  const filterUsers = (search: string) => setUsersToShow(users.filter(user => user.name.toLowerCase().includes(search.toLowerCase())));
+  const filterUsers = (search: string) => setUsersToShow(users.filter(user => [user.name, user.steamName, user.xboxName, user.psnName].some(username => username?.toLowerCase().includes(search.toLowerCase()))));
 
   useEffect(() => {
     fetchData();
