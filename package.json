@@ -1,11 +1,12 @@
 {
   "name": "the-finals-leaderboard",
-  "version": "0.2.0",
+  "version": "1",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,7 +20,9 @@
     "@vitejs/plugin-react": "^3.1.0",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
+    "prettier": "^3.0.3",
     "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2",
     "vite": "^4.5.0"
   }
 }
