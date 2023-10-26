@@ -1,7 +1,8 @@
-import { Button, Collapse, Divider, Image, Input, Space, Table, Typography } from "antd";
+import { Button, Collapse, Divider, Image, Input, Popover, Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import cb1Data from "../data/leaderboard-beta-1.json";
 import cb2Data from "../data/leaderboard-beta-2.json";
+import Icons from "./Icons";
 import { RawUser, User } from "../types";
 import { ColumnType } from "antd/es/table";
 
@@ -150,6 +151,32 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
     { name: "Bronze 4", min: 0, max: 1249 }
   ];
 
+  const namePopoverContent = (user: User) => {
+    if (!user.steamName && !user.xboxName && !user.psnName) return;
+    return (
+      <Space direction="vertical">
+        <span>
+          <Typography.Text strong>Embark ID</Typography.Text>: {user.name}
+        </span>
+        {user.steamName && (
+          <span>
+            <Icons.steam className="h-5 w-5 inline" /> {user.steamName}
+          </span>
+        )}
+        {user.xboxName && (
+          <span>
+            <Icons.xbox className="h-5 w-5 inline" /> {user.xboxName}
+          </span>
+        )}
+        {user.psnName && (
+          <span>
+            <Icons.playstation className="h-5 w-5 inline" /> {user.psnName}
+          </span>
+        )}
+      </Space>
+    );
+  };
+
   const columns = [
     {
       title: "Rank",
@@ -166,6 +193,7 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
     {
       title: "Name",
       dataIndex: "name",
+      render: (name: string, user: User) => (betaVersion === "3" ? <Popover content={namePopoverContent(user)}>{name}</Popover> : name),
       sorter: (a: User, b: User) => a.name.localeCompare(b.name)
     },
     betaVersion === "1" && {
