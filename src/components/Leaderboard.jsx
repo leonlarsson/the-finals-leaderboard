@@ -1,6 +1,7 @@
 import { Button, Collapse, Divider, Image, Input, Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import cb1Data from "../data/leaderboard-beta-1";
+import cb2Data from "../data/leaderboard-beta-2";
 
 const Leaderboard = ({ betaVersion }) => {
 
@@ -13,6 +14,7 @@ const Leaderboard = ({ betaVersion }) => {
         let league;
         if (betaVersion === "1") league = fameToLeague_cb1(fame);
         if (betaVersion === "2") league = fameToLeague_cb2(fame);
+        if (betaVersion === "3") league = fameToLeague_cb2(fame);
         return <Image className="inline" title={`${league} league`} height={height ?? 50} src={`/images/${league.toLowerCase().replace(" ", "-")}.png`} />;
     };
 
@@ -61,6 +63,9 @@ const Leaderboard = ({ betaVersion }) => {
         rank: user.r,
         change: user.or - user.r,
         name: user.name,
+        steamName: user.steam,
+        xboxName: user.xbox,
+        psnName: user.psn,
         xp: user.x,
         level: user.mx,
         cashouts: user.c,
@@ -78,10 +83,19 @@ const Leaderboard = ({ betaVersion }) => {
             return;
         }
 
+        if (betaVersion === "2") {
+            const initialUsers = transformData(cb2Data);
+            setUsers(initialUsers);
+            setUsersToShow(initialUsers);
+            setLoading(false);
+            return;
+        }
+
         try {
 
-            const res = await fetch("https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json");
+            const res = await fetch("https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-crossplay.json");
             // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
+            // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
 
             if (res.ok) {
                 const json = await res.json();
