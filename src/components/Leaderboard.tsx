@@ -2,7 +2,7 @@ import { Button, Collapse, Divider, Image, Input, Popover, Space, Table, Typogra
 import { useEffect, useState } from "react";
 import cb1Data from "../data/leaderboard-beta-1.json";
 import cb2Data from "../data/leaderboard-beta-2.json";
-import Icons from "./Icons";
+import Icons from "./icons";
 import { RawUser, User } from "../types";
 import { ColumnType } from "antd/es/table";
 

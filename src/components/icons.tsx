@@ -1,6 +1,6 @@
 type IconProps = React.HTMLAttributes<SVGElement>;
 
-const Icons = {
+const icons = {
   steam: (props: IconProps) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" {...props}>
       <path
@@ -27,4 +27,4 @@ const Icons = {
   )
 };
 
-export default Icons;
+export default icons;
