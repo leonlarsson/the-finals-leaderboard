@@ -6,7 +6,11 @@ import Icons from "./icons";
 import { RawUser, User } from "../types";
 import { ColumnType } from "antd/es/table";
 
-const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
+type Props = {
+  leaderboardVersion: "closedBeta1" | "closedBeta2" | "openBeta";
+};
+
+const Leaderboard = ({ leaderboardVersion }: Props) => {
   const [users, setUsers] = useState<User[]>([]);
   const [usersToShow, setUsersToShow] = useState<User[]>(users);
   const [loading, setLoading] = useState<boolean>(false);
@@ -14,9 +18,9 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
 
   const getRankIcon = (fame: number, height?: number) => {
     let league = "Bronze";
-    if (betaVersion === "1") league = fameToLeague_cb1(fame);
-    if (betaVersion === "2") league = fameToLeague_cb2(fame);
-    if (betaVersion === "3") league = fameToLeague_cb2(fame);
+    if (leaderboardVersion === "closedBeta1") league = fameToLeague_cb1(fame);
+    if (leaderboardVersion === "closedBeta2") league = fameToLeague_cb2(fame);
+    if (leaderboardVersion === "openBeta") league = fameToLeague_cb2(fame);
     return <Image className="inline" title={`${league} league`} height={height ?? 50} src={`/images/${league.toLowerCase().replace(" ", "-")}.png`} />;
   };
 
@@ -78,7 +82,7 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
   const fetchData = async () => {
     setLoading(true);
 
-    if (betaVersion === "1") {
+    if (leaderboardVersion === "closedBeta1") {
       const initialUsers = transformData(cb1Data);
       setUsers(initialUsers);
       setUsersToShow(initialUsers);
@@ -86,7 +90,7 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
       return;
     }
 
-    if (betaVersion === "2") {
+    if (leaderboardVersion === "closedBeta2") {
       const initialUsers = transformData(cb2Data);
       setUsers(initialUsers);
       setUsersToShow(initialUsers);
@@ -193,16 +197,16 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
     {
       title: "Name",
       dataIndex: "name",
-      render: (name: string, user: User) => (betaVersion === "3" ? <Popover content={namePopoverContent(user)}>{name}</Popover> : name),
+      render: (name: string, user: User) => (leaderboardVersion === "openBeta" ? <Popover content={namePopoverContent(user)}>{name}</Popover> : name),
       sorter: (a: User, b: User) => a.name.localeCompare(b.name)
     },
-    betaVersion === "1" && {
+    leaderboardVersion === "closedBeta1" && {
       title: "XP",
       dataIndex: "xp",
       render: (xp: number) => xp.toLocaleString("en-US"),
       sorter: (a: User, b: User) => a.xp! - b.xp! // These exist in version 1
     },
-    betaVersion === "1" && {
+    leaderboardVersion === "closedBeta1" && {
       title: "Level",
       dataIndex: "level",
       render: (level: number) => level.toLocaleString("en-US"),
@@ -222,7 +226,7 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
           {getRankIcon(fame)} {fame.toLocaleString("en-US")}
         </span>
       ),
-      filters: (betaVersion === "1" ? cb1leagues : cb2leagues).map(league => ({ text: league.name, value: `${league.min}:${league.max}` })),
+      filters: (leaderboardVersion === "closedBeta1" ? cb1leagues : cb2leagues).map(league => ({ text: league.name, value: `${league.min}:${league.max}` })),
       onFilter: (value: string, record: User) => {
         const min = value.match(/(.*):/)?.[1];
         const max = value.match(/:(.*)/)?.[1];
@@ -256,7 +260,7 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
                   Out of the top {users.length.toLocaleString("en-US")} players...
                 </Divider>
 
-                {(betaVersion === "1" ? cb1leagues : cb2leagues).map(league => (
+                {(leaderboardVersion === "closedBeta1" ? cb1leagues : cb2leagues).map(league => (
                   <span key={league.name}>
                     <Typography.Text code>
                       {users.filter(user => user.fame >= league.min && user.fame <= league.max).length.toLocaleString("en-US")} ({(users.filter(user => user.fame >= league.min && user.fame <= league.max).length / users.length).toLocaleString("en-US", { style: "percent", maximumFractionDigits: 1 })})
@@ -268,12 +272,12 @@ const Leaderboard = ({ betaVersion }: { betaVersion: "1" | "2" | "3" }) => {
                 <Divider className="!mb-0" orientation="left">
                   Averages
                 </Divider>
-                {betaVersion === "1" && (
+                {leaderboardVersion === "closedBeta1" && (
                   <span>
                     Average XP: <Typography.Text code>{(users.map(user => user.xp!).reduce((a, b) => a + b, 0) / users.length).toLocaleString("en-US", { maximumFractionDigits: 0 })}</Typography.Text>
                   </span>
                 )}
-                {betaVersion === "1" && (
+                {leaderboardVersion === "closedBeta1" && (
                   <span>
                     Average Level: <Typography.Text code>{(users.map(user => user.level!).reduce((a, b) => a + b, 0) / users.length).toLocaleString("en-US", { maximumFractionDigits: 0 })}</Typography.Text>
                   </span>

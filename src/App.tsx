@@ -26,8 +26,8 @@ const App = () => {
       <Tabs
         defaultActiveKey="1"
         items={[
-          { key: "1", label: "Closed Beta 1", children: <Leaderboard betaVersion={"1"} /> },
-          { key: "2", label: "Closed Beta 2", children: <Leaderboard betaVersion={"2"} /> },
+          { key: "1", label: "Closed Beta 1", children: <Leaderboard leaderboardVersion={"closedBeta1"} /> },
+          { key: "2", label: "Closed Beta 2", children: <Leaderboard leaderboardVersion={"closedBeta2"} /> },
           {
             key: "3",
             label: (
@@ -35,7 +35,7 @@ const App = () => {
                 <Badge className="mr-1" status="processing" /> Open Beta
               </span>
             ),
-            children: <Leaderboard betaVersion={"3"} />
+            children: <Leaderboard leaderboardVersion={"openBeta"} />
           }
         ]}
       />
