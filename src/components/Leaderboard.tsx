@@ -160,21 +160,44 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
     return (
       <Space direction="vertical">
         <span>
-          <Typography.Text strong>Embark ID</Typography.Text>: {user.name}
+          <img src="/images/Embark.png" className="inline w-5 h-5" /> <Typography.Text strong>Embark ID</Typography.Text>: {user.name}
         </span>
         {user.steamName && (
           <span>
-            <Icons.steam className="h-5 w-5 inline" /> {user.steamName}
+            <Icons.steam className="h-5 w-5 inline" /> <Typography.Text strong>Steam:</Typography.Text> {user.steamName}
           </span>
         )}
         {user.xboxName && (
           <span>
-            <Icons.xbox className="h-5 w-5 inline" /> {user.xboxName}
+            <Icons.xbox className="h-5 w-5 inline" /> <Typography.Text strong>Xbox:</Typography.Text> {user.xboxName}
           </span>
         )}
         {user.psnName && (
           <span>
-            <Icons.playstation className="h-5 w-5 inline" /> {user.psnName}
+            <Icons.playstation className="h-5 w-5 inline" /> <Typography.Text strong>PlayStation:</Typography.Text> {user.psnName}
+          </span>
+        )}
+      </Space>
+    );
+  };
+
+  const platformNamesInline = (user: User) => {
+    return (
+      <Space direction="vertical">
+        <span>{user.name}</span>
+        {user.steamName && (
+          <span>
+            <Icons.steam className="h-5 w-5 inline opacity-60" /> {user.steamName}
+          </span>
+        )}
+        {user.xboxName && (
+          <span>
+            <Icons.xbox className="h-5 w-5 inline opacity-60" /> {user.xboxName}
+          </span>
+        )}
+        {user.psnName && (
+          <span>
+            <Icons.playstation className="h-5 w-5 inline opacity-60" /> {user.psnName}
           </span>
         )}
       </Space>
@@ -197,7 +220,7 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
     {
       title: "Name",
       dataIndex: "name",
-      render: (name: string, user: User) => (leaderboardVersion === "openBeta" ? <Popover content={namePopoverContent(user)}>{name}</Popover> : name),
+      render: (name: string, user: User) => (leaderboardVersion === "openBeta" ? <Popover content={namePopoverContent(user)}>{platformNamesInline(user)}</Popover> : name),
       sorter: (a: User, b: User) => a.name.localeCompare(b.name)
     },
     leaderboardVersion === "closedBeta1" && {
