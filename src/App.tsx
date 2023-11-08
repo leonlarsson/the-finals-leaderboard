@@ -1,4 +1,4 @@
-import { Badge, Tabs } from "antd";
+import { Tabs } from "antd";
 import Leaderboard from "./components/Leaderboard";
 import "./App.css";
 
@@ -28,15 +28,7 @@ const App = () => {
         items={[
           { key: "1", label: "Closed Beta 1", children: <Leaderboard leaderboardVersion={"closedBeta1"} /> },
           { key: "2", label: "Closed Beta 2", children: <Leaderboard leaderboardVersion={"closedBeta2"} /> },
-          {
-            key: "3",
-            label: (
-              <span>
-                <Badge className="mr-1" status="processing" /> Open Beta
-              </span>
-            ),
-            children: <Leaderboard leaderboardVersion={"openBeta"} />
-          }
+          { key: "3", label: "Open Beta", children: <Leaderboard leaderboardVersion={"openBeta"} /> }
         ]}
       />
     </div>
