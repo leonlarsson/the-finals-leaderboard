@@ -1,7 +1,7 @@
 import { Button, Collapse, Divider, Image, Input, Popover, Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
-import cb1Data from "../data/leaderboard-beta-1.json";
-import cb2Data from "../data/leaderboard-beta-2.json";
+import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
+import closedBeta2Data from "../data/leaderboard-closed-beta-2.json";
 import Icons from "./icons";
 import { RawUser, User } from "../types";
 import { ColumnType } from "antd/es/table";
@@ -83,7 +83,7 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
     setLoading(true);
 
     if (leaderboardVersion === "closedBeta1") {
-      const initialUsers = transformData(cb1Data);
+      const initialUsers = transformData(closedBeta1Data);
       setUsers(initialUsers);
       setUsersToShow(initialUsers);
       setLoading(false);
@@ -91,7 +91,7 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
     }
 
     if (leaderboardVersion === "closedBeta2") {
-      const initialUsers = transformData(cb2Data);
+      const initialUsers = transformData(closedBeta2Data);
       setUsers(initialUsers);
       setUsersToShow(initialUsers);
       setLoading(false);
