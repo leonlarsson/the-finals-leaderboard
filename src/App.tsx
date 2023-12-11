@@ -5,10 +5,17 @@ import "./App.css";
 const App = () => {
   return (
     <div className="container mb-12">
-      <h1 className="text-4xl font-medium underline">THE FINALS - Unofficial Leaderboard</h1>
+      <h1 className="text-4xl font-medium underline">
+        THE FINALS - Unofficial Leaderboard
+      </h1>
       <h5 className="text-xl">
-        Top players from the playtests. You can find the official leaderboard{" "}
-        <a href="https://www.reachthefinals.com/leaderboard-beta" target="_blank" className="link">
+        All leaderboards from playtests, including launch. You can find the
+        official leaderboard{" "}
+        <a
+          href="https://www.reachthefinals.com/leaderboard-beta"
+          target="_blank"
+          className="link"
+        >
           here
         </a>
         . Created by{" "}
@@ -16,7 +23,11 @@ const App = () => {
           me
         </a>
         . Source{" "}
-        <a href="https://github.com/leonlarsson/the-finals-leaderboard" target="_blank" className="link">
+        <a
+          href="https://github.com/leonlarsson/the-finals-leaderboard"
+          target="_blank"
+          className="link"
+        >
           here
         </a>
         .
@@ -24,11 +35,28 @@ const App = () => {
       <hr />
 
       <Tabs
-        defaultActiveKey="1"
+        defaultActiveKey="4"
         items={[
-          { key: "1", label: "Closed Beta 1", children: <Leaderboard leaderboardVersion={"closedBeta1"} /> },
-          { key: "2", label: "Closed Beta 2", children: <Leaderboard leaderboardVersion={"closedBeta2"} /> },
-          { key: "3", label: "Open Beta", children: <Leaderboard leaderboardVersion={"openBeta"} /> }
+          {
+            key: "4",
+            label: "Live",
+            children: <Leaderboard leaderboardVersion={"live"} />,
+          },
+          {
+            key: "3",
+            label: "Open Beta",
+            children: <Leaderboard leaderboardVersion={"openBeta"} />,
+          },
+          {
+            key: "2",
+            label: "Closed Beta 2",
+            children: <Leaderboard leaderboardVersion={"closedBeta2"} />,
+          },
+          {
+            key: "1",
+            label: "Closed Beta 1",
+            children: <Leaderboard leaderboardVersion={"closedBeta1"} />,
+          },
         ]}
       />
     </div>
