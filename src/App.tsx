@@ -6,21 +6,12 @@ const App = () => {
   return (
     <div className="container mb-12">
       <h1 className="text-4xl font-medium underline">
-        THE FINALS - Unofficial Leaderboard
+        Unofficial Leaderboard – THE FINALS
       </h1>
       <h5 className="text-xl">
-        All leaderboards from playtests, including launch. You can find the
-        official leaderboard{" "}
-        <a
-          href="https://www.reachthefinals.com/leaderboard-beta"
-          target="_blank"
-          className="link"
-        >
-          here
-        </a>
-        . Created by{" "}
+        View leaderboards from THE FINALS and track your progress. Created by{" "}
         <a href="https://twitter.com/mozzyfx" target="_blank" className="link">
-          me
+          Leon
         </a>
         . Source{" "}
         <a
@@ -59,6 +50,12 @@ const App = () => {
           },
         ]}
       />
+
+      <div className="mt-10">
+        <span className="text-sm">
+          All imagery and data is owned by Embark Studios.
+        </span>
+      </div>
     </div>
   );
 };
