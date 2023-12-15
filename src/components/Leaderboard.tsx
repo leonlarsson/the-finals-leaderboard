@@ -35,7 +35,7 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
       <Image
         className="inline"
         title={`${league} league`}
-        height={height ?? 50}
+        height={height ?? 60}
         src={`/images/${league.toLowerCase().replace(" ", "-")}.png`}
       />
     );
