@@ -1,6 +1,7 @@
 import { Tabs } from "antd";
 import Leaderboard from "./components/Leaderboard";
 import "./App.css";
+import {LEADERBOARD_VERSION} from "./helpers";
 
 const App = () => {
   return (
@@ -31,22 +32,22 @@ const App = () => {
           {
             key: "4",
             label: "Live",
-            children: <Leaderboard leaderboardVersion={"live"} />,
+            children: <Leaderboard leaderboardVersion={LEADERBOARD_VERSION.LIVE} />,
           },
           {
             key: "3",
             label: "Open Beta",
-            children: <Leaderboard leaderboardVersion={"openBeta"} />,
+            children: <Leaderboard leaderboardVersion={LEADERBOARD_VERSION.OPEN_BETA} />,
           },
           {
             key: "2",
             label: "Closed Beta 2",
-            children: <Leaderboard leaderboardVersion={"closedBeta2"} />,
+            children: <Leaderboard leaderboardVersion={LEADERBOARD_VERSION.CLOSED_BETA_2} />,
           },
           {
             key: "1",
             label: "Closed Beta 1",
-            children: <Leaderboard leaderboardVersion={"closedBeta1"} />,
+            children: <Leaderboard leaderboardVersion={LEADERBOARD_VERSION.CLOSED_BETA_1} />,
           },
         ]}
       />

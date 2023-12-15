@@ -16,9 +16,10 @@ import openBetaData from "../data/leaderboard-open-beta-1.json";
 import Icons from "./icons";
 import { RawUser, User } from "../types";
 import { ColumnType } from "antd/es/table";
+import {fameToLeague, LEADERBOARD_VERSION} from "../helpers";
 
 type Props = {
-  leaderboardVersion: "closedBeta1" | "closedBeta2" | "openBeta" | "live";
+  leaderboardVersion: LEADERBOARD_VERSION;
 };
 
 const Leaderboard = ({ leaderboardVersion }: Props) => {
@@ -28,11 +29,8 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
   const [error, setError] = useState<boolean>(false);
 
   const getRankIcon = (fame: number, height?: number) => {
-    let league = "Bronze";
-    if (leaderboardVersion === "closedBeta1") league = fameToLeague_cb1(fame);
-    if (leaderboardVersion === "closedBeta2") league = fameToLeague_cb2(fame);
-    if (leaderboardVersion === "openBeta") league = fameToLeague_cb2(fame);
-    if (leaderboardVersion === "live") league = fameToLeague_cb2(fame);
+    const league = fameToLeague(leaderboardVersion, fame)
+
     return (
       <Image
         className="inline"
@@ -41,46 +39,6 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
         src={`/images/${league.toLowerCase().replace(" ", "-")}.png`}
       />
     );
-  };
-
-  const fameToLeague_cb1 = (fame: number) => {
-    let league = "bronze";
-    if (fame >= 500) league = "Silver";
-    if (fame >= 1000) league = "Gold";
-    if (fame >= 5000) league = "Diamond";
-    return league;
-  };
-
-  const fameToLeague_cb2 = (fame: number) => {
-    let league;
-    // Borrowed from https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-cb2-1.js
-    league = "Bronze 4";
-    if (fame >= 20000) {
-      league = "Diamond 4";
-      if (fame >= 21250) league = "Diamond 3";
-      if (fame >= 22500) league = "Diamond 2";
-      if (fame >= 23750) league = "Diamond 1";
-    } else if (fame >= 15000) {
-      league = "Platinum 4";
-      if (fame >= 16250) league = "Platinum 3";
-      if (fame >= 17500) league = "Platinum 2";
-      if (fame >= 18750) league = "Platinum 1";
-    } else if (fame >= 10000) {
-      league = "Gold 4";
-      if (fame >= 11250) league = "Gold 3";
-      if (fame >= 12500) league = "Gold 2";
-      if (fame >= 13750) league = "Gold 1";
-    } else if (fame >= 5000) {
-      league = "Silver 4";
-      if (fame >= 6250) league = "Silver 3";
-      if (fame >= 7500) league = "Silver 2";
-      if (fame >= 8750) league = "Silver 1";
-    } else {
-      if (fame >= 1250) league = "Bronze 3";
-      if (fame >= 2500) league = "Bronze 2";
-      if (fame >= 3750) league = "Bronze 1";
-    }
-    return league;
   };
 
   const transformData = (data: RawUser[]): User[] =>
