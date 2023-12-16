@@ -19,7 +19,9 @@ const App = () => {
   const [search, setSearch] = useState<string>("");
   const [users, setUsers] = useState<User[]>([]);
   const usersToShow = users.filter(user =>
-    user.name.toLowerCase().includes(search.toLowerCase())
+    [user.name, user.steamName, user.xboxName, user.psnName].some(username =>
+      username?.toLowerCase().includes(search.toLowerCase())
+    )
   );
   const [error, setError] = useState<boolean>(false);
 
@@ -69,7 +71,7 @@ const App = () => {
   }, [selectedLeaderboardVersion]);
 
   return (
-    <div className="container mb-12">
+    <div className="container mb-12 font-saira">
       <h1 className="text-4xl font-medium underline">
         Unofficial Leaderboard – THE FINALS
       </h1>
@@ -124,7 +126,7 @@ const App = () => {
 
             <Button
               variant="outline"
-              className="select-none !cursor-not-allowed"
+              className="select-none"
               onClick={fetchData}
               disabled={selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE}
             >
