@@ -136,7 +136,10 @@ const App = () => {
         {error && <span className="text-red-700">Error fetching data.</span>}
         {!error && (
           <>
-            <DataTable columns={columns} data={usersToShow} />
+            <DataTable
+              columns={columns(selectedLeaderboardVersion)}
+              data={usersToShow}
+            />
           </>
         )}
       </div>
