@@ -1,23 +1,15 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Collapse,
-  Divider,
-  Image,
-  Input,
-  Popover,
-  Space,
-  Table,
-  Typography,
-} from "antd";
+import { Button, Input, Popover, Space, Table, Typography } from "antd";
 import { ColumnType } from "antd/es/table";
-import Icons from "./icons";
-import { RawUser, User } from "../types";
-import { fameToLeague } from "../helpers/fameToLeague";
-import { LEADERBOARD_VERSION } from "../helpers/leagues";
 import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
 import closedBeta2Data from "../data/leaderboard-closed-beta-2.json";
 import openBetaData from "../data/leaderboard-open-beta-1.json";
+import Icons from "./icons";
+import Stats from "./Stats";
+import fameToLeague from "../helpers/fameToLeague";
+import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "../helpers/leagues";
+import fameToRankIcon from "../helpers/fameToRankIcon";
+import { RawUser, User } from "../types";
 
 type Props = {
   leaderboardVersion: LEADERBOARD_VERSION;
@@ -28,19 +20,6 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
   const [usersToShow, setUsersToShow] = useState<User[]>(users);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-
-  const getRankIcon = (fame: number, height?: number) => {
-    const league = fameToLeague(leaderboardVersion, fame);
-
-    return (
-      <Image
-        className="inline"
-        title={`${league} league`}
-        height={height ?? 60}
-        src={`/images/${league.toLowerCase().replace(" ", "-")}.png`}
-      />
-    );
-  };
 
   const transformData = (data: RawUser[]): User[] =>
     data.map(user => ({
@@ -120,36 +99,6 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const cb1leagues = [
-    { name: "Diamond", min: 5000, max: Infinity },
-    { name: "Gold", min: 1000, max: 4999 },
-    { name: "Silver", min: 500, max: 999 },
-    { name: "Bronze", min: 0, max: 499 },
-  ];
-
-  const cb2leagues = [
-    { name: "Diamond 1", min: 23750, max: Infinity },
-    { name: "Diamond 2", min: 22500, max: 23749 },
-    { name: "Diamond 3", min: 21250, max: 22499 },
-    { name: "Diamond 4", min: 20000, max: 21249 },
-    { name: "Platinum 1", min: 18750, max: 19999 },
-    { name: "Platinum 2", min: 17500, max: 18749 },
-    { name: "Platinum 3", min: 16250, max: 17499 },
-    { name: "Platinum 4", min: 15000, max: 16249 },
-    { name: "Gold 1", min: 13750, max: 14999 },
-    { name: "Gold 2", min: 12500, max: 13749 },
-    { name: "Gold 3", min: 11250, max: 12499 },
-    { name: "Gold 4", min: 10000, max: 11249 },
-    { name: "Silver 1", min: 8750, max: 9999 },
-    { name: "Silver 2", min: 7500, max: 8749 },
-    { name: "Silver 3", min: 6250, max: 7499 },
-    { name: "Silver 4", min: 5000, max: 6249 },
-    { name: "Bronze 1", min: 3750, max: 4999 },
-    { name: "Bronze 2", min: 2500, max: 3749 },
-    { name: "Bronze 3", min: 1250, max: 2499 },
-    { name: "Bronze 4", min: 0, max: 1249 },
-  ];
 
   const namePopoverContent = (user: User) => {
     if (!user.steamName && !user.xboxName && !user.psnName) return;
@@ -269,24 +218,18 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
       dataIndex: "fame",
       render: (fame: number) => (
         <span>
-          {getRankIcon(fame)} {fame.toLocaleString("en-US")}
+          {fameToRankIcon(leaderboardVersion, fame)}{" "}
+          {fame.toLocaleString("en-US")}
         </span>
       ),
-      filters: (leaderboardVersion === "closedBeta1"
-        ? cb1leagues
-        : cb2leagues
-      ).map(league => ({
-        text: league.name,
-        value: `${league.min}:${league.max}`,
-      })),
-      onFilter: (value: string, record: User) => {
-        const min = value.match(/(.*):/)?.[1];
-        const max = value.match(/:(.*)/)?.[1];
-        return (
-          record.fame >= parseInt(min ?? "0") &&
-          record.fame <= parseInt(max ?? "0")
-        );
-      },
+      filters: [
+        ...VERSION_LEAGUES[leaderboardVersion].map(x => ({
+          text: x.league,
+          value: x.league,
+        })),
+      ].reverse(),
+      onFilter: (value: string, record: User) =>
+        value === fameToLeague(leaderboardVersion, record.fame),
       sorter: (a: User, b: User) => a.fame - b.fame,
     },
   ].filter(column => column !== false) as ColumnType<User>[];
@@ -319,100 +262,7 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
             loading={loading}
           />
 
-          <Collapse>
-            <Collapse.Panel key={1} header="Stats">
-              <Space className="w-full" direction="vertical" size={2}>
-                <Divider className="!mb-0" orientation="left">
-                  Out of the top {users.length.toLocaleString("en-US")}{" "}
-                  players...
-                </Divider>
-
-                {(leaderboardVersion === "closedBeta1"
-                  ? cb1leagues
-                  : cb2leagues
-                ).map(league => (
-                  <span key={league.name}>
-                    <Typography.Text code>
-                      {users
-                        .filter(
-                          user =>
-                            user.fame >= league.min && user.fame <= league.max,
-                        )
-                        .length.toLocaleString("en-US")}{" "}
-                      (
-                      {(
-                        users.filter(
-                          user =>
-                            user.fame >= league.min && user.fame <= league.max,
-                        ).length / users.length
-                      ).toLocaleString("en-US", {
-                        style: "percent",
-                        maximumFractionDigits: 1,
-                      })}
-                      )
-                    </Typography.Text>{" "}
-                    {users.filter(
-                      user =>
-                        user.fame >= league.min && user.fame <= league.max,
-                    ).length === 1
-                      ? "is"
-                      : "are"}{" "}
-                    in {league.name} league {getRankIcon(league.max)}
-                  </span>
-                ))}
-
-                <Divider className="!mb-0" orientation="left">
-                  Averages
-                </Divider>
-                {leaderboardVersion === "closedBeta1" && (
-                  <span>
-                    Average XP:{" "}
-                    <Typography.Text code>
-                      {(
-                        users.map(user => user.xp!).reduce((a, b) => a + b, 0) /
-                        users.length
-                      ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                    </Typography.Text>
-                  </span>
-                )}
-                {leaderboardVersion === "closedBeta1" && (
-                  <span>
-                    Average Level:{" "}
-                    <Typography.Text code>
-                      {(
-                        users
-                          .map(user => user.level!)
-                          .reduce((a, b) => a + b, 0) / users.length
-                      ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                    </Typography.Text>
-                  </span>
-                )}
-                <span>
-                  Average Cashouts:{" "}
-                  <Typography.Text code>
-                    {(
-                      users
-                        .map(user => user.cashouts)
-                        .reduce((a, b) => a + b, 0) / users.length
-                    ).toLocaleString("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                      maximumFractionDigits: 0,
-                    })}
-                  </Typography.Text>
-                </span>
-                <span>
-                  Average Fame:{" "}
-                  <Typography.Text code>
-                    {(
-                      users.map(user => user.fame).reduce((a, b) => a + b, 0) /
-                      users.length
-                    ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                  </Typography.Text>
-                </span>
-              </Space>
-            </Collapse.Panel>
-          </Collapse>
+          <Stats leaderboardVersion={leaderboardVersion} users={users} />
         </Space>
       )}
     </Space>
