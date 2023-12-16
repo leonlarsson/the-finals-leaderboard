@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Button,
   Collapse,
@@ -9,14 +10,14 @@ import {
   Table,
   Typography,
 } from "antd";
-import { useEffect, useState } from "react";
+import { ColumnType } from "antd/es/table";
+import Icons from "./icons";
+import { RawUser, User } from "../types";
+import { fameToLeague } from "../helpers/fameToLeague";
+import { LEADERBOARD_VERSION } from "../helpers/leagues";
 import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
 import closedBeta2Data from "../data/leaderboard-closed-beta-2.json";
 import openBetaData from "../data/leaderboard-open-beta-1.json";
-import Icons from "./icons";
-import { RawUser, User } from "../types";
-import { ColumnType } from "antd/es/table";
-import {fameToLeague, LEADERBOARD_VERSION} from "../helpers";
 
 type Props = {
   leaderboardVersion: LEADERBOARD_VERSION;
@@ -29,7 +30,7 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
   const [error, setError] = useState<boolean>(false);
 
   const getRankIcon = (fame: number, height?: number) => {
-    const league = fameToLeague(leaderboardVersion, fame)
+    const league = fameToLeague(leaderboardVersion, fame);
 
     return (
       <Image
