@@ -223,9 +223,9 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
         </span>
       ),
       filters: [
-        ...VERSION_LEAGUES[leaderboardVersion].map(x => ({
-          text: x.league,
-          value: x.league,
+        ...VERSION_LEAGUES[leaderboardVersion].map(league => ({
+          text: league.name,
+          value: league.name,
         })),
       ].reverse(),
       onFilter: (value: string, record: User) =>

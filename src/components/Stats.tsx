@@ -21,11 +21,11 @@ export default ({ leaderboardVersion, users }: Props) => {
           {VERSION_LEAGUES[leaderboardVersion].map(league => {
             const usersInLeague = users.filter(
               user =>
-                league.league === fameToLeague(leaderboardVersion, user.fame),
+                league.name === fameToLeague(leaderboardVersion, user.fame),
             ).length;
 
             return (
-              <span key={league.league}>
+              <span key={league.name}>
                 <Typography.Text code>
                   {usersInLeague.toLocaleString("en-US")} (
                   {(usersInLeague / users.length).toLocaleString("en-US", {
@@ -34,7 +34,7 @@ export default ({ leaderboardVersion, users }: Props) => {
                   })}
                   )
                 </Typography.Text>{" "}
-                {usersInLeague === 1 ? "is" : "are"} in {league.league} league{" "}
+                {usersInLeague === 1 ? "is" : "are"} in {league.name} league{" "}
                 {fameToRankIcon(leaderboardVersion, league.fame, 50)}
               </span>
             );
