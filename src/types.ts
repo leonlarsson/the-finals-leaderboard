@@ -36,3 +36,5 @@ export type User = {
   cashouts: number;
   fame: number;
 };
+
+export type Platforms = "crossplay" | "steam" | "xbox" | "psn";

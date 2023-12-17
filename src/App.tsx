@@ -12,17 +12,16 @@ import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
 import { Button } from "./components/ui/button";
 import Stats from "./components/Stats";
+import Icons from "./components/icons";
 import transformData from "./helpers/transformData";
 import { LEADERBOARD_VERSION } from "./helpers/leagues";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
 import { cn } from "./lib/utils";
-import { User } from "./types";
+import { Platforms, User } from "./types";
 
 import "./index.css";
-
-type Platforms = "crossplay" | "steam" | "xbox" | "psn";
 
 const App = () => {
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
@@ -154,9 +153,22 @@ const App = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="crossplay">Crossplay</SelectItem>
-                <SelectItem value="steam">Steam</SelectItem>
-                <SelectItem value="xbox">Xbox</SelectItem>
-                <SelectItem value="psn">PlayStation</SelectItem>
+                <SelectItem value="steam">
+                  <div className="flex gap-1 items-center">
+                    <Icons.steam className="h-4 inline" /> <span>Steam</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="xbox">
+                  <div className="flex gap-1 items-center">
+                    <Icons.xbox className="h-4 inline" /> <span>Xbox</span>
+                  </div>
+                </SelectItem>
+                <SelectItem value="psn">
+                  <div className="flex gap-1 items-center">
+                    <Icons.playstation className="h-4 inline" />{" "}
+                    <span>PlayStation</span>
+                  </div>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -166,7 +178,7 @@ const App = () => {
         {!error && (
           <>
             <DataTable
-              columns={columns(selectedLeaderboardVersion)}
+              columns={columns(selectedLeaderboardVersion, selectedPlatform)}
               data={users}
             />
           </>
