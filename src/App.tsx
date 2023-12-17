@@ -4,7 +4,7 @@ import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {DataTable, Filter, Platform} from "./components/dataTable";
 import {columns} from "./components/TableColumns";
 import {Button} from "./components/ui/button";
-import Stats from "./components/leaderboard/Stats";
+import Stats from "./components/Stats";
 import transformData from "./helpers/transformData";
 import {LEADERBOARD_VERSION} from "./helpers/leagues";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
