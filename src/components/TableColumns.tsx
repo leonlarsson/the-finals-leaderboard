@@ -1,12 +1,10 @@
-import { ArrowUpDown } from "lucide-react";
-import { Column, ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import Icons from "./icons";
 import { cn } from "@/lib/utils";
@@ -14,20 +12,25 @@ import fameToRankIcon from "@/helpers/fameToRankIcon";
 import fameToLeague from "@/helpers/fameToLeague";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
 import { User } from "@/types";
+import { DataTableColumnHeader } from "./DataTableColumnHeader";
 
 export const columns = (
   leaderboardVersion: LEADERBOARD_VERSION
 ): ColumnDef<User>[] => {
   const rankColumn = {
     accessorKey: "rank",
-    invertSorting: true,
-    header: ({ column }) => headerSort("Rank", column),
+    // invertSorting: true,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Rank" />
+    ),
     cell: ({ getValue }) => (getValue() as number).toLocaleString("en"),
   } satisfies ColumnDef<User>;
 
   const changeColumn = {
     accessorKey: "change",
-    header: ({ column }) => headerSort("24h change", column),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="24h change" />
+    ),
     cell: ({ getValue }) => {
       const value = getValue() as number;
       return (
@@ -65,19 +68,25 @@ export const columns = (
 
   const xpColumn = {
     accessorKey: "xp",
-    header: ({ column }) => headerSort("XP", column),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="XP" />
+    ),
     cell: ({ getValue }) => ((getValue() as number) ?? 0).toLocaleString("en"),
   } satisfies ColumnDef<User>;
 
   const levelColumn = {
     accessorKey: "level",
-    header: ({ column }) => headerSort("Level", column),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Level" />
+    ),
     cell: ({ getValue }) => ((getValue() as number) ?? 0).toLocaleString("en"),
   } satisfies ColumnDef<User>;
 
   const cashoutsColumn = {
     accessorKey: "cashouts",
-    header: ({ column }) => headerSort("Cashouts", column),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Cashouts" />
+    ),
     cell: ({ getValue }) =>
       (getValue() as number).toLocaleString("en", {
         style: "currency",
@@ -88,7 +97,9 @@ export const columns = (
 
   const fameColumn = {
     accessorKey: "fame",
-    header: ({ column }) => headerSort("Fame", column),
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Fame" />
+    ),
     cell: ({ getValue }) => (
       <span className="flex items-center gap-2">
         <Popover>
@@ -123,17 +134,6 @@ export const columns = (
     column => column.accessorKey !== "xp" && column.accessorKey !== "level"
   );
 };
-
-const headerSort = (text: string, column: Column<User, unknown>) => (
-  <Button
-    variant="ghost"
-    className="p-0 w-full text-left flex justify-start hover:underline"
-    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  >
-    {text}
-    <ArrowUpDown className="ml-2 h-4 w-4" />
-  </Button>
-);
 
 const platformNamesInline = (user: User) => {
   return (
