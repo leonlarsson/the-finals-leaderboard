@@ -1,3 +1,5 @@
+import { Platform } from "./enums";
+
 export type RawUser = {
   /** The user's rank. */
   r: number;
@@ -38,3 +40,13 @@ export type User = {
 };
 
 export type Platforms = "crossplay" | "steam" | "xbox" | "psn";
+
+export interface Filter {
+  user?: string;
+  platform: Platform;
+}
+
+export interface LeaderboardFiltersProps {
+  filters: Filter;
+  onChange: (change: Filter) => void;
+}

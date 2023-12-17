@@ -1,20 +1,18 @@
-import {useLayoutEffect, useState} from "react";
-import {RefreshCw} from "lucide-react";
-import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {DataTable, Filter, Platform} from "./components/dataTable";
-import {columns} from "./components/TableColumns";
-import {Button} from "./components/ui/button";
+import { useLayoutEffect, useState } from "react";
+import { RefreshCw } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DataTable } from "./components/dataTable";
+import { columns } from "./components/TableColumns";
+import { Button } from "./components/ui/button";
 import Stats from "./components/Stats";
-import Icons from "./components/icons";
 import transformData from "./helpers/transformData";
-import {LEADERBOARD_VERSION} from "./helpers/leagues";
+import { LEADERBOARD_VERSION } from "./helpers/leagues";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
-import {cn} from "./lib/utils";
-import {User} from "./types";
-import {LeaderboardUrlParams} from "@/enums";
-
+import { cn } from "./lib/utils";
+import { Filter, User } from "./types";
+import { LeaderboardUrlParams, Platform } from "@/enums";
 
 import "./index.css";
 
@@ -25,14 +23,16 @@ const App = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const [filter, setFilter] = useState<Filter>( () => {
-    const url = new URLSearchParams(window.location.search)
+  const [filter, setFilter] = useState<Filter>(() => {
+    const url = new URLSearchParams(window.location.search);
 
     return {
       user: url.get(LeaderboardUrlParams.USER) ?? undefined,
-      platform: url.get(LeaderboardUrlParams.PLATFORM) as Platform || Platform.CROSSPLAY
-    }
-  })
+      platform:
+        (url.get(LeaderboardUrlParams.PLATFORM) as Platform) ||
+        Platform.CROSSPLAY,
+    };
+  });
 
   const fetchData = async () => {
     setLoading(true);
@@ -82,20 +82,26 @@ const App = () => {
   }, [selectedLeaderboardVersion, filter.platform]);
 
   useLayoutEffect(() => {
-    const { user, platform } = filter
-    const url = new URL(window.location.href)
+    const { user, platform } = filter;
+    const url = new URL(window.location.href);
 
-    if (user) url.searchParams.set(LeaderboardUrlParams.USER, user)
-    else url.searchParams.delete(LeaderboardUrlParams.USER)
+    user
+      ? url.searchParams.set(LeaderboardUrlParams.USER, user)
+      : url.searchParams.delete(LeaderboardUrlParams.USER);
 
-    if (platform) url.searchParams.set(LeaderboardUrlParams.PLATFORM, platform)
-    else url.searchParams.delete(LeaderboardUrlParams.PLATFORM)
+    platform
+      ? url.searchParams.set(LeaderboardUrlParams.PLATFORM, platform)
+      : url.searchParams.delete(LeaderboardUrlParams.PLATFORM);
 
-    if (selectedLeaderboardVersion) url.searchParams.set(LeaderboardUrlParams.VERSION, selectedLeaderboardVersion)
-    else url.searchParams.delete(LeaderboardUrlParams.VERSION)
+    selectedLeaderboardVersion
+      ? url.searchParams.set(
+          LeaderboardUrlParams.VERSION,
+          selectedLeaderboardVersion
+        )
+      : url.searchParams.delete(LeaderboardUrlParams.VERSION);
 
-    history.pushState({}, "", url.href)
-  }, [selectedLeaderboardVersion, filter])
+    history.pushState({}, "", url.href);
+  }, [selectedLeaderboardVersion, filter]);
 
   return (
     <div className="container mb-12 font-saira">
@@ -164,7 +170,7 @@ const App = () => {
         {!error && (
           <>
             <DataTable
-              columns={columns(selectedLeaderboardVersion, selectedPlatform)}
+              columns={columns(selectedLeaderboardVersion, filter.platform)}
               data={users}
               filter={filter}
               onFilterChange={setFilter}

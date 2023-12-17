@@ -21,20 +21,21 @@ import {
 } from "@/components/ui/table";
 
 import { DataTablePagination } from "./DataTablePagination";
-import {DataTableFilters, Filter} from "./DataTableFilters.tsx";
+import { DataTableFilters } from "./DataTableFilters.tsx";
+import { Filter } from "@/types.ts";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filter: Filter,
-  onFilterChange: (newFilter: Filter) => void
+  filter: Filter;
+  onFilterChange: (newFilter: Filter) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   filter,
-  onFilterChange
+  onFilterChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -60,8 +61,9 @@ export function DataTable<TData, TValue>({
         filters={filter}
         onChange={newFilter => {
           table.getColumn("name")?.setFilterValue(newFilter.user);
-          onFilterChange(newFilter)
-        }} />
+          onFilterChange(newFilter);
+        }}
+      />
 
       <div className="rounded-md border">
         <Table>

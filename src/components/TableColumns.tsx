@@ -12,7 +12,7 @@ import fameToRankIcon from "@/helpers/fameToRankIcon";
 import fameToLeague from "@/helpers/fameToLeague";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
 import { Platforms, User } from "@/types";
-import { DataTableColumnHeader } from "./DataTableColumnHeader";
+import { DataTableColumnHeader } from "./dataTable/DataTableColumnHeader";
 
 export const columns = (
   leaderboardVersion: LEADERBOARD_VERSION,

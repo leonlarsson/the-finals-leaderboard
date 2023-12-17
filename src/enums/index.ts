@@ -1,1 +1,1 @@
-export * from './LeaderboardUrlParams.ts'
+export * from "./LeaderboardUrlParams";
