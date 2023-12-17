@@ -12,6 +12,7 @@ import fameToRankIcon from "../../helpers/fameToRankIcon";
 import { RawUser, User } from "../../types";
 import {Filter, LeaderboardFilters, Platform} from "./LeaderboardFilters";
 import {filterUsers} from "./helper.ts";
+import {LeaderboardUrlParams} from "./types";
 
 type Props = {
   leaderboardVersion: LEADERBOARD_VERSION;
@@ -22,8 +23,8 @@ export const Leaderboard = ({ leaderboardVersion }: Props) => {
     const url = new URLSearchParams(window.location.search)
 
     return {
-      user: url.get("user") ?? undefined,
-      platforms: (url.get("platforms")?.split(",") ?? []) as Platform[]
+      user: url.get(LeaderboardUrlParams.USER) ?? undefined,
+      platforms: (url.get(LeaderboardUrlParams.PLATFORMS)?.split(",") ?? []) as Platform[]
     }
   })
   const [users, setUsers] = useState<User[]>([]);
@@ -35,11 +36,11 @@ export const Leaderboard = ({ leaderboardVersion }: Props) => {
 
     const url = new URL(window.location.href)
 
-    if (user) url.searchParams.set("user", user)
-    else url.searchParams.delete("user")
+    if (user) url.searchParams.set(LeaderboardUrlParams.USER, user)
+    else url.searchParams.delete(LeaderboardUrlParams.USER)
 
-    if (platforms.length > 0) url.searchParams.set("platforms", platforms.join(","))
-    else url.searchParams.delete("platforms")
+    if (platforms.length > 0) url.searchParams.set(LeaderboardUrlParams.PLATFORMS, platforms.join(","))
+    else url.searchParams.delete(LeaderboardUrlParams.PLATFORMS)
 
     history.pushState({}, "", url.href)
 
