@@ -1,5 +1,5 @@
 import { Tabs } from "antd";
-import Leaderboard from "./components/Leaderboard";
+import { Leaderboard } from "./components/leaderboard";
 import { LEADERBOARD_VERSION } from "./helpers/leagues";
 
 import "./App.css";

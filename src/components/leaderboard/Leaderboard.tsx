@@ -1,25 +1,51 @@
-import { useEffect, useState } from "react";
-import { Button, Input, Popover, Space, Table, Typography } from "antd";
+import {useEffect, useMemo, useState} from "react";
+import { Button, Popover, Space, Table, Typography } from "antd";
 import { ColumnType } from "antd/es/table";
-import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
-import closedBeta2Data from "../data/leaderboard-closed-beta-2.json";
-import openBetaData from "../data/leaderboard-open-beta-1.json";
-import Icons from "./icons";
+import closedBeta1Data from "../../data/leaderboard-closed-beta-1.json";
+import closedBeta2Data from "../../data/leaderboard-closed-beta-2.json";
+import openBetaData from "../../data/leaderboard-open-beta-1.json";
+import Icons from "./../icons";
 import Stats from "./Stats";
-import fameToLeague from "../helpers/fameToLeague";
-import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "../helpers/leagues";
-import fameToRankIcon from "../helpers/fameToRankIcon";
-import { RawUser, User } from "../types";
+import fameToLeague from "../../helpers/fameToLeague";
+import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "../../helpers/leagues";
+import fameToRankIcon from "../../helpers/fameToRankIcon";
+import { RawUser, User } from "../../types";
+import {Filter, LeaderboardFilters, Platform} from "./LeaderboardFilters";
+import {filterUsers} from "./helper.ts";
 
 type Props = {
   leaderboardVersion: LEADERBOARD_VERSION;
 };
 
-const Leaderboard = ({ leaderboardVersion }: Props) => {
+export const Leaderboard = ({ leaderboardVersion }: Props) => {
+  const [filters, setFilters] = useState<Filter>(() => {
+    const url = new URLSearchParams(window.location.search)
+
+    return {
+      user: url.get("user") ?? undefined,
+      platforms: (url.get("platforms")?.split(",") ?? []) as Platform[]
+    }
+  })
   const [users, setUsers] = useState<User[]>([]);
-  const [usersToShow, setUsersToShow] = useState<User[]>(users);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+
+  const usersToShow = useMemo(() => {
+    const { user, platforms } = filters
+
+    const url = new URL(window.location.href)
+
+    if (user) url.searchParams.set("user", user)
+    else url.searchParams.delete("user")
+
+    if (platforms.length > 0) url.searchParams.set("platforms", platforms.join(","))
+    else url.searchParams.delete("platforms")
+
+    history.pushState({}, "", url.href)
+
+
+    return users.filter(user => filterUsers(user, filters))
+  }, [users, filters])
 
   const transformData = (data: RawUser[]): User[] =>
     data.map(user => ({
@@ -42,7 +68,6 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
     if (leaderboardVersion === "closedBeta1") {
       const initialUsers = transformData(closedBeta1Data);
       setUsers(initialUsers);
-      setUsersToShow(initialUsers);
       setLoading(false);
       return;
     }
@@ -50,7 +75,6 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
     if (leaderboardVersion === "closedBeta2") {
       const initialUsers = transformData(closedBeta2Data);
       setUsers(initialUsers);
-      setUsersToShow(initialUsers);
       setLoading(false);
       return;
     }
@@ -58,7 +82,6 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
     if (leaderboardVersion === "openBeta") {
       const initialUsers = transformData(openBetaData);
       setUsers(initialUsers);
-      setUsersToShow(initialUsers);
       setLoading(false);
       return;
     }
@@ -75,7 +98,6 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
         const json = await res.json();
         const initialUsers = transformData(json);
         setUsers(initialUsers);
-        setUsersToShow(initialUsers);
         setError(false);
       } else {
         setError(true);
@@ -86,15 +108,6 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
       setLoading(false);
     }
   };
-
-  const filterUsers = (search: string) =>
-    setUsersToShow(
-      users.filter(user =>
-        [user.name, user.steamName, user.xboxName, user.psnName].some(
-          username => username?.toLowerCase().includes(search.toLowerCase()),
-        ),
-      ),
-    );
 
   useEffect(() => {
     fetchData();
@@ -156,11 +169,11 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
     );
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       title: "Rank",
       dataIndex: "rank",
-      render: (rank: number) => rank.toLocaleString("en-US"),
+      render: (rank: number, _: any, i: number) => filters.platforms.length > 0 ? `${i + 1} (${rank.toLocaleString("en-US")})` : rank.toLocaleString("en-US"),
       sorter: (a: User, b: User) => a.rank - b.rank,
     },
     {
@@ -232,15 +245,12 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
         value === fameToLeague(leaderboardVersion, record.fame),
       sorter: (a: User, b: User) => a.fame - b.fame,
     },
-  ].filter(column => column !== false) as ColumnType<User>[];
+  ].filter(column => column !== false) as ColumnType<User>[],
+  [filters])
 
   return (
     <Space className="w-full" direction="vertical">
-      <Input
-        size="large"
-        placeholder="Search for a user"
-        onChange={e => filterUsers(e.target.value)}
-      />
+      <LeaderboardFilters filters={filters} onChange={setFilters} />
       <Space>
         <Button disabled={loading} onClick={fetchData}>
           Refresh data
@@ -268,5 +278,3 @@ const Leaderboard = ({ leaderboardVersion }: Props) => {
     </Space>
   );
 };
-
-export default Leaderboard;

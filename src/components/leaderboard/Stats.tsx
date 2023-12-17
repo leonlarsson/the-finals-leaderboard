@@ -1,8 +1,8 @@
 import { Collapse, Divider, Space, Typography } from "antd";
-import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "../helpers/leagues";
-import fameToLeague from "../helpers/fameToLeague";
-import fameToRankIcon from "../helpers/fameToRankIcon";
-import { User } from "../types";
+import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "../../helpers/leagues";
+import fameToLeague from "../../helpers/fameToLeague";
+import fameToRankIcon from "../../helpers/fameToRankIcon";
+import { User } from "../../types";
 
 type Props = {
   leaderboardVersion: LEADERBOARD_VERSION;
