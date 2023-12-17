@@ -137,20 +137,23 @@ const headerSort = (text: string, column: Column<User, unknown>) => (
 
 const platformNamesInline = (user: User) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-1">
       <span>{user.name}</span>
+
       {user.steamName && (
-        <span>
+        <span className="inline-flex gap-1">
           <Icons.steam className="h-5 w-5 inline opacity-60" /> {user.steamName}
         </span>
       )}
+
       {user.xboxName && (
-        <span>
+        <span className="inline-flex gap-1">
           <Icons.xbox className="h-5 w-5 inline opacity-60" /> {user.xboxName}
         </span>
       )}
+
       {user.psnName && (
-        <span>
+        <span className="inline-flex gap-1">
           <Icons.playstation className="h-5 w-5 inline opacity-60" />{" "}
           {user.psnName}
         </span>
@@ -163,26 +166,29 @@ const namePopoverContent = (user: User) => {
   if (!user.steamName && !user.xboxName && !user.psnName) return;
   return (
     <div className="flex flex-col gap-2">
-      <span>
+      <span className="inline-flex gap-1">
         <img src="/images/Embark.png" className="inline w-5 h-5" />{" "}
-        <span className="font-bold">Embark ID</span>: {user.name}
+        <span className="font-semibold">Embark ID:</span> {user.name}
       </span>
+
       {user.steamName && (
-        <span>
+        <span className="inline-flex gap-1">
           <Icons.steam className="h-5 w-5 inline" />{" "}
-          <span className="font-bold">Steam:</span> {user.steamName}
+          <span className="font-semibold">Steam:</span> {user.steamName}
         </span>
       )}
+
       {user.xboxName && (
-        <span>
+        <span className="inline-flex gap-1">
           <Icons.xbox className="h-5 w-5 inline" />{" "}
-          <span className="font-bold">Xbox:</span> {user.xboxName}
+          <span className="font-semibold">Xbox:</span> {user.xboxName}
         </span>
       )}
+
       {user.psnName && (
-        <span>
+        <span className="inline-flex gap-1">
           <Icons.playstation className="h-5 w-5 inline" />{" "}
-          <span className="font-bold">PlayStation:</span> {user.psnName}
+          <span className="font-semibold">PlayStation:</span> {user.psnName}
         </span>
       )}
     </div>
