@@ -1,43 +1,51 @@
+import { useEffect, useState } from "react";
+import { RefreshCw } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LEADERBOARD_VERSION } from "./helpers/leagues";
-
-import "./index.css";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
+import { Button } from "./components/ui/button";
+import Stats from "./components/Stats";
 import transformData from "./helpers/transformData";
+import { LEADERBOARD_VERSION } from "./helpers/leagues";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
-import { useEffect, useState } from "react";
+import { cn } from "./lib/utils";
 import { User } from "./types";
-import { Button } from "./components/ui/button";
-import Stats from "./components/Stats";
+
+import "./index.css";
 
 const App = () => {
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
     useState<LEADERBOARD_VERSION>(LEADERBOARD_VERSION.LIVE);
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
   const fetchData = async () => {
+    setLoading(true);
     setError(false);
     if (selectedLeaderboardVersion === "closedBeta1") {
       setUsers(transformData(closedBeta1Data));
+      setLoading(false);
       return;
     }
 
     if (selectedLeaderboardVersion === "closedBeta2") {
       setUsers(transformData(closedBeta2Data));
+      setLoading(false);
       return;
     }
 
     if (selectedLeaderboardVersion === "openBeta") {
       setUsers(transformData(openBetaData));
+      setLoading(false);
       return;
     }
 
     try {
       const res = await fetch(
+        // TODO: Add platform-specific leaderboards
         "https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-crossplay-discovery-live.json"
       );
       // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
@@ -53,6 +61,8 @@ const App = () => {
       }
     } catch (error) {
       setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -108,11 +118,17 @@ const App = () => {
 
             <Button
               variant="outline"
-              className="select-none"
+              className="group select-none"
               onClick={fetchData}
-              disabled={selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE}
+              disabled={
+                selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE ||
+                loading
+              }
             >
               Refresh
+              <RefreshCw
+                className={cn("ml-2 h-4 w-4", loading && "animate-spin")}
+              />
             </Button>
           </div>
         </Tabs>
