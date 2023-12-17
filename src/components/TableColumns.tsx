@@ -49,6 +49,11 @@ export const columns = (
 
   const nameColumn = {
     accessorKey: "name",
+    // This to make filtering easier
+    accessorFn: user =>
+      `${user.name} ${user.steamName ?? ""} ${user.xboxName ?? ""} ${
+        user.psnName ?? ""
+      }`.toLowerCase(),
     header: "Name",
     cell: ({ row: { original: user } }) => {
       return user.steamName || user.xboxName || user.psnName ? (

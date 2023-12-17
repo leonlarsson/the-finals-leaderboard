@@ -11,19 +11,12 @@ import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
 import { useEffect, useState } from "react";
 import { User } from "./types";
 import { Button } from "./components/ui/button";
-import { Input } from "./components/ui/input";
 import Stats from "./components/Stats";
 
 const App = () => {
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
     useState<LEADERBOARD_VERSION>(LEADERBOARD_VERSION.LIVE);
-  const [search, setSearch] = useState<string>("");
   const [users, setUsers] = useState<User[]>([]);
-  const usersToShow = users.filter(user =>
-    [user.name, user.steamName, user.xboxName, user.psnName].some(username =>
-      username?.toLowerCase().includes(search.toLowerCase())
-    )
-  );
   const [error, setError] = useState<boolean>(false);
 
   const fetchData = async () => {
@@ -93,12 +86,6 @@ const App = () => {
       </h5>
 
       <div className="flex flex-col gap-2 my-4">
-        <Input
-          placeholder="Search for username..."
-          value={search}
-          onInput={e => setSearch(e.currentTarget.value)}
-        />
-
         <Tabs
           value={selectedLeaderboardVersion}
           onValueChange={e =>
@@ -135,7 +122,7 @@ const App = () => {
           <>
             <DataTable
               columns={columns(selectedLeaderboardVersion)}
-              data={usersToShow}
+              data={users}
             />
           </>
         )}
