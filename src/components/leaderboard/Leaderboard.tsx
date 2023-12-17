@@ -174,7 +174,14 @@ export const Leaderboard = ({ leaderboardVersion }: Props) => {
     {
       title: "Rank",
       dataIndex: "rank",
-      render: (rank: number, _: any, i: number) => filters.platforms.length > 0 ? `${i + 1} (${rank.toLocaleString("en-US")})` : rank.toLocaleString("en-US"),
+      render: (rank: number, user: User) => {
+        const globalRank = rank.toLocaleString("en-US")
+        let platformRank = filters.platforms.length > 0 && !filters.user
+          ? usersToShow.findIndex(shownUser => shownUser.name === user.name) + 1
+          : undefined
+
+        return platformRank ? `${platformRank} (${globalRank})` : globalRank
+      },
       sorter: (a: User, b: User) => a.rank - b.rank,
     },
     {
