@@ -92,9 +92,7 @@ const App = () => {
         .
       </h5>
 
-      <hr className="my-2" />
-
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 my-4">
         <Input
           placeholder="Search for username..."
           value={search}
