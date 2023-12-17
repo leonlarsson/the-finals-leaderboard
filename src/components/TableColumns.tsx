@@ -11,11 +11,12 @@ import { cn } from "@/lib/utils";
 import fameToRankIcon from "@/helpers/fameToRankIcon";
 import fameToLeague from "@/helpers/fameToLeague";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
-import { User } from "@/types";
+import { Platforms, User } from "@/types";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 
 export const columns = (
-  leaderboardVersion: LEADERBOARD_VERSION
+  leaderboardVersion: LEADERBOARD_VERSION,
+  selectedPlatform: Platforms
 ): ColumnDef<User>[] => {
   const rankColumn = {
     accessorKey: "rank",
@@ -66,7 +67,21 @@ export const columns = (
           </Tooltip>
         </TooltipProvider>
       ) : (
-        user.name
+        <span className="inline-flex gap-1">
+          {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
+            selectedPlatform === "steam" && (
+              <Icons.steam className="h-5 w-5 inline opacity-60" />
+            )}
+          {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
+            selectedPlatform === "xbox" && (
+              <Icons.xbox className="h-5 w-5 inline opacity-60" />
+            )}
+          {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
+            selectedPlatform === "psn" && (
+              <Icons.playstation className="h-5 w-5 inline opacity-60" />
+            )}{" "}
+          {user.name}
+        </span>
       );
     },
   } satisfies ColumnDef<User>;

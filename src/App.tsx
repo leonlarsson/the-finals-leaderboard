@@ -5,6 +5,7 @@ import {DataTable, Filter, Platform} from "./components/dataTable";
 import {columns} from "./components/TableColumns";
 import {Button} from "./components/ui/button";
 import Stats from "./components/Stats";
+import Icons from "./components/icons";
 import transformData from "./helpers/transformData";
 import {LEADERBOARD_VERSION} from "./helpers/leagues";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
@@ -13,6 +14,7 @@ import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
 import {cn} from "./lib/utils";
 import {User} from "./types";
 import {LeaderboardUrlParams} from "@/enums";
+
 
 import "./index.css";
 
@@ -162,7 +164,7 @@ const App = () => {
         {!error && (
           <>
             <DataTable
-              columns={columns(selectedLeaderboardVersion)}
+              columns={columns(selectedLeaderboardVersion, selectedPlatform)}
               data={users}
               filter={filter}
               onFilterChange={setFilter}
