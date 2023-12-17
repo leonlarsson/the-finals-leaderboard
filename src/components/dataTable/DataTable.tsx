@@ -19,18 +19,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 
 import { DataTablePagination } from "./DataTablePagination";
+import {DataTableFilters, Filter} from "./DataTableFilters.tsx";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filter: Filter,
+  onFilterChange: (newFilter: Filter) => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filter,
+  onFilterChange
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -52,14 +56,12 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-3">
-      <Input
-        placeholder="Filter usernames..."
-        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-        onChange={event => {
-          table.getColumn("name")?.setFilterValue(event.target.value);
-        }}
-        className="max-w-sm"
-      />
+      <DataTableFilters
+        filters={filter}
+        onChange={newFilter => {
+          table.getColumn("name")?.setFilterValue(newFilter.user);
+          onFilterChange(newFilter)
+        }} />
 
       <div className="rounded-md border">
         <Table>

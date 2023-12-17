@@ -1,37 +1,31 @@
-import { useEffect, useState } from "react";
-import { RefreshCw } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./components/ui/select";
-import { DataTable } from "./components/DataTable";
-import { columns } from "./components/TableColumns";
-import { Button } from "./components/ui/button";
-import Stats from "./components/Stats";
+import {useEffect, useState} from "react";
+import {RefreshCw} from "lucide-react";
+import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {DataTable, Filter, Platform} from "./components/dataTable";
+import {columns} from "./components/TableColumns";
+import {Button} from "./components/ui/button";
+import Stats from "./components/leaderboard/Stats";
 import transformData from "./helpers/transformData";
-import { LEADERBOARD_VERSION } from "./helpers/leagues";
+import {LEADERBOARD_VERSION} from "./helpers/leagues";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
-import { cn } from "./lib/utils";
-import { User } from "./types";
+import {cn} from "./lib/utils";
+import {User} from "./types";
 
 import "./index.css";
-
-type Platforms = "crossplay" | "steam" | "xbox" | "psn";
 
 const App = () => {
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
     useState<LEADERBOARD_VERSION>(LEADERBOARD_VERSION.LIVE);
-  const [selectedPlatform, setSelectedPlatform] =
-    useState<Platforms>("crossplay");
+
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [filter, setFilter] = useState<Filter>({
+    user: undefined,
+    platform: Platform.CROSSPLAY
+  })
 
   const fetchData = async () => {
     setLoading(true);
@@ -56,7 +50,7 @@ const App = () => {
 
     try {
       const res = await fetch(
-        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`
+        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${filter.platform}-discovery-live.json`
       );
       // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
       // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
@@ -78,7 +72,7 @@ const App = () => {
 
   useEffect(() => {
     fetchData();
-  }, [selectedLeaderboardVersion, selectedPlatform]);
+  }, [selectedLeaderboardVersion, filter.platform]);
 
   return (
     <div className="container mb-12 font-saira">
@@ -140,25 +134,6 @@ const App = () => {
                 className={cn("ml-2 h-4 w-4", loading && "animate-spin")}
               />
             </Button>
-
-            <Select
-              value={selectedPlatform}
-              onValueChange={e => setSelectedPlatform(e as Platforms)}
-              disabled={
-                selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE ||
-                loading
-              }
-            >
-              <SelectTrigger className="w-fit">
-                <SelectValue placeholder="Select platform" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="crossplay">Crossplay</SelectItem>
-                <SelectItem value="steam">Steam</SelectItem>
-                <SelectItem value="xbox">Xbox</SelectItem>
-                <SelectItem value="psn">PlayStation</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </Tabs>
 
@@ -168,6 +143,8 @@ const App = () => {
             <DataTable
               columns={columns(selectedLeaderboardVersion)}
               data={users}
+              filter={filter}
+              onFilterChange={setFilter}
             />
           </>
         )}
