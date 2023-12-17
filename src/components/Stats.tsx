@@ -1,8 +1,13 @@
-import { Collapse, Divider, Space, Typography } from "antd";
-import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "../helpers/leagues";
-import fameToLeague from "../helpers/fameToLeague";
-import fameToRankIcon from "../helpers/fameToRankIcon";
-import { User } from "../types";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import fameToLeague from "@/helpers/fameToLeague";
+import fameToRankIcon from "@/helpers/fameToRankIcon";
+import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "@/helpers/leagues";
+import { User } from "@/types";
 
 type Props = {
   leaderboardVersion: LEADERBOARD_VERSION;
@@ -10,90 +15,98 @@ type Props = {
 };
 export default ({ leaderboardVersion, users }: Props) => {
   return (
-    <Collapse>
-      <Collapse.Panel key={1} header="Stats">
-        <Space className="w-full" direction="vertical" size={2}>
-          <Divider className="!mb-0" orientation="left">
-            Out of the top {users.length.toLocaleString("en-US")} players...
-          </Divider>
+    <Accordion type="single" collapsible>
+      <AccordionItem value="item-1">
+        <AccordionTrigger className="bg-neutral-200 rounded p-2 text-xl">
+          Stats
+        </AccordionTrigger>
 
-          {/* LEAGUES */}
-          {VERSION_LEAGUES[leaderboardVersion].map(league => {
-            const usersInLeague = users.filter(
-              user =>
-                league.name === fameToLeague(leaderboardVersion, user.fame),
-            ).length;
+        <AccordionContent className="text-sm p-2 bg-neutral-100">
+          <div className="flex flex-col gap-2">
+            {/* AVERAGES */}
+            <span className="underline text-lg">Averages</span>
 
-            return (
-              <span key={league.name}>
-                <Typography.Text code>
-                  {usersInLeague.toLocaleString("en-US")} (
-                  {(usersInLeague / users.length).toLocaleString("en-US", {
-                    style: "percent",
-                    maximumFractionDigits: 1,
-                  })}
-                  )
-                </Typography.Text>{" "}
-                {usersInLeague === 1 ? "is" : "are"} in {league.name} league{" "}
-                {fameToRankIcon(leaderboardVersion, league.fame, 50)}
+            {leaderboardVersion === "closedBeta1" && (
+              <span>
+                Average XP:{" "}
+                <code className="bg-neutral-200 p-1 rounded">
+                  {(
+                    users.map(user => user.xp!).reduce((a, b) => a + b, 0) /
+                    users.length
+                  ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                </code>
               </span>
-            );
-          })}
+            )}
 
-          {/* AVERAGES */}
-          <Divider className="!mb-0" orientation="left">
-            Averages
-          </Divider>
+            {leaderboardVersion === "closedBeta1" && (
+              <span>
+                Average Level:{" "}
+                <code className="bg-neutral-200 p-1 rounded">
+                  {(
+                    users.map(user => user.level!).reduce((a, b) => a + b, 0) /
+                    users.length
+                  ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                </code>
+              </span>
+            )}
 
-          {leaderboardVersion === "closedBeta1" && (
             <span>
-              Average XP:{" "}
-              <Typography.Text code>
+              Average Cashouts:{" "}
+              <code className="bg-neutral-200 p-1 rounded">
                 {(
-                  users.map(user => user.xp!).reduce((a, b) => a + b, 0) /
+                  users.map(user => user.cashouts).reduce((a, b) => a + b, 0) /
+                  users.length
+                ).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  maximumFractionDigits: 0,
+                })}
+              </code>
+            </span>
+
+            <span>
+              Average Fame:{" "}
+              <code className="bg-neutral-200 p-1 rounded">
+                {(
+                  users.map(user => user.fame).reduce((a, b) => a + b, 0) /
                   users.length
                 ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-              </Typography.Text>
+              </code>
             </span>
-          )}
+          </div>
 
-          {leaderboardVersion === "closedBeta1" && (
-            <span>
-              Average Level:{" "}
-              <Typography.Text code>
-                {(
-                  users.map(user => user.level!).reduce((a, b) => a + b, 0) /
-                  users.length
-                ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-              </Typography.Text>
-            </span>
-          )}
+          <hr className="my-2 border-black/30" />
 
-          <span>
-            Average Cashouts:{" "}
-            <Typography.Text code>
-              {(
-                users.map(user => user.cashouts).reduce((a, b) => a + b, 0) /
-                users.length
-              ).toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-                maximumFractionDigits: 0,
-              })}
-            </Typography.Text>
+          <span className="underline text-lg">
+            Out of the top {users.length.toLocaleString("en")} players...
           </span>
 
-          <span>
-            Average Fame:{" "}
-            <Typography.Text code>
-              {(
-                users.map(user => user.fame).reduce((a, b) => a + b, 0) /
-                users.length
-              ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-            </Typography.Text>
-          </span>
-        </Space>
-      </Collapse.Panel>
-    </Collapse>
+          <div className="flex flex-col">
+            {/* LEAGUES */}
+            {VERSION_LEAGUES[leaderboardVersion].map(league => {
+              const usersInLeague = users.filter(
+                user =>
+                  league.name === fameToLeague(leaderboardVersion, user.fame)
+              ).length;
+
+              return (
+                <span key={league.name}>
+                  <code className="bg-neutral-200 p-1 rounded">
+                    {usersInLeague.toLocaleString("en-US")} (
+                    {(usersInLeague / users.length).toLocaleString("en-US", {
+                      style: "percent",
+                      maximumFractionDigits: 1,
+                    })}
+                    )
+                  </code>{" "}
+                  {usersInLeague === 1 ? "is" : "are"} in {league.name} league{" "}
+                  {fameToRankIcon(leaderboardVersion, league.fame, 60)}
+                </span>
+              );
+            })}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 };

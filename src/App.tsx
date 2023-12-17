@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { User } from "./types";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
+import Stats from "./components/Stats";
 
 const App = () => {
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
@@ -28,20 +29,17 @@ const App = () => {
   const fetchData = async () => {
     setError(false);
     if (selectedLeaderboardVersion === "closedBeta1") {
-      const initialUsers = transformData(closedBeta1Data);
-      setUsers(initialUsers);
+      setUsers(transformData(closedBeta1Data));
       return;
     }
 
     if (selectedLeaderboardVersion === "closedBeta2") {
-      const initialUsers = transformData(closedBeta2Data);
-      setUsers(initialUsers);
+      setUsers(transformData(closedBeta2Data));
       return;
     }
 
     if (selectedLeaderboardVersion === "openBeta") {
-      const initialUsers = transformData(openBetaData);
-      setUsers(initialUsers);
+      setUsers(transformData(openBetaData));
       return;
     }
 
@@ -55,8 +53,7 @@ const App = () => {
 
       if (res.ok) {
         const json = await res.json();
-        const initialUsers = transformData(json);
-        setUsers(initialUsers);
+        setUsers(transformData(json));
         setError(false);
       } else {
         setError(true);
@@ -146,11 +143,18 @@ const App = () => {
         )}
       </div>
 
-      <div>STATS HERE</div>
+      <Stats leaderboardVersion={selectedLeaderboardVersion} users={users} />
 
       <div className="mt-10">
         <span className="text-sm">
-          All imagery and data is owned by Embark Studios.
+          All imagery and data is owned by{" "}
+          <a
+            href="https://www.embark-studios.com/"
+            className="font-medium hover:underline"
+          >
+            Embark Studios
+          </a>
+          .
         </span>
       </div>
     </div>
