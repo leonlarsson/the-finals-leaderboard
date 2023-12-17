@@ -150,6 +150,7 @@ const App = () => {
           All imagery and data is owned by{" "}
           <a
             href="https://www.embark-studios.com/"
+            target="_blank"
             className="font-medium hover:underline"
           >
             Embark Studios
