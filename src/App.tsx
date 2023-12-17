@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./components/ui/select";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
 import { Button } from "./components/ui/button";
@@ -15,9 +22,13 @@ import { User } from "./types";
 
 import "./index.css";
 
+type Platforms = "crossplay" | "steam" | "xbox" | "psn";
+
 const App = () => {
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
     useState<LEADERBOARD_VERSION>(LEADERBOARD_VERSION.LIVE);
+  const [selectedPlatform, setSelectedPlatform] =
+    useState<Platforms>("crossplay");
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -45,8 +56,7 @@ const App = () => {
 
     try {
       const res = await fetch(
-        // TODO: Add platform-specific leaderboards
-        "https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-crossplay-discovery-live.json"
+        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`
       );
       // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
       // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
@@ -68,7 +78,7 @@ const App = () => {
 
   useEffect(() => {
     fetchData();
-  }, [selectedLeaderboardVersion]);
+  }, [selectedLeaderboardVersion, selectedPlatform]);
 
   return (
     <div className="container mb-12 font-saira">
@@ -130,6 +140,25 @@ const App = () => {
                 className={cn("ml-2 h-4 w-4", loading && "animate-spin")}
               />
             </Button>
+
+            <Select
+              value={selectedPlatform}
+              onValueChange={e => setSelectedPlatform(e as Platforms)}
+              disabled={
+                selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE ||
+                loading
+              }
+            >
+              <SelectTrigger className="w-fit">
+                <SelectValue placeholder="Select platform" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="crossplay">Crossplay</SelectItem>
+                <SelectItem value="steam">Steam</SelectItem>
+                <SelectItem value="xbox">Xbox</SelectItem>
+                <SelectItem value="psn">PlayStation</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </Tabs>
 
