@@ -42,8 +42,12 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const searchParams = new URLSearchParams(window.location.search);
+  const search = searchParams.get("name");
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
+    { id: "name", value: search },
+  ]);
 
   const table = useReactTable({
     data,
@@ -103,12 +107,22 @@ export function DataTable<TData, TValue>({
         </Tabs>
 
         <Input
+          className="max-w-xs"
           placeholder="Filter usernames..."
+          maxLength={20}
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={event => {
             table.getColumn("name")?.setFilterValue(event.target.value);
+
+            event.target.value.length
+              ? searchParams.set("name", event.target.value)
+              : searchParams.delete("name");
+            window.history.replaceState(
+              null,
+              "",
+              searchParams.size > 0 ? `?${searchParams.toString()}` : "/"
+            );
           }}
-          className="max-w-xs"
         />
       </div>
 
