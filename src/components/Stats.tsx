@@ -17,13 +17,13 @@ type Props = {
 export default ({ leaderboardVersion, platform, users }: Props) => {
   const getPlatformName = (platform: Platforms) => {
     switch (platform) {
-      case "crossplay":
+      case Platforms.Crossplay:
         return "Crossplay";
-      case "steam":
+      case Platforms.Steam:
         return "Steam";
-      case "xbox":
+      case Platforms.Xbox:
         return "Xbox";
-      case "psn":
+      case Platforms.PSN:
         return "PlayStation";
       default:
         return "Crossplay";

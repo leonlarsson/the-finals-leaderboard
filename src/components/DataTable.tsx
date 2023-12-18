@@ -72,28 +72,28 @@ export function DataTable<TData, TValue>({
         >
           <TabsList>
             <TabsTrigger
-              value={"crossplay"}
+              value={Platforms.Crossplay}
               title="Crossplay"
               disabled={platformSelectDisabled}
             >
               <Icons.crossplay className="h-5 w-5 inline" />
             </TabsTrigger>
             <TabsTrigger
-              value={"steam"}
+              value={Platforms.Steam}
               title="Steam"
               disabled={platformSelectDisabled}
             >
               <Icons.steam className="h-5 w-5 inline" />
             </TabsTrigger>
             <TabsTrigger
-              value={"xbox"}
+              value={Platforms.Xbox}
               title="Xbox"
               disabled={platformSelectDisabled}
             >
               <Icons.xbox className="h-5 w-5 inline" />
             </TabsTrigger>
             <TabsTrigger
-              value={"psn"}
+              value={Platforms.PSN}
               title="PlayStation"
               disabled={platformSelectDisabled}
             >
