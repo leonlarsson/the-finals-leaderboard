@@ -37,4 +37,9 @@ export type User = {
   fame: number;
 };
 
-export type Platforms = "crossplay" | "steam" | "xbox" | "psn";
+export enum Platforms {
+  Crossplay = "crossplay",
+  Steam = "steam",
+  Xbox = "xbox",
+  PSN = "psn",
+}

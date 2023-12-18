@@ -16,10 +16,31 @@ import { Platforms, User } from "./types";
 import "./index.css";
 
 const App = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const leaderboardSearchParam = searchParams.get("leaderboard");
+  const platformSearchParam = searchParams.get("platform");
+
+  const initialLeaderboardVersion =
+    leaderboardSearchParam &&
+    Object.values(LEADERBOARD_VERSION).includes(
+      leaderboardSearchParam as LEADERBOARD_VERSION
+    )
+      ? leaderboardSearchParam
+      : LEADERBOARD_VERSION.LIVE;
+
+  const initialPlatform =
+    platformSearchParam &&
+    Object.values(Platforms).includes(platformSearchParam as Platforms)
+      ? platformSearchParam
+      : Platforms.Crossplay;
+
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
-    useState<LEADERBOARD_VERSION>(LEADERBOARD_VERSION.LIVE);
-  const [selectedPlatform, setSelectedPlatform] =
-    useState<Platforms>("crossplay");
+    useState<LEADERBOARD_VERSION>(
+      initialLeaderboardVersion as LEADERBOARD_VERSION
+    );
+  const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(
+    initialPlatform as Platforms
+  );
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -67,8 +88,28 @@ const App = () => {
     }
   };
 
+  // Fetch data on load and when selected leaderboard version or platform changes
   useEffect(() => {
     fetchData();
+  }, [selectedLeaderboardVersion, selectedPlatform]);
+
+  // Store selected leaderboard version and platform in URL
+  // Perhaps not the best way to do it, but it works
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    selectedLeaderboardVersion === LEADERBOARD_VERSION.LIVE
+      ? searchParams.delete("leaderboard")
+      : searchParams.set("leaderboard", selectedLeaderboardVersion);
+
+    selectedPlatform === Platforms.Crossplay
+      ? searchParams.delete("platform")
+      : searchParams.set("platform", selectedPlatform);
+
+    window.history.replaceState(
+      null,
+      "",
+      searchParams.size > 0 ? `?${searchParams.toString()}` : "/"
+    );
   }, [selectedLeaderboardVersion, selectedPlatform]);
 
   return (
