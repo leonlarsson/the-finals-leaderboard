@@ -114,10 +114,10 @@ const App = () => {
 
   return (
     <div className="container mb-12 font-saira">
-      <h1 className="text-4xl font-medium underline">
+      <h1 className="text-2xl font-medium underline min-[440px]:text-4xl">
         Unofficial Leaderboard – THE FINALS
       </h1>
-      <h5 className="text-xl">
+      <h5 className="text-base min-[440px]:text-xl">
         View leaderboards from THE FINALS and track your progress. Created by{" "}
         <a
           href="https://twitter.com/mozzyfx"
@@ -150,13 +150,16 @@ const App = () => {
             <TabsList>
               <TabsTrigger value={LEADERBOARD_VERSION.LIVE}>Live</TabsTrigger>
               <TabsTrigger value={LEADERBOARD_VERSION.OPEN_BETA}>
-                Open Beta
+                <span className="hidden min-[440px]:block">Open Beta</span>
+                <span className="block min-[440px]:hidden">Beta</span>
               </TabsTrigger>
               <TabsTrigger value={LEADERBOARD_VERSION.CLOSED_BETA_2}>
-                Closed Beta 2
+                <span className="hidden min-[440px]:block">Closed Beta 2</span>
+                <span className="block min-[440px]:hidden">CB2</span>
               </TabsTrigger>
               <TabsTrigger value={LEADERBOARD_VERSION.CLOSED_BETA_1}>
-                Closed Beta 1
+                <span className="hidden min-[440px]:block">Closed Beta 1</span>
+                <span className="block min-[440px]:hidden">CB1</span>
               </TabsTrigger>
             </TabsList>
           </Tabs>
