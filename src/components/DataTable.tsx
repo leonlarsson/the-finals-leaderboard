@@ -10,7 +10,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -19,16 +18,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { Input } from "./ui/input";
+import Icons from "@/components/icons";
 import { DataTablePagination } from "./DataTablePagination";
+import { LEADERBOARD_VERSION } from "@/helpers/leagues";
+import { Platforms } from "@/types";
 
 interface DataTableProps<TData, TValue> {
+  loading: boolean;
+  selectedLeaderboardVersion: LEADERBOARD_VERSION;
+  selectedPlatform: Platforms;
+  setSelectedPlatform: (platform: Platforms) => void;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 export function DataTable<TData, TValue>({
+  loading,
+  selectedLeaderboardVersion,
+  selectedPlatform,
+  setSelectedPlatform,
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -50,16 +60,58 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  // TODO: Fix flicker while we switch to live and we aren't loading yet
+  const platformSelectDisabled =
+    selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE || loading;
+
   return (
     <div className="space-y-3">
-      <Input
-        placeholder="Filter usernames..."
-        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-        onChange={event => {
-          table.getColumn("name")?.setFilterValue(event.target.value);
-        }}
-        className="max-w-sm"
-      />
+      <div className="flex gap-2 flex-wrap">
+        <Tabs
+          defaultValue={selectedPlatform}
+          onValueChange={e => setSelectedPlatform(e as Platforms)}
+        >
+          <TabsList>
+            <TabsTrigger
+              value={"crossplay"}
+              title="Crossplay"
+              disabled={platformSelectDisabled}
+            >
+              <Icons.crossplay className="h-5 w-5 inline" />
+            </TabsTrigger>
+            <TabsTrigger
+              value={"steam"}
+              title="Steam"
+              disabled={platformSelectDisabled}
+            >
+              <Icons.steam className="h-5 w-5 inline" />
+            </TabsTrigger>
+            <TabsTrigger
+              value={"xbox"}
+              title="Xbox"
+              disabled={platformSelectDisabled}
+            >
+              <Icons.xbox className="h-5 w-5 inline" />
+            </TabsTrigger>
+            <TabsTrigger
+              value={"psn"}
+              title="PlayStation"
+              disabled={platformSelectDisabled}
+            >
+              <Icons.playstation className="h-5 w-5 inline" />
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <Input
+          placeholder="Filter usernames..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={event => {
+            table.getColumn("name")?.setFilterValue(event.target.value);
+          }}
+          className="max-w-xs"
+        />
+      </div>
 
       <div className="rounded-md border">
         <Table>
