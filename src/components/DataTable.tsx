@@ -60,7 +60,6 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  // TODO: Fix flicker while we switch to live and we aren't loading yet
   const platformSelectDisabled =
     selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE || loading;
 

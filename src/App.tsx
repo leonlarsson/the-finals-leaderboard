@@ -100,9 +100,11 @@ const App = () => {
         <div className="flex gap-2 flex-wrap">
           <Tabs
             value={selectedLeaderboardVersion}
-            onValueChange={e =>
-              setSelectedLeaderboardVersion(e as LEADERBOARD_VERSION)
-            }
+            onValueChange={e => {
+              // Set loading to true if we're switching to live to avoid a short state of the platform select being available
+              if (e === LEADERBOARD_VERSION.LIVE) setLoading(true);
+              setSelectedLeaderboardVersion(e as LEADERBOARD_VERSION);
+            }}
           >
             <TabsList>
               <TabsTrigger value={LEADERBOARD_VERSION.LIVE}>Live</TabsTrigger>
