@@ -150,7 +150,11 @@ const App = () => {
         )}
       </div>
 
-      <Stats leaderboardVersion={selectedLeaderboardVersion} users={users} />
+      <Stats
+        leaderboardVersion={selectedLeaderboardVersion}
+        platform={selectedPlatform}
+        users={users}
+      />
 
       <div className="mt-10">
         <span className="text-sm">

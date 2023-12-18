@@ -7,18 +7,36 @@ import {
 import fameToLeague from "@/helpers/fameToLeague";
 import fameToRankIcon from "@/helpers/fameToRankIcon";
 import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "@/helpers/leagues";
-import { User } from "@/types";
+import { Platforms, User } from "@/types";
 
 type Props = {
   leaderboardVersion: LEADERBOARD_VERSION;
+  platform: Platforms;
   users: User[];
 };
-export default ({ leaderboardVersion, users }: Props) => {
+export default ({ leaderboardVersion, platform, users }: Props) => {
+  const getPlatformName = (platform: Platforms) => {
+    switch (platform) {
+      case "crossplay":
+        return "Crossplay";
+      case "steam":
+        return "Steam";
+      case "xbox":
+        return "Xbox";
+      case "psn":
+        return "PlayStation";
+      default:
+        return "Crossplay";
+    }
+  };
+
+  const platformName = getPlatformName(platform);
+
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
         <AccordionTrigger className="bg-neutral-200 rounded p-2 text-xl">
-          Stats
+          Stats ({platformName})
         </AccordionTrigger>
 
         <AccordionContent className="text-sm p-2 bg-neutral-100">
