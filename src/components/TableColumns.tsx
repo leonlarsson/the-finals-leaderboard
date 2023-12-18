@@ -6,6 +6,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { ChevronDown, ChevronUp, Minus } from "lucide-react";
 import Icons from "./icons";
 import { cn } from "@/lib/utils";
 import fameToRankIcon from "@/helpers/fameToRankIcon";
@@ -37,12 +38,25 @@ export const columns = (
       return (
         <span
           className={cn(
-            value > 0 ? "text-green-600" : value === 0 ? "" : "text-red-500"
+            value > 0 ? "text-green-700" : value === 0 ? "" : "text-red-600"
           )}
         >
-          {value > 0
-            ? `+${value.toLocaleString("en")}`
-            : value.toLocaleString("en")}
+          {value > 0 ? (
+            <span className="inline-flex items-center">
+              {<ChevronUp className="inline h-6" />}
+              {value.toLocaleString("en")}
+            </span>
+          ) : value < 0 ? (
+            <span className="inline-flex items-center">
+              {<ChevronDown className="inline h-6" />}
+              {Math.abs(value).toLocaleString("en")}
+            </span>
+          ) : (
+            <span className="inline-flex items-center">
+              {<Minus className="inline h-5" />}
+              {value.toLocaleString("en")}
+            </span>
+          )}
         </span>
       );
     },
