@@ -18,27 +18,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Input } from "./ui/input";
-import Icons from "@/components/icons";
 import { DataTablePagination } from "./DataTablePagination";
-import { LEADERBOARD_VERSION } from "@/helpers/leagues";
-import { Platforms } from "@/types";
 
 interface DataTableProps<TData, TValue> {
-  loading: boolean;
-  selectedLeaderboardVersion: LEADERBOARD_VERSION;
-  selectedPlatform: Platforms;
-  setSelectedPlatform: (platform: Platforms) => void;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 export function DataTable<TData, TValue>({
-  loading,
-  selectedLeaderboardVersion,
-  selectedPlatform,
-  setSelectedPlatform,
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -65,48 +53,9 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const platformSelectDisabled =
-    selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE || loading;
-
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
-        <Tabs
-          defaultValue={selectedPlatform}
-          onValueChange={e => setSelectedPlatform(e as Platforms)}
-        >
-          <TabsList>
-            <TabsTrigger
-              value={Platforms.Crossplay}
-              title="Crossplay"
-              disabled={platformSelectDisabled}
-            >
-              <Icons.crossplay className="inline size-5" />
-            </TabsTrigger>
-            <TabsTrigger
-              value={Platforms.Steam}
-              title="Steam"
-              disabled={platformSelectDisabled}
-            >
-              <Icons.steam className="inline size-5" />
-            </TabsTrigger>
-            <TabsTrigger
-              value={Platforms.Xbox}
-              title="Xbox"
-              disabled={platformSelectDisabled}
-            >
-              <Icons.xbox className="inline size-5" />
-            </TabsTrigger>
-            <TabsTrigger
-              value={Platforms.PSN}
-              title="PlayStation"
-              disabled={platformSelectDisabled}
-            >
-              <Icons.playstation className="inline size-5" />
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
         <Input
           className="max-w-xs"
           placeholder="Filter usernames..."

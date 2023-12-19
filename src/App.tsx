@@ -5,6 +5,7 @@ import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
 import { Button } from "./components/ui/button";
 import Stats from "./components/Stats";
+import Icons from "./components/icons";
 import transformData from "./helpers/transformData";
 import { LEADERBOARD_VERSION } from "./helpers/leagues";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
@@ -112,6 +113,9 @@ const App = () => {
     );
   }, [selectedLeaderboardVersion, selectedPlatform]);
 
+  const disabled =
+    selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE || loading;
+
   return (
     <div className="container mb-12 font-saira">
       <h1 className="text-2xl font-medium underline min-[440px]:text-4xl">
@@ -156,14 +160,48 @@ const App = () => {
             </TabsList>
           </Tabs>
 
+          <Tabs
+            defaultValue={selectedPlatform}
+            onValueChange={e => setSelectedPlatform(e as Platforms)}
+          >
+            <TabsList>
+              <TabsTrigger
+                value={Platforms.Crossplay}
+                title="Crossplay"
+                disabled={disabled}
+              >
+                <Icons.crossplay className="inline size-5" />
+              </TabsTrigger>
+              <TabsTrigger
+                value={Platforms.Steam}
+                title="Steam"
+                disabled={disabled}
+              >
+                <Icons.steam className="inline size-5" />
+              </TabsTrigger>
+              <TabsTrigger
+                value={Platforms.Xbox}
+                title="Xbox"
+                disabled={disabled}
+              >
+                <Icons.xbox className="inline size-5" />
+              </TabsTrigger>
+              <TabsTrigger
+                value={Platforms.PSN}
+                title="PlayStation"
+                disabled={disabled}
+              >
+                <Icons.playstation className="inline size-5" />
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
           <Button
             variant="outline"
             className="group select-none"
             title="Refresh data."
             onClick={fetchData}
-            disabled={
-              selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE || loading
-            }
+            disabled={disabled}
           >
             <span className="mr-2 hidden min-[440px]:block">Refresh</span>
 
@@ -175,12 +213,6 @@ const App = () => {
         {!error && (
           <>
             <DataTable
-              loading={loading}
-              selectedLeaderboardVersion={selectedLeaderboardVersion}
-              selectedPlatform={selectedPlatform}
-              setSelectedPlatform={value =>
-                setSelectedPlatform(value as Platforms)
-              }
               columns={columns(selectedLeaderboardVersion, selectedPlatform)}
               data={users}
             />
