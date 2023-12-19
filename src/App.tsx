@@ -167,7 +167,7 @@ const App = () => {
           >
             <span className="mr-2 hidden min-[440px]:block">Refresh</span>
 
-            <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
+            <RefreshCw className={cn("size-4", loading && "animate-spin")} />
           </Button>
         </div>
 

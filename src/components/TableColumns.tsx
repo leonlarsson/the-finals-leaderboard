@@ -84,15 +84,15 @@ export const columns = (
         <span className="inline-flex gap-1">
           {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
             selectedPlatform === "steam" && (
-              <Icons.steam className="inline h-5 w-5 opacity-60" />
+              <Icons.steam className="size-5 inline opacity-60" />
             )}
           {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
             selectedPlatform === "xbox" && (
-              <Icons.xbox className="inline h-5 w-5 opacity-60" />
+              <Icons.xbox className="size-5 inline opacity-60" />
             )}
           {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
             selectedPlatform === "psn" && (
-              <Icons.playstation className="inline h-5 w-5 opacity-60" />
+              <Icons.playstation className="size-5 inline opacity-60" />
             )}{" "}
           {user.name}
         </span>
@@ -176,19 +176,19 @@ const platformNamesInline = (user: User) => {
 
       {user.steamName && (
         <span className="inline-flex gap-1">
-          <Icons.steam className="inline h-5 w-5 opacity-60" /> {user.steamName}
+          <Icons.steam className="size-5 inline opacity-60" /> {user.steamName}
         </span>
       )}
 
       {user.xboxName && (
         <span className="inline-flex gap-1">
-          <Icons.xbox className="inline h-5 w-5 opacity-60" /> {user.xboxName}
+          <Icons.xbox className="size-5 inline opacity-60" /> {user.xboxName}
         </span>
       )}
 
       {user.psnName && (
         <span className="inline-flex gap-1">
-          <Icons.playstation className="inline h-5 w-5 opacity-60" />{" "}
+          <Icons.playstation className="size-5 inline opacity-60" />{" "}
           {user.psnName}
         </span>
       )}
@@ -201,27 +201,27 @@ const namePopoverContent = (user: User) => {
   return (
     <div className="flex flex-col gap-2">
       <span className="inline-flex gap-1">
-        <img src="/images/Embark.png" className="inline h-5 w-5" />{" "}
+        <img src="/images/Embark.png" className="size-5 inline" />{" "}
         <span className="font-semibold">Embark ID:</span> {user.name}
       </span>
 
       {user.steamName && (
         <span className="inline-flex gap-1">
-          <Icons.steam className="inline h-5 w-5" />{" "}
+          <Icons.steam className="size-5 inline" />{" "}
           <span className="font-semibold">Steam:</span> {user.steamName}
         </span>
       )}
 
       {user.xboxName && (
         <span className="inline-flex gap-1">
-          <Icons.xbox className="inline h-5 w-5" />{" "}
+          <Icons.xbox className="size-5 inline" />{" "}
           <span className="font-semibold">Xbox:</span> {user.xboxName}
         </span>
       )}
 
       {user.psnName && (
         <span className="inline-flex gap-1">
-          <Icons.playstation className="inline h-5 w-5" />{" "}
+          <Icons.playstation className="size-5 inline" />{" "}
           <span className="font-semibold">PlayStation:</span> {user.psnName}
         </span>
       )}

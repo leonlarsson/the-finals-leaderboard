@@ -38,30 +38,30 @@ export function DataTableColumnHeader<TData, TValue>({
           >
             <span>{title}</span>
             {column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="ml-2 h-4 w-4" />
+              <ArrowDownIcon className="size-4 ml-2" />
             ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ml-2 h-4 w-4" />
+              <ArrowUpIcon className="size-4 ml-2" />
             ) : (
-              <ArrowUpDown className="ml-2 h-4 w-4" />
+              <ArrowUpDown className="size-4 ml-2" />
             )}
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <ArrowUpIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowUpIcon className="size-3.5 mr-2 text-muted-foreground/70" />
             Asc
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <ArrowDownIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowDownIcon className="size-3.5 mr-2 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 
           <DropdownMenuItem onClick={() => column.clearSorting()}>
-            <ArrowUpDown className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <ArrowUpDown className="size-3.5 mr-2 text-muted-foreground/70" />
             Clear
           </DropdownMenuItem>
         </DropdownMenuContent>
