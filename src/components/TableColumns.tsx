@@ -84,15 +84,15 @@ export const columns = (
         <span className="inline-flex gap-1">
           {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
             selectedPlatform === "steam" && (
-              <Icons.steam className="size-5 inline opacity-60" />
+              <Icons.steam className="inline size-5 opacity-60" />
             )}
           {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
             selectedPlatform === "xbox" && (
-              <Icons.xbox className="size-5 inline opacity-60" />
+              <Icons.xbox className="inline size-5 opacity-60" />
             )}
           {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
             selectedPlatform === "psn" && (
-              <Icons.playstation className="size-5 inline opacity-60" />
+              <Icons.playstation className="inline size-5 opacity-60" />
             )}{" "}
           {user.name}
         </span>
@@ -137,13 +137,22 @@ export const columns = (
     cell: ({ getValue }) => (
       <span className="flex items-center gap-2">
         <Popover>
-          <PopoverTrigger>
+          <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200">
             {fameToRankIcon(leaderboardVersion, getValue() as number)}{" "}
-            {(getValue() as number).toLocaleString("en")}
+            <div className="flex flex-col">
+              <span>
+                {fameToLeague(leaderboardVersion, getValue() as number)}
+              </span>
+              <span>{(getValue() as number).toLocaleString("en")}</span>
+            </div>
           </PopoverTrigger>
+
           <PopoverContent className="flex flex-col items-center justify-center">
             <span className="text-xl font-medium">
               {fameToLeague(leaderboardVersion, getValue() as number)}
+            </span>
+            <span>
+              {(getValue() as number).toLocaleString("en")} fame points
             </span>
             {fameToRankIcon(leaderboardVersion, getValue() as number, 160)}
           </PopoverContent>
@@ -176,19 +185,19 @@ const platformNamesInline = (user: User) => {
 
       {user.steamName && (
         <span className="inline-flex gap-1">
-          <Icons.steam className="size-5 inline opacity-60" /> {user.steamName}
+          <Icons.steam className="inline size-5 opacity-60" /> {user.steamName}
         </span>
       )}
 
       {user.xboxName && (
         <span className="inline-flex gap-1">
-          <Icons.xbox className="size-5 inline opacity-60" /> {user.xboxName}
+          <Icons.xbox className="inline size-5 opacity-60" /> {user.xboxName}
         </span>
       )}
 
       {user.psnName && (
         <span className="inline-flex gap-1">
-          <Icons.playstation className="size-5 inline opacity-60" />{" "}
+          <Icons.playstation className="inline size-5 opacity-60" />{" "}
           {user.psnName}
         </span>
       )}
@@ -201,27 +210,27 @@ const namePopoverContent = (user: User) => {
   return (
     <div className="flex flex-col gap-2">
       <span className="inline-flex gap-1">
-        <img src="/images/Embark.png" className="size-5 inline" />{" "}
+        <img src="/images/Embark.png" className="inline size-5" />{" "}
         <span className="font-semibold">Embark ID:</span> {user.name}
       </span>
 
       {user.steamName && (
         <span className="inline-flex gap-1">
-          <Icons.steam className="size-5 inline" />{" "}
+          <Icons.steam className="inline size-5" />{" "}
           <span className="font-semibold">Steam:</span> {user.steamName}
         </span>
       )}
 
       {user.xboxName && (
         <span className="inline-flex gap-1">
-          <Icons.xbox className="size-5 inline" />{" "}
+          <Icons.xbox className="inline size-5" />{" "}
           <span className="font-semibold">Xbox:</span> {user.xboxName}
         </span>
       )}
 
       {user.psnName && (
         <span className="inline-flex gap-1">
-          <Icons.playstation className="size-5 inline" />{" "}
+          <Icons.playstation className="inline size-5" />{" "}
           <span className="font-semibold">PlayStation:</span> {user.psnName}
         </span>
       )}
