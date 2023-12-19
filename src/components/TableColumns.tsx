@@ -131,41 +131,42 @@ export const columns = (
 
   const fameColumn = {
     accessorKey: "fame",
+    accessorFn: user => ({
+      fame: user.fame,
+      league: fameToLeague(leaderboardVersion, user.fame),
+    }),
+    filterFn: (value, _, filterValue: string[]) =>
+      !filterValue.length ||
+      filterValue.includes(
+        fameToLeague(leaderboardVersion, value.original.fame),
+      ),
     header: ({ column }) => {
-      // Get the unique ranks for the column. Might be useful in the future (filtering)
-      // const uniqueValues = new Set(
-      //   Array.from(column.getFacetedUniqueValues().keys()).map(value =>
-      //     fameToLeague(leaderboardVersion, value),
-      //   ),
-      // );
-
       return <DataTableColumnHeader column={column} title="Fame" />;
     },
-    cell: ({ getValue }) => (
-      <span className="flex items-center gap-2">
-        <Popover>
-          <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200">
-            {fameToRankIcon(leaderboardVersion, getValue() as number)}{" "}
-            <div className="flex flex-col">
-              <span>
-                {fameToLeague(leaderboardVersion, getValue() as number)}
-              </span>
-              <span>{(getValue() as number).toLocaleString("en")}</span>
-            </div>
-          </PopoverTrigger>
+    cell: ({ getValue }) => {
+      const { fame } = getValue() as { fame: number; league: string };
+      return (
+        <span className="flex items-center gap-2">
+          <Popover>
+            <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200">
+              {fameToRankIcon(leaderboardVersion, fame)}{" "}
+              <div className="flex flex-col">
+                <span>{fameToLeague(leaderboardVersion, fame)}</span>
+                <span>{fame.toLocaleString("en")}</span>
+              </div>
+            </PopoverTrigger>
 
-          <PopoverContent className="flex flex-col items-center justify-center">
-            <span className="text-xl font-medium">
-              {fameToLeague(leaderboardVersion, getValue() as number)}
-            </span>
-            <span>
-              {(getValue() as number).toLocaleString("en")} fame points
-            </span>
-            {fameToRankIcon(leaderboardVersion, getValue() as number, 160)}
-          </PopoverContent>
-        </Popover>
-      </span>
-    ),
+            <PopoverContent className="flex flex-col items-center justify-center">
+              <span className="text-xl font-medium">
+                {fameToLeague(leaderboardVersion, fame)}
+              </span>
+              <span>{fame.toLocaleString("en")} fame points</span>
+              {fameToRankIcon(leaderboardVersion, fame, 160)}
+            </PopoverContent>
+          </Popover>
+        </span>
+      );
+    },
   } satisfies ColumnDef<User>;
 
   const columns = [

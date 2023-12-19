@@ -5,6 +5,7 @@ import {
   SortingState,
   flexRender,
   getCoreRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -20,13 +21,19 @@ import {
 } from "@/components/ui/table";
 import DataTableToolbar from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
+import { LEADERBOARD_VERSION } from "@/helpers/leagues";
+import { Platforms } from "@/types";
 
 interface DataTableProps<TData, TValue> {
+  leaderboardVersion: LEADERBOARD_VERSION;
+  platform: Platforms;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
 export function DataTable<TData, TValue>({
+  leaderboardVersion,
+  platform,
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -46,7 +53,7 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    // getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     state: {
       sorting,
       columnFilters,
@@ -55,7 +62,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-3">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar
+        leaderboardVersion={leaderboardVersion}
+        platform={platform}
+        table={table}
+      />
 
       <div className="rounded-md border">
         <Table className="min-w-[800px] table-fixed">

@@ -213,6 +213,8 @@ const App = () => {
         {!error && (
           <>
             <DataTable
+              leaderboardVersion={selectedLeaderboardVersion}
+              platform={selectedPlatform}
               columns={columns(selectedLeaderboardVersion, selectedPlatform)}
               data={users}
             />

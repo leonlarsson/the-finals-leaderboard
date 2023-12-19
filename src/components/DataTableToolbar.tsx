@@ -1,11 +1,50 @@
+import { useEffect } from "react";
 import { Table } from "@tanstack/react-table";
+import { CheckIcon, PlusCircle } from "lucide-react";
 import { Input } from "./ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Button } from "./ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "./ui/command";
+import { LEADERBOARD_VERSION } from "@/helpers/leagues";
+import { cn } from "@/lib/utils";
+import { Platforms } from "@/types";
 
 type Props<TData> = {
+  leaderboardVersion: LEADERBOARD_VERSION;
+  platform: Platforms;
   table: Table<TData>;
 };
 
-export default function <TData>({ table }: Props<TData>) {
+export default function <TData>({
+  leaderboardVersion,
+  platform,
+  table,
+}: Props<TData>) {
+  const fameColumn = table.getColumn("fame");
+  const uniqueLeagues = [
+    ...new Set(
+      Array.from(fameColumn?.getFacetedUniqueValues()?.keys() ?? []).map(
+        ({ league }) => league,
+      ),
+    ),
+  ];
+
+  const selectedValues = new Set(fameColumn!.getFilterValue() as string[]);
+
+  // Reset fame filter on version or platform
+  useEffect(() => {
+    selectedValues.clear();
+    fameColumn?.setFilterValue(selectedValues);
+  }, [leaderboardVersion, platform]);
+
   return (
     <div className="flex flex-wrap gap-2">
       <Input
@@ -27,6 +66,70 @@ export default function <TData>({ table }: Props<TData>) {
           );
         }}
       />
+
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" size="sm" className="h-10 border-dashed">
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Filter leagues ({selectedValues.size})
+          </Button>
+        </PopoverTrigger>
+
+        <PopoverContent className="w-[200px] p-0" align="start">
+          <Command>
+            <CommandInput placeholder="Filter..." />
+            <CommandList>
+              <CommandEmpty>No league found.</CommandEmpty>
+
+              <CommandGroup>
+                {uniqueLeagues.map(league => {
+                  const isSelected = selectedValues.has(league);
+                  return (
+                    <CommandItem
+                      key={league}
+                      onSelect={() => {
+                        isSelected
+                          ? selectedValues.delete(league)
+                          : selectedValues.add(league);
+
+                        const filterValues = Array.from(selectedValues);
+                        fameColumn?.setFilterValue(filterValues);
+                      }}
+                    >
+                      <div
+                        className={cn(
+                          "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                          isSelected
+                            ? "bg-primary text-primary-foreground"
+                            : "opacity-50 [&_svg]:invisible",
+                        )}
+                      >
+                        <CheckIcon className={cn("h-4 w-4")} />
+                      </div>
+
+                      <span>{league}</span>
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+
+              {selectedValues.size > 0 && (
+                <>
+                  <CommandSeparator />
+                  <CommandGroup>
+                    <CommandItem
+                      onSelect={() => fameColumn?.setFilterValue(undefined)}
+                      className="justify-center text-center"
+                    >
+                      Clear filters
+                    </CommandItem>
+                  </CommandGroup>
+                </>
+              )}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
