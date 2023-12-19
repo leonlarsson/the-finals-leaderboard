@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "./ui/input";
+import DataTableToolbar from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
 
 interface DataTableProps<TData, TValue> {
@@ -55,26 +55,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap gap-2">
-        <Input
-          className="max-w-xs"
-          placeholder="Filter usernames..."
-          maxLength={20}
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={event => {
-            table.getColumn("name")?.setFilterValue(event.target.value);
-
-            event.target.value.length
-              ? searchParams.set("name", event.target.value)
-              : searchParams.delete("name");
-            window.history.replaceState(
-              null,
-              "",
-              searchParams.size > 0 ? `?${searchParams.toString()}` : "/",
-            );
-          }}
-        />
-      </div>
+      <DataTableToolbar table={table} />
 
       <div className="rounded-md border">
         <Table className="min-w-[800px] table-fixed">
