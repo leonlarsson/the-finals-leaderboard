@@ -69,7 +69,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex flex-wrap gap-2">
         <Tabs
           defaultValue={selectedPlatform}
           onValueChange={e => setSelectedPlatform(e as Platforms)}
@@ -80,28 +80,28 @@ export function DataTable<TData, TValue>({
               title="Crossplay"
               disabled={platformSelectDisabled}
             >
-              <Icons.crossplay className="h-5 w-5 inline" />
+              <Icons.crossplay className="inline h-5 w-5" />
             </TabsTrigger>
             <TabsTrigger
               value={Platforms.Steam}
               title="Steam"
               disabled={platformSelectDisabled}
             >
-              <Icons.steam className="h-5 w-5 inline" />
+              <Icons.steam className="inline h-5 w-5" />
             </TabsTrigger>
             <TabsTrigger
               value={Platforms.Xbox}
               title="Xbox"
               disabled={platformSelectDisabled}
             >
-              <Icons.xbox className="h-5 w-5 inline" />
+              <Icons.xbox className="inline h-5 w-5" />
             </TabsTrigger>
             <TabsTrigger
               value={Platforms.PSN}
               title="PlayStation"
               disabled={platformSelectDisabled}
             >
-              <Icons.playstation className="h-5 w-5 inline" />
+              <Icons.playstation className="inline h-5 w-5" />
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -120,14 +120,14 @@ export function DataTable<TData, TValue>({
             window.history.replaceState(
               null,
               "",
-              searchParams.size > 0 ? `?${searchParams.toString()}` : "/"
+              searchParams.size > 0 ? `?${searchParams.toString()}` : "/",
             );
           }}
         />
       </div>
 
       <div className="rounded-md border">
-        <Table className="table-fixed min-w-[800px]">
+        <Table className="min-w-[800px] table-fixed">
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
@@ -138,7 +138,7 @@ export function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -158,7 +158,7 @@ export function DataTable<TData, TValue>({
                     <TableCell key={cell.id} className="p-3">
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

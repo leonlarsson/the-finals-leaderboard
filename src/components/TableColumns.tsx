@@ -17,7 +17,7 @@ import { DataTableColumnHeader } from "./DataTableColumnHeader";
 
 export const columns = (
   leaderboardVersion: LEADERBOARD_VERSION,
-  selectedPlatform: Platforms
+  selectedPlatform: Platforms,
 ): ColumnDef<User>[] => {
   const rankColumn = {
     accessorKey: "rank",
@@ -38,7 +38,7 @@ export const columns = (
       return (
         <span
           className={cn(
-            value > 0 ? "text-green-700" : value === 0 ? "" : "text-red-600"
+            value > 0 ? "text-green-700" : value === 0 ? "" : "text-red-600",
           )}
         >
           {value > 0 ? (
@@ -84,15 +84,15 @@ export const columns = (
         <span className="inline-flex gap-1">
           {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
             selectedPlatform === "steam" && (
-              <Icons.steam className="h-5 w-5 inline opacity-60" />
+              <Icons.steam className="inline h-5 w-5 opacity-60" />
             )}
           {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
             selectedPlatform === "xbox" && (
-              <Icons.xbox className="h-5 w-5 inline opacity-60" />
+              <Icons.xbox className="inline h-5 w-5 opacity-60" />
             )}
           {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
             selectedPlatform === "psn" && (
-              <Icons.playstation className="h-5 w-5 inline opacity-60" />
+              <Icons.playstation className="inline h-5 w-5 opacity-60" />
             )}{" "}
           {user.name}
         </span>
@@ -141,8 +141,8 @@ export const columns = (
             {fameToRankIcon(leaderboardVersion, getValue() as number)}{" "}
             {(getValue() as number).toLocaleString("en")}
           </PopoverTrigger>
-          <PopoverContent className="flex justify-center flex-col items-center">
-            <span className="font-medium text-xl">
+          <PopoverContent className="flex flex-col items-center justify-center">
+            <span className="text-xl font-medium">
               {fameToLeague(leaderboardVersion, getValue() as number)}
             </span>
             {fameToRankIcon(leaderboardVersion, getValue() as number, 160)}
@@ -165,7 +165,7 @@ export const columns = (
   if (leaderboardVersion === LEADERBOARD_VERSION.CLOSED_BETA_1) return columns;
 
   return columns.filter(
-    column => column.accessorKey !== "xp" && column.accessorKey !== "level"
+    column => column.accessorKey !== "xp" && column.accessorKey !== "level",
   );
 };
 
@@ -176,19 +176,19 @@ const platformNamesInline = (user: User) => {
 
       {user.steamName && (
         <span className="inline-flex gap-1">
-          <Icons.steam className="h-5 w-5 inline opacity-60" /> {user.steamName}
+          <Icons.steam className="inline h-5 w-5 opacity-60" /> {user.steamName}
         </span>
       )}
 
       {user.xboxName && (
         <span className="inline-flex gap-1">
-          <Icons.xbox className="h-5 w-5 inline opacity-60" /> {user.xboxName}
+          <Icons.xbox className="inline h-5 w-5 opacity-60" /> {user.xboxName}
         </span>
       )}
 
       {user.psnName && (
         <span className="inline-flex gap-1">
-          <Icons.playstation className="h-5 w-5 inline opacity-60" />{" "}
+          <Icons.playstation className="inline h-5 w-5 opacity-60" />{" "}
           {user.psnName}
         </span>
       )}
@@ -201,27 +201,27 @@ const namePopoverContent = (user: User) => {
   return (
     <div className="flex flex-col gap-2">
       <span className="inline-flex gap-1">
-        <img src="/images/Embark.png" className="inline w-5 h-5" />{" "}
+        <img src="/images/Embark.png" className="inline h-5 w-5" />{" "}
         <span className="font-semibold">Embark ID:</span> {user.name}
       </span>
 
       {user.steamName && (
         <span className="inline-flex gap-1">
-          <Icons.steam className="h-5 w-5 inline" />{" "}
+          <Icons.steam className="inline h-5 w-5" />{" "}
           <span className="font-semibold">Steam:</span> {user.steamName}
         </span>
       )}
 
       {user.xboxName && (
         <span className="inline-flex gap-1">
-          <Icons.xbox className="h-5 w-5 inline" />{" "}
+          <Icons.xbox className="inline h-5 w-5" />{" "}
           <span className="font-semibold">Xbox:</span> {user.xboxName}
         </span>
       )}
 
       {user.psnName && (
         <span className="inline-flex gap-1">
-          <Icons.playstation className="h-5 w-5 inline" />{" "}
+          <Icons.playstation className="inline h-5 w-5" />{" "}
           <span className="font-semibold">PlayStation:</span> {user.psnName}
         </span>
       )}

@@ -4,7 +4,7 @@ import { LEADERBOARD_VERSION } from "./leagues";
 export default (
   leaderboardVersion: LEADERBOARD_VERSION,
   fame: number,
-  height?: number
+  height?: number,
 ) => {
   const league = fameToLeague(leaderboardVersion, fame);
 

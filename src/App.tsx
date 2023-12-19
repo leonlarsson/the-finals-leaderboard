@@ -23,7 +23,7 @@ const App = () => {
   const initialLeaderboardVersion =
     leaderboardSearchParam &&
     Object.values(LEADERBOARD_VERSION).includes(
-      leaderboardSearchParam as LEADERBOARD_VERSION
+      leaderboardSearchParam as LEADERBOARD_VERSION,
     )
       ? leaderboardSearchParam
       : LEADERBOARD_VERSION.LIVE;
@@ -36,10 +36,10 @@ const App = () => {
 
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
     useState<LEADERBOARD_VERSION>(
-      initialLeaderboardVersion as LEADERBOARD_VERSION
+      initialLeaderboardVersion as LEADERBOARD_VERSION,
     );
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(
-    initialPlatform as Platforms
+    initialPlatform as Platforms,
   );
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -68,7 +68,7 @@ const App = () => {
 
     try {
       const res = await fetch(
-        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`
+        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`,
       );
       // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
       // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
@@ -108,7 +108,7 @@ const App = () => {
     window.history.replaceState(
       null,
       "",
-      searchParams.size > 0 ? `?${searchParams.toString()}` : "/"
+      searchParams.size > 0 ? `?${searchParams.toString()}` : "/",
     );
   }, [selectedLeaderboardVersion, selectedPlatform]);
 
@@ -129,8 +129,8 @@ const App = () => {
         .
       </h5>
 
-      <div className="flex flex-col gap-2 my-4">
-        <div className="flex gap-2 flex-wrap">
+      <div className="my-4 flex flex-col gap-2">
+        <div className="flex flex-wrap gap-2">
           <Tabs
             value={selectedLeaderboardVersion}
             onValueChange={e => {
@@ -165,7 +165,7 @@ const App = () => {
               selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE || loading
             }
           >
-            <span className="hidden min-[440px]:block mr-2">Refresh</span>
+            <span className="mr-2 hidden min-[440px]:block">Refresh</span>
 
             <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
           </Button>
