@@ -1,7 +1,12 @@
 // Borrowed from https://ui.shadcn.com/docs/components/data-table#column-header
 
 import { Column } from "@tanstack/react-table";
-import { ArrowDownIcon, ArrowUpDown, ArrowUpIcon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  ChevronsUpDown,
+  XCircle,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -38,30 +43,30 @@ export function DataTableColumnHeader<TData, TValue>({
           >
             <span>{title}</span>
             {column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="size-4 ml-2" />
+              <ArrowDownIcon className="ml-2 size-4" />
             ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="size-4 ml-2" />
+              <ArrowUpIcon className="ml-2 size-4" />
             ) : (
-              <ArrowUpDown className="size-4 ml-2" />
+              <ChevronsUpDown className="ml-2 size-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <ArrowUpIcon className="size-3.5 mr-2 text-muted-foreground/70" />
+            <ArrowUpIcon className="mr-2 size-3.5 text-muted-foreground/70" />
             Asc
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <ArrowDownIcon className="size-3.5 mr-2 text-muted-foreground/70" />
+            <ArrowDownIcon className="mr-2 size-3.5 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 
           <DropdownMenuItem onClick={() => column.clearSorting()}>
-            <ArrowUpDown className="size-3.5 mr-2 text-muted-foreground/70" />
+            <XCircle className="mr-2 size-3.5 text-muted-foreground/70" />
             Clear
           </DropdownMenuItem>
         </DropdownMenuContent>
