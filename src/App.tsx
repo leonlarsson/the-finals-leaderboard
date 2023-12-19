@@ -126,14 +126,6 @@ const App = () => {
         >
           Leon
         </a>
-        . Source{" "}
-        <a
-          href="https://github.com/leonlarsson/the-finals-leaderboard"
-          target="_blank"
-          className="font-medium hover:underline"
-        >
-          here
-        </a>
         .
       </h5>
 
@@ -167,15 +159,15 @@ const App = () => {
           <Button
             variant="outline"
             className="group select-none"
+            title="Refresh data."
             onClick={fetchData}
             disabled={
               selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE || loading
             }
           >
-            Refresh
-            <RefreshCw
-              className={cn("ml-2 h-4 w-4", loading && "animate-spin")}
-            />
+            <span className="hidden min-[440px]:block mr-2">Refresh</span>
+
+            <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
           </Button>
         </div>
 
@@ -211,6 +203,14 @@ const App = () => {
             className="font-medium hover:underline"
           >
             Embark Studios
+          </a>
+          . Source{" "}
+          <a
+            href="https://github.com/leonlarsson/the-finals-leaderboard"
+            target="_blank"
+            className="font-medium hover:underline"
+          >
+            here
           </a>
           .
         </span>
