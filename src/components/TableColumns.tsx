@@ -131,9 +131,16 @@ export const columns = (
 
   const fameColumn = {
     accessorKey: "fame",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Fame" />
-    ),
+    header: ({ column }) => {
+      // Get the unique ranks for the column. Might be useful in the future (filtering)
+      // const uniqueValues = new Set(
+      //   Array.from(column.getFacetedUniqueValues().keys()).map(value =>
+      //     fameToLeague(leaderboardVersion, value),
+      //   ),
+      // );
+
+      return <DataTableColumnHeader column={column} title="Fame" />;
+    },
     cell: ({ getValue }) => (
       <span className="flex items-center gap-2">
         <Popover>

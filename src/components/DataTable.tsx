@@ -58,6 +58,7 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    // getFacetedUniqueValues: getFacetedUniqueValues(),
     state: {
       sorting,
       columnFilters,
@@ -80,28 +81,28 @@ export function DataTable<TData, TValue>({
               title="Crossplay"
               disabled={platformSelectDisabled}
             >
-              <Icons.crossplay className="size-5 inline" />
+              <Icons.crossplay className="inline size-5" />
             </TabsTrigger>
             <TabsTrigger
               value={Platforms.Steam}
               title="Steam"
               disabled={platformSelectDisabled}
             >
-              <Icons.steam className="size-5 inline" />
+              <Icons.steam className="inline size-5" />
             </TabsTrigger>
             <TabsTrigger
               value={Platforms.Xbox}
               title="Xbox"
               disabled={platformSelectDisabled}
             >
-              <Icons.xbox className="size-5 inline" />
+              <Icons.xbox className="inline size-5" />
             </TabsTrigger>
             <TabsTrigger
               value={Platforms.PSN}
               title="PlayStation"
               disabled={platformSelectDisabled}
             >
-              <Icons.playstation className="size-5 inline" />
+              <Icons.playstation className="inline size-5" />
             </TabsTrigger>
           </TabsList>
         </Tabs>
