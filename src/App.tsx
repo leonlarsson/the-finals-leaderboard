@@ -133,7 +133,7 @@ const App = () => {
         .
       </h5>
 
-      <div className="my-4 flex flex-col gap-2">
+      <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
           <Tabs
             value={selectedLeaderboardVersion}
