@@ -13,6 +13,7 @@ export default (
       className="inline"
       title={`${league} league`}
       width={height ?? 60}
+      alt={`${league} league image`}
       src={`/images/${league.toLowerCase().replace(" ", "-")}.png`}
     />
   );

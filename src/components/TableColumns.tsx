@@ -149,7 +149,10 @@ export const columns = (
         <span className="flex items-center gap-2">
           <Popover>
             <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200">
-              {fameToRankIcon(leaderboardVersion, fame)}{" "}
+              <div className="size-[60px]">
+                {fameToRankIcon(leaderboardVersion, fame)}
+              </div>
+
               <div className="flex flex-col">
                 <span>{fameToLeague(leaderboardVersion, fame)}</span>
                 <span>{fame.toLocaleString("en")}</span>
