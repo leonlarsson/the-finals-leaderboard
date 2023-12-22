@@ -158,50 +158,43 @@ const App = () => {
             </TabsList>
           </Tabs>
 
-          <TooltipProvider disableHoverableContent>
-            <Tabs
-              defaultValue={selectedPlatform}
-              onValueChange={e => setSelectedPlatform(e as Platforms)}
-            >
-              <TabsList>
-                {[
-                  {
-                    value: Platforms.Crossplay,
-                    title: "Crossplay",
-                    icon: <Icons.crossplay className="inline size-5" />,
-                  },
-                  {
-                    value: Platforms.Steam,
-                    title: "Steam",
-                    icon: <Icons.steam className="inline size-5" />,
-                  },
-                  {
-                    value: Platforms.Xbox,
-                    title: "Xbox",
-                    icon: <Icons.xbox className="inline size-5" />,
-                  },
-                  {
-                    value: Platforms.PSN,
-                    title: "PlayStation",
-                    icon: <Icons.playstation className="inline size-5" />,
-                  },
-                ].map(({ value, title, icon }) => (
-                  <Tooltip key={value}>
-                    <TooltipTrigger>
-                      <TabsTrigger value={value} disabled={disabled}>
-                        {icon}
-                      </TabsTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent className="flex gap-1">
-                      {icon} {title}
-                    </TooltipContent>
-                  </Tooltip>
-                ))}
-              </TabsList>
-            </Tabs>
+          <Tabs
+            defaultValue={selectedPlatform}
+            onValueChange={e => setSelectedPlatform(e as Platforms)}
+          >
+            <TabsList>
+              {[
+                {
+                  value: Platforms.Crossplay,
+                  title: "Crossplay",
+                  icon: <Icons.crossplay className="inline size-5" />,
+                },
+                {
+                  value: Platforms.Steam,
+                  title: "Steam",
+                  icon: <Icons.steam className="inline size-5" />,
+                },
+                {
+                  value: Platforms.Xbox,
+                  title: "Xbox",
+                  icon: <Icons.xbox className="inline size-5" />,
+                },
+                {
+                  value: Platforms.PSN,
+                  title: "PlayStation",
+                  icon: <Icons.playstation className="inline size-5" />,
+                },
+              ].map(({ value, icon }) => (
+                <TabsTrigger key={value} value={value} disabled={disabled}>
+                  {icon}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
 
+          <TooltipProvider disableHoverableContent>
             <Tooltip>
-              <TooltipTrigger>
+              <TooltipTrigger asChild>
                 <Button
                   variant="outline"
                   className="select-none"
