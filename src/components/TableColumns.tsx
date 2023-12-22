@@ -73,7 +73,7 @@ export const columns = (
     cell: ({ row: { original: user } }) => {
       return user.steamName || user.xboxName || user.psnName ? (
         <TooltipProvider>
-          <Tooltip delayDuration={0}>
+          <Tooltip delayDuration={0} disableHoverableContent>
             <TooltipTrigger asChild className="w-fit">
               <span className="flex flex-col">{platformNamesInline(user)}</span>
             </TooltipTrigger>
@@ -148,7 +148,7 @@ export const columns = (
       return (
         <span className="flex items-center gap-2">
           <Popover>
-            <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200">
+            <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
               <div className="size-[60px]">
                 {fameToRankIcon(leaderboardVersion, fame)}
               </div>
