@@ -128,8 +128,7 @@ const App = () => {
         Enhanced Leaderboard – THE FINALS
       </h1>
       <h5 className="text-base min-[440px]:text-xl">
-        View leaderboards from THE FINALS and track your progress. Created by{" "}
-        <Link href="https://twitter.com/mozzyfx">Leon</Link>.
+        View leaderboards from THE FINALS and track your progress.
       </h5>
 
       <div className="my-4 flex flex-col gap-5">
@@ -187,8 +186,8 @@ const App = () => {
                     icon: <Icons.playstation className="inline size-5" />,
                   },
                 ].map(({ value, title, icon }) => (
-                  <Tooltip>
-                    <TooltipTrigger key={value}>
+                  <Tooltip key={value}>
+                    <TooltipTrigger>
                       <TabsTrigger value={value} disabled={disabled}>
                         {icon}
                       </TabsTrigger>
@@ -246,13 +245,22 @@ const App = () => {
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
           All imagery and data is owned by{" "}
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
-          Source{" "}
-          <Link href="https://github.com/leonlarsson/the-finals-leaderboard">
-            here
-          </Link>
-          .
         </span>
-        <ThemeToggle />
+
+        <div className="flex gap-2">
+          <ThemeToggle />
+          <Button variant="outline" size="icon">
+            <Link href="https://x.com/mozzyfx">
+              <Icons.xTwitter className="size-5" />
+            </Link>
+          </Button>
+
+          <Button variant="outline" size="icon">
+            <Link href="https://github.com/leonlarsson/the-finals-leaderboard">
+              <Icons.github className="size-5" />
+            </Link>
+          </Button>
+        </div>
       </div>
     </div>
   );
