@@ -73,7 +73,7 @@ export const columns = (
     cell: ({ row: { original: user } }) => {
       return user.steamName || user.xboxName || user.psnName ? (
         <TooltipProvider>
-          <Tooltip>
+          <Tooltip delayDuration={0}>
             <TooltipTrigger asChild className="w-fit">
               <span className="flex flex-col">{platformNamesInline(user)}</span>
             </TooltipTrigger>
