@@ -92,6 +92,8 @@ export default function <TData>({
 
                   return (
                     <CommandItem
+                      // https://github.com/shadcn-ui/ui/pull/1522
+                      value={league}
                       key={league}
                       onSelect={() => {
                         isSelected
