@@ -119,18 +119,11 @@ const App = () => {
   return (
     <div className="container mb-12 font-saira">
       <h1 className="text-2xl font-medium underline min-[440px]:text-4xl">
-        Unofficial Leaderboard – THE FINALS
+        Enhanced Leaderboard – THE FINALS
       </h1>
       <h5 className="text-base min-[440px]:text-xl">
         View leaderboards from THE FINALS and track your progress. Created by{" "}
-        <a
-          href="https://twitter.com/mozzyfx"
-          target="_blank"
-          className="font-medium hover:underline"
-        >
-          Leon
-        </a>
-        .
+        <Link href="https://twitter.com/mozzyfx">Leon</Link>.
       </h5>
 
       <div className="my-4 flex flex-col gap-5">
@@ -230,27 +223,31 @@ const App = () => {
 
       <div className="mt-10">
         <span className="text-sm">
+          This site is not affiliated with{" "}
+          <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
           All imagery and data is owned by{" "}
-          <a
-            href="https://www.embark-studios.com/"
-            target="_blank"
-            className="font-medium hover:underline"
-          >
-            Embark Studios
-          </a>
-          . Source{" "}
-          <a
-            href="https://github.com/leonlarsson/the-finals-leaderboard"
-            target="_blank"
-            className="font-medium hover:underline"
-          >
+          <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
+          Source{" "}
+          <Link href="https://github.com/leonlarsson/the-finals-leaderboard">
             here
-          </a>
+          </Link>
           .
         </span>
       </div>
     </div>
   );
 };
+
+const Link = ({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) => (
+  <a href={href} target="_blank" className="font-medium hover:underline">
+    {children}
+  </a>
+);
 
 export default App;
