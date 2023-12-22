@@ -35,11 +35,11 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
-        <AccordionTrigger className="rounded bg-neutral-200 p-2 text-xl">
+        <AccordionTrigger className="rounded bg-neutral-200 p-2 text-xl dark:bg-neutral-900">
           Stats ({platformName})
         </AccordionTrigger>
 
-        <AccordionContent className="bg-neutral-100 p-2 text-sm">
+        <AccordionContent className="bg-neutral-100 p-2 text-sm dark:bg-neutral-800">
           <div className="flex flex-col gap-2">
             {/* AVERAGES */}
             <span className="text-lg underline">Averages</span>
@@ -47,30 +47,30 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
             {leaderboardVersion === "closedBeta1" && (
               <span>
                 Average XP:{" "}
-                <code className="rounded bg-neutral-200 p-1">
+                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
                   {(
                     users.map(user => user.xp!).reduce((a, b) => a + b, 0) /
                     users.length
                   ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                </code>
+                </span>
               </span>
             )}
 
             {leaderboardVersion === "closedBeta1" && (
               <span>
                 Average Level:{" "}
-                <code className="rounded bg-neutral-200 p-1">
+                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
                   {(
                     users.map(user => user.level!).reduce((a, b) => a + b, 0) /
                     users.length
                   ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                </code>
+                </span>
               </span>
             )}
 
             <span>
               Average Cashouts:{" "}
-              <code className="rounded bg-neutral-200 p-1">
+              <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
                 {(
                   users.map(user => user.cashouts).reduce((a, b) => a + b, 0) /
                   users.length
@@ -79,17 +79,17 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                   currency: "USD",
                   maximumFractionDigits: 0,
                 })}
-              </code>
+              </span>
             </span>
 
             <span>
               Average Fame:{" "}
-              <code className="rounded bg-neutral-200 p-1">
+              <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
                 {(
                   users.map(user => user.fame).reduce((a, b) => a + b, 0) /
                   users.length
                 ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-              </code>
+              </span>
             </span>
           </div>
 
@@ -109,14 +109,14 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
 
               return (
                 <span key={league.name}>
-                  <code className="rounded bg-neutral-200 p-1">
+                  <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
                     {usersInLeague.toLocaleString("en-US")} (
                     {(usersInLeague / users.length).toLocaleString("en-US", {
                       style: "percent",
                       maximumFractionDigits: 1,
                     })}
                     )
-                  </code>{" "}
+                  </span>{" "}
                   {usersInLeague === 1 ? "is" : "are"} in {league.name} league{" "}
                   {fameToRankIcon(leaderboardVersion, league.fame, 60)}
                 </span>

@@ -1,3 +1,4 @@
+import "./index.css";
 import { useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -5,6 +6,7 @@ import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
 import { Button } from "./components/ui/button";
 import Stats from "./components/Stats";
+import ThemeToggle from "./components/ThemeToggle";
 import Icons from "./components/icons";
 import transformData from "./helpers/transformData";
 import { LEADERBOARD_VERSION } from "./helpers/leagues";
@@ -13,8 +15,6 @@ import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
 import { cn } from "./lib/utils";
 import { Platforms, User } from "./types";
-
-import "./index.css";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -221,7 +221,7 @@ const App = () => {
         users={users}
       />
 
-      <div className="mt-10">
+      <div className="mt-10 flex flex-col gap-2">
         <span className="text-sm">
           This site is not affiliated with{" "}
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
@@ -233,6 +233,7 @@ const App = () => {
           </Link>
           .
         </span>
+        <ThemeToggle />
       </div>
     </div>
   );
