@@ -84,6 +84,12 @@ export default function <TData>({
               <CommandGroup>
                 {uniqueLeagues.map(league => {
                   const isSelected = selectedValues.has(league);
+
+                  // TODO: Take current filters into account?
+                  const amountOfPlayersInLeague = Array.from(
+                    fameColumn?.getFacetedUniqueValues().keys() ?? [],
+                  ).filter(({ league: l }) => l === league).length;
+
                   return (
                     <CommandItem
                       key={league}
@@ -107,7 +113,12 @@ export default function <TData>({
                         <CheckIcon className={cn("h-4 w-4")} />
                       </div>
 
-                      <span>{league}</span>
+                      <div className="flex w-full items-center justify-between">
+                        <span>{league}</span>
+                        <span className="font-mono text-xs">
+                          {amountOfPlayersInLeague.toLocaleString("en")}
+                        </span>
+                      </div>
                     </CommandItem>
                   );
                 })}
