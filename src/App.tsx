@@ -5,6 +5,12 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
 import { Button } from "./components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./components/ui/tooltip";
 import Stats from "./components/Stats";
 import ThemeToggle from "./components/ThemeToggle";
 import Icons from "./components/icons";
@@ -153,53 +159,66 @@ const App = () => {
             </TabsList>
           </Tabs>
 
-          <Tabs
-            defaultValue={selectedPlatform}
-            onValueChange={e => setSelectedPlatform(e as Platforms)}
-          >
-            <TabsList>
-              <TabsTrigger
-                value={Platforms.Crossplay}
-                title="Crossplay"
-                disabled={disabled}
-              >
-                <Icons.crossplay className="inline size-5" />
-              </TabsTrigger>
-              <TabsTrigger
-                value={Platforms.Steam}
-                title="Steam"
-                disabled={disabled}
-              >
-                <Icons.steam className="inline size-5" />
-              </TabsTrigger>
-              <TabsTrigger
-                value={Platforms.Xbox}
-                title="Xbox"
-                disabled={disabled}
-              >
-                <Icons.xbox className="inline size-5" />
-              </TabsTrigger>
-              <TabsTrigger
-                value={Platforms.PSN}
-                title="PlayStation"
-                disabled={disabled}
-              >
-                <Icons.playstation className="inline size-5" />
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <TooltipProvider disableHoverableContent>
+            <Tabs
+              defaultValue={selectedPlatform}
+              onValueChange={e => setSelectedPlatform(e as Platforms)}
+            >
+              <TabsList>
+                {[
+                  {
+                    value: Platforms.Crossplay,
+                    title: "Crossplay",
+                    icon: <Icons.crossplay className="inline size-5" />,
+                  },
+                  {
+                    value: Platforms.Steam,
+                    title: "Steam",
+                    icon: <Icons.steam className="inline size-5" />,
+                  },
+                  {
+                    value: Platforms.Xbox,
+                    title: "Xbox",
+                    icon: <Icons.xbox className="inline size-5" />,
+                  },
+                  {
+                    value: Platforms.PSN,
+                    title: "PlayStation",
+                    icon: <Icons.playstation className="inline size-5" />,
+                  },
+                ].map(({ value, title, icon }) => (
+                  <Tooltip>
+                    <TooltipTrigger key={value}>
+                      <TabsTrigger value={value} disabled={disabled}>
+                        {icon}
+                      </TabsTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent className="flex gap-1">
+                      {icon} {title}
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
+              </TabsList>
+            </Tabs>
 
-          <Button
-            variant="outline"
-            className="group select-none"
-            title="Refresh data."
-            onClick={fetchData}
-            disabled={disabled}
-          >
-            <span className="mr-2 hidden min-[440px]:block">Refresh</span>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  variant="outline"
+                  className="select-none"
+                  onClick={fetchData}
+                  disabled={disabled}
+                >
+                  <span className="mr-2 hidden min-[440px]:block">Refresh</span>
 
-            <RefreshCw className={cn("size-4", loading && "animate-spin")} />
-          </Button>
+                  <RefreshCw
+                    className={cn("size-4", loading && "animate-spin")}
+                  />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Refresh data.</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
 
         {error && <span className="text-red-700">Error fetching data.</span>}
