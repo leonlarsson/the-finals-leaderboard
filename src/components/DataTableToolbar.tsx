@@ -13,6 +13,8 @@ import {
   CommandList,
   CommandSeparator,
 } from "./ui/command";
+import { Separator } from "./ui/separator";
+import { Badge } from "./ui/badge";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
 import { cn } from "@/lib/utils";
 import { Platforms } from "@/types";
@@ -71,7 +73,39 @@ export default function <TData>({
         <PopoverTrigger asChild>
           <Button variant="outline" size="sm" className="h-10 border-dashed">
             <PlusCircle className="mr-2 h-4 w-4" />
-            Filter leagues ({selectedValues.size})
+            Filter leagues
+            {selectedValues.size > 0 && (
+              <>
+                <Separator orientation="vertical" className="mx-2 h-4" />
+                <Badge
+                  variant="secondary"
+                  className="rounded-sm px-1 font-medium md:hidden"
+                >
+                  {selectedValues.size}
+                </Badge>
+
+                <div className="hidden gap-1 font-medium md:flex">
+                  {selectedValues.size > 2 ? (
+                    <Badge
+                      variant="secondary"
+                      className="rounded-sm px-1 font-medium"
+                    >
+                      {selectedValues.size} selected
+                    </Badge>
+                  ) : (
+                    Array.from(selectedValues).map(value => (
+                      <Badge
+                        key={value}
+                        variant="secondary"
+                        className="rounded-sm px-1 font-medium"
+                      >
+                        {value}
+                      </Badge>
+                    ))
+                  )}
+                </div>
+              </>
+            )}
           </Button>
         </PopoverTrigger>
 
@@ -117,9 +151,12 @@ export default function <TData>({
 
                       <div className="flex w-full items-center justify-between">
                         <span>{league}</span>
-                        <span className="font-mono text-xs">
+                        <Badge
+                          variant="secondary"
+                          className="rounded-sm px-1 text-xs"
+                        >
                           {amountOfPlayersInLeague.toLocaleString("en")}
-                        </span>
+                        </Badge>
                       </div>
                     </CommandItem>
                   );
