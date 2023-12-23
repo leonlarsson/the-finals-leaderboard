@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Table } from "@tanstack/react-table";
 import { CheckIcon, PlusCircle } from "lucide-react";
 import { Input } from "./ui/input";
@@ -30,6 +30,7 @@ export default function <TData>({
   platform,
   table,
 }: Props<TData>) {
+  const [didMount, setDidMount] = useState(false);
   const fameColumn = table.getColumn("fame");
   const uniqueLeagues = [
     ...new Set(
@@ -41,11 +42,32 @@ export default function <TData>({
 
   const selectedValues = new Set(fameColumn!.getFilterValue() as string[]);
 
-  // Reset fame filter on version or platform
+  // Setting didMount to true upon mounting
   useEffect(() => {
+    setDidMount(true);
+  }, []);
+
+  // Reset fame filter on version or platform. Only done after first render since we don't want to reset the filter on initial load
+  useEffect(() => {
+    if (!didMount) return;
     selectedValues.clear();
     fameColumn?.setFilterValue(selectedValues);
   }, [leaderboardVersion, platform]);
+
+  // Save fame filter in URL
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+
+    selectedValues.size
+      ? searchParams.set("leagues", Array.from(selectedValues).join(","))
+      : searchParams.delete("leagues");
+
+    window.history.replaceState(
+      null,
+      "",
+      searchParams.size > 0 ? `?${searchParams.toString()}` : "/",
+    );
+  }, [selectedValues]);
 
   return (
     <div className="flex flex-wrap gap-2">

@@ -39,9 +39,11 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const searchParams = new URLSearchParams(window.location.search);
   const search = searchParams.get("name");
+  const leagues = searchParams.get("leagues");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: "name", value: search ?? "" },
+    { id: "fame", value: leagues?.split(",") ?? [] },
   ]);
 
   const table = useReactTable({
