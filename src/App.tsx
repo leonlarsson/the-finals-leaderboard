@@ -1,6 +1,7 @@
 import "./index.css";
 import { useEffect, useState } from "react";
-import { RefreshCw } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader, RefreshCw } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
@@ -20,7 +21,7 @@ import openBetaData from "./data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
 import { cn } from "./lib/utils";
-import { Platforms, User } from "./types";
+import { Platforms } from "./types";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -45,60 +46,45 @@ const App = () => {
     useState<LEADERBOARD_VERSION>(
       initialLeaderboardVersion as LEADERBOARD_VERSION,
     );
+
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(
     initialPlatform as Platforms,
   );
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
+
+  const queryClient = useQueryClient();
 
   const fetchData = async () => {
-    setLoading(true);
-    setError(false);
     if (selectedLeaderboardVersion === "closedBeta1") {
-      setUsers(transformData(closedBeta1Data));
-      setLoading(false);
-      return;
+      return transformData(closedBeta1Data);
     }
 
     if (selectedLeaderboardVersion === "closedBeta2") {
-      setUsers(transformData(closedBeta2Data));
-      setLoading(false);
-      return;
+      return transformData(closedBeta2Data);
     }
 
     if (selectedLeaderboardVersion === "openBeta") {
-      setUsers(transformData(openBetaData));
-      setLoading(false);
-      return;
+      return transformData(openBetaData);
     }
 
-    try {
-      const res = await fetch(
-        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`,
-      );
-      // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
-      // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
-      // open beta: https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-crossplay.json
+    const res = await fetch(
+      `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`,
+    );
+    // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
+    // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
+    // open beta: https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-crossplay.json
 
-      if (res.ok) {
-        const json = await res.json();
-        setUsers(transformData(json));
-        setError(false);
-      } else {
-        setError(true);
-      }
-    } catch (error) {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
+    const json = await res.json();
+    return transformData(json);
   };
 
-  // Fetch data on load and when selected leaderboard version or platform changes
-  useEffect(() => {
-    fetchData();
-  }, [selectedLeaderboardVersion, selectedPlatform]);
+  // Use TanStack Query to fetch data
+  // This will cache all cpmbinations of leaderboard version and platform infinitely
+  // Or until the page is refreshed or the cache is invalidated (refresh button is pressed)
+  const { isLoading, data, error, dataUpdatedAt, isRefetching } = useQuery({
+    queryKey: ["leaderboard", selectedLeaderboardVersion, selectedPlatform],
+    queryFn: () => fetchData(),
+    staleTime: Infinity, // Cache the data until the page is refreshed
+  });
 
   // Store selected leaderboard version and platform in URL
   // Perhaps not the best way to do it, but it works
@@ -120,7 +106,9 @@ const App = () => {
   }, [selectedLeaderboardVersion, selectedPlatform]);
 
   const disabled =
-    selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE || loading;
+    selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE ||
+    isLoading ||
+    isRefetching;
 
   return (
     <div className="container mb-12 font-saira">
@@ -135,11 +123,9 @@ const App = () => {
         <div className="flex flex-wrap gap-2">
           <Tabs
             value={selectedLeaderboardVersion}
-            onValueChange={e => {
-              // Set loading to true if we're switching to live to avoid a short state of the platform select being available
-              if (e === LEADERBOARD_VERSION.LIVE) setLoading(true);
-              setSelectedLeaderboardVersion(e as LEADERBOARD_VERSION);
-            }}
+            onValueChange={e =>
+              setSelectedLeaderboardVersion(e as LEADERBOARD_VERSION)
+            }
           >
             <TabsList>
               <TabsTrigger value={LEADERBOARD_VERSION.LIVE}>Live</TabsTrigger>
@@ -198,13 +184,16 @@ const App = () => {
                 <Button
                   variant="outline"
                   className="select-none"
-                  onClick={fetchData}
+                  onClick={() => queryClient.invalidateQueries()}
                   disabled={disabled}
                 >
                   <span className="mr-2 hidden min-[440px]:block">Refresh</span>
 
                   <RefreshCw
-                    className={cn("size-4", loading && "animate-spin")}
+                    className={cn(
+                      "size-4",
+                      (isLoading || isRefetching) && "animate-spin",
+                    )}
                   />
                 </Button>
               </TooltipTrigger>
@@ -214,13 +203,14 @@ const App = () => {
         </div>
 
         {error && <span className="text-red-700">Error fetching data.</span>}
+
         {!error && (
           <>
             <DataTable
               leaderboardVersion={selectedLeaderboardVersion}
               platform={selectedPlatform}
               columns={columns(selectedLeaderboardVersion, selectedPlatform)}
-              data={users}
+              data={data ?? []}
             />
           </>
         )}
@@ -229,17 +219,25 @@ const App = () => {
       <Stats
         leaderboardVersion={selectedLeaderboardVersion}
         platform={selectedPlatform}
-        users={users}
+        users={data ?? []}
       />
 
       <div className="mt-10 flex flex-col gap-2">
+        <span>
+          Current data updated at{" "}
+          {isLoading || isRefetching ? (
+            <Loader className="inline size-5 animate-spin" />
+          ) : (
+            new Date(dataUpdatedAt).toLocaleString()
+          )}
+        </span>
+
         <span className="text-sm">
           This site is not affiliated with{" "}
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
           All imagery and data is owned by{" "}
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
         </span>
-
         <div className="flex gap-2">
           <ThemeToggle />
           <Button variant="outline" size="icon">
