@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({
       />
 
       <div className="rounded-md border">
-        <Table className="min-w-[800px] table-fixed">
+        <Table className="min-w-[800px]">
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
