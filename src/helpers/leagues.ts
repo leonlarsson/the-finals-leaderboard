@@ -44,32 +44,32 @@ const CLOSED_BETA_TWO_LEAGUES = [
   { fame: 23_750, name: "Diamond 1" },
 ] satisfies FameLeague[];
 
-// TODO: Website and game are currently inconsistent. Poke Embark about this. Below are the website values.
+// TODO: Values from https://twitter.com/Party_Rooster - Will still chase with Embark
 const LIVE_LEAGUES = [
   { fame: 0, name: "Bronze 4" },
-  { fame: 1_250, name: "Bronze 3" },
-  { fame: 2_500, name: "Bronze 2" },
-  { fame: 3_750, name: "Bronze 1" },
+  { fame: 250, name: "Bronze 3" },
+  { fame: 750, name: "Bronze 2" },
+  { fame: 1_750, name: "Bronze 1" },
 
-  { fame: 5_000, name: "Silver 4" },
-  { fame: 6_250, name: "Silver 3" },
-  { fame: 7_500, name: "Silver 2" },
-  { fame: 8_750, name: "Silver 1" },
+  { fame: 4_500, name: "Silver 4" },
+  { fame: 5_250, name: "Silver 3" },
+  { fame: 6_250, name: "Silver 2" },
+  { fame: 7_250, name: "Silver 1" },
 
-  { fame: 10_000, name: "Gold 4" },
+  { fame: 9_250, name: "Gold 4" },
   { fame: 11_250, name: "Gold 3" },
-  { fame: 12_500, name: "Gold 2" },
-  { fame: 13_750, name: "Gold 1" },
+  { fame: 13_250, name: "Gold 2" },
+  { fame: 15_250, name: "Gold 1" },
 
-  { fame: 15_000, name: "Platinum 4" },
-  { fame: 16_250, name: "Platinum 3" },
-  { fame: 17_500, name: "Platinum 2" },
-  { fame: 18_750, name: "Platinum 1" },
+  { fame: 18_250, name: "Platinum 4" },
+  { fame: 21_250, name: "Platinum 3" },
+  { fame: 24_250, name: "Platinum 2" },
+  { fame: 27_250, name: "Platinum 1" },
 
-  { fame: 20_000, name: "Diamond 4" },
-  { fame: 21_250, name: "Diamond 3" },
-  { fame: 22_500, name: "Diamond 2" },
-  { fame: 23_750, name: "Diamond 1" },
+  { fame: 31_250, name: "Diamond 4" },
+  { fame: 35_500, name: "Diamond 3" },
+  { fame: 40_000, name: "Diamond 2" },
+  { fame: 45_000, name: "Diamond 1" },
 ] satisfies FameLeague[];
 
 export const VERSION_LEAGUES = {
