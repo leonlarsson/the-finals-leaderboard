@@ -23,6 +23,7 @@ import DataTableToolbar from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
 import { Platforms } from "@/types";
+import {TableExpandedRow} from "@/components/TableExpandedRow.tsx";
 
 interface DataTableProps<TData, TValue> {
   leaderboardVersion: LEADERBOARD_VERSION;
@@ -94,19 +95,23 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(row => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id} className="p-3">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <>
+                  <TableRow
+                    key={row.id}
+                    onClick={() => row.toggleExpanded()}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map(cell => (
+                      <TableCell key={cell.id} className="p-3">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                  <TableExpandedRow colSpan={columns.length} show={row.getIsExpanded()} name={(data[row.id as any] as any).name as string} platform={platform} />
+                </>
               ))
             ) : (
               <TableRow>
