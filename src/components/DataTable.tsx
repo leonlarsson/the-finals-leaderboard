@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -62,6 +62,13 @@ export function DataTable<TData, TValue>({
       columnFilters,
     },
   });
+
+  // Reset expanded rows when data changes
+  useEffect(() => {
+    table.getRowModel().rows.forEach(row => {
+      row.toggleExpanded(false);
+    });
+  }, [data]);
 
   return (
     <div className="space-y-3">
