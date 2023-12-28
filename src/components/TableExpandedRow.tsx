@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { LineChart } from "@mui/x-charts";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   getLeaderboardByUsername,
   UserLeaderboardResponse,
 } from "@/sdk/finalsTracker";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { useTheme } from "./ThemeProvider";
 import { Platforms } from "@/types";
 
 type TableExpandedRowProps = {
@@ -20,6 +22,7 @@ export const TableExpandedRow = ({
   name,
   colSpan,
 }: TableExpandedRowProps) => {
+  const selectedTheme = useTheme().theme;
   const [data, setData] = useState<UserLeaderboardResponse>();
   const { dates, fames, ranks } = useMemo(
     () => ({
@@ -40,7 +43,7 @@ export const TableExpandedRow = ({
       .catch(e => setData(e.response.data));
   }, [show]);
 
-  if (!show || !data) return;
+  if (!show || !data) return null;
 
   if (data.errors && data?.errors.length > 0)
     return (
@@ -55,50 +58,65 @@ export const TableExpandedRow = ({
       </TableRow>
     );
 
+  const theme = createTheme({
+    palette: {
+      mode:
+        selectedTheme === "system"
+          ? window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light"
+          : selectedTheme === "dark"
+            ? "dark"
+            : "light",
+    },
+  });
+
   return (
     <TableRow>
       <TableCell colSpan={colSpan} className="h-24 text-center">
-        <LineChart
-          xAxis={[
-            {
-              data: dates,
-              valueFormatter: (date: Date) => date.toLocaleDateString(),
-              scaleType: "time",
-              tickLabelInterval: (date: Date) => date.getHours() === 0,
-            },
-          ]}
-          yAxis={[
-            {
-              id: "fameAxis",
-              scaleType: "linear",
-              tickMinStep: 20_000,
-              max: Math.max(...fames!) * 1.2,
-              min: Math.min(...fames!) * 0.2,
-            },
-            {
-              id: "rankAxis",
-              scaleType: "linear",
-              tickMinStep: 1,
-              valueFormatter: value => (value * -1).toString(),
-            },
-          ]}
-          series={[
-            {
-              yAxisKey: "rankAxis",
-              data: ranks,
-              label: "Rank",
-              valueFormatter: value => (value * -1).toString(),
-            },
-            {
-              yAxisKey: "fameAxis",
-              data: fames,
-              label: "Fame",
-            },
-          ]}
-          leftAxis="fameAxis"
-          rightAxis="rankAxis"
-          height={400}
-        />
+        <ThemeProvider theme={theme}>
+          <LineChart
+            xAxis={[
+              {
+                data: dates,
+                valueFormatter: (date: Date) => date.toLocaleDateString(),
+                scaleType: "time",
+                tickLabelInterval: (date: Date) => date.getHours() === 0,
+              },
+            ]}
+            yAxis={[
+              {
+                id: "fameAxis",
+                scaleType: "linear",
+                tickMinStep: 20_000,
+                max: Math.max(...fames!) * 1.2,
+                min: Math.min(...fames!) * 0.2,
+              },
+              {
+                id: "rankAxis",
+                scaleType: "linear",
+                tickMinStep: 1,
+                valueFormatter: value => (value * -1).toString(),
+              },
+            ]}
+            series={[
+              {
+                yAxisKey: "rankAxis",
+                data: ranks,
+                label: "Rank",
+                valueFormatter: value => (value * -1).toString(),
+              },
+              {
+                yAxisKey: "fameAxis",
+                data: fames,
+                label: "Fame",
+              },
+            ]}
+            leftAxis="fameAxis"
+            rightAxis="rankAxis"
+            height={400}
+          />
+        </ThemeProvider>
       </TableCell>
     </TableRow>
   );
