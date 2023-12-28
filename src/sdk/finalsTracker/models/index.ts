@@ -1,2 +1,2 @@
-export * from './FinalsTrackerResponse.ts'
-export * from './UserLeaderboardQueryParams.ts'
+export * from "./FinalsTrackerResponse";
+export * from "./UserLeaderboardQueryParams";

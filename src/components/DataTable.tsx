@@ -20,10 +20,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataTableToolbar from "./DataTableToolbar";
+import { TableExpandedRow } from "./TableExpandedRow";
 import { DataTablePagination } from "./DataTablePagination";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
 import { Platforms } from "@/types";
-import {TableExpandedRow} from "@/components/TableExpandedRow.tsx";
 
 interface DataTableProps<TData, TValue> {
   leaderboardVersion: LEADERBOARD_VERSION;
@@ -110,7 +110,12 @@ export function DataTable<TData, TValue>({
                       </TableCell>
                     ))}
                   </TableRow>
-                  <TableExpandedRow colSpan={columns.length} show={row.getIsExpanded()} name={(data[row.id as any] as any).name as string} platform={platform} />
+                  <TableExpandedRow
+                    colSpan={columns.length}
+                    show={row.getIsExpanded()}
+                    name={(data[row.id as any] as any).name as string}
+                    platform={platform}
+                  />
                 </>
               ))
             ) : (
