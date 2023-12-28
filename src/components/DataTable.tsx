@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -95,9 +95,8 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(row => (
-                <>
+                <Fragment key={row.id}>
                   <TableRow
-                    key={row.id}
                     onClick={() => row.toggleExpanded()}
                     data-state={row.getIsSelected() && "selected"}
                   >
@@ -110,13 +109,14 @@ export function DataTable<TData, TValue>({
                       </TableCell>
                     ))}
                   </TableRow>
+
                   <TableExpandedRow
                     colSpan={columns.length}
                     show={row.getIsExpanded()}
                     name={(data[row.id as any] as any).name as string}
                     platform={platform}
                   />
-                </>
+                </Fragment>
               ))
             ) : (
               <TableRow>
