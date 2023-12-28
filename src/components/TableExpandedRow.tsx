@@ -42,7 +42,7 @@ export const TableExpandedRow = (props: TableExpandedRowProps) => {
     return (
       <TableRow>
         <TableCell colSpan={colSpan} className="h-24 text-center">
-          <span>Something went wrong while fetching table data</span>
+          <span>Something went wrong while fetching table data.</span>
           <br />
           {data.errors.map((err, i) => (
             <span key={i}>{err}</span>
@@ -58,11 +58,7 @@ export const TableExpandedRow = (props: TableExpandedRowProps) => {
           xAxis={[
             {
               data: dates,
-              valueFormatter: (date: Date) =>
-                date.toLocaleDateString("fr-FR", {
-                  month: "2-digit",
-                  day: "2-digit",
-                }),
+              valueFormatter: (date: Date) => date.toLocaleDateString(),
               scaleType: "time",
               tickLabelInterval: (date: Date) => date.getHours() === 0,
             },
