@@ -1,21 +1,25 @@
-import { Platforms } from "@/types";
 import { useEffect, useMemo, useState } from "react";
+import { LineChart } from "@mui/x-charts";
 import {
   getLeaderboardByUsername,
   UserLeaderboardResponse,
 } from "@/sdk/finalsTracker";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { LineChart } from "@mui/x-charts";
+import { Platforms } from "@/types";
 
-export interface TableExpandedRowProps {
+type TableExpandedRowProps = {
   show: boolean;
   platform: Platforms;
   name: string;
   colSpan: number;
-}
+};
 
-export const TableExpandedRow = (props: TableExpandedRowProps) => {
-  const { show, platform, name, colSpan } = props;
+export const TableExpandedRow = ({
+  show,
+  platform,
+  name,
+  colSpan,
+}: TableExpandedRowProps) => {
   const [data, setData] = useState<UserLeaderboardResponse>();
   const { dates, fames, ranks } = useMemo(
     () => ({
