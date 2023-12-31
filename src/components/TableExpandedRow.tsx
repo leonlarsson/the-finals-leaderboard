@@ -7,6 +7,7 @@ import {
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Platforms } from "@/types";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
+import LinearProgress from '@mui/material/LinearProgress';
 
 type TableExpandedRowProps = {
   show: boolean;
@@ -30,8 +31,6 @@ export const TableExpandedRow = ({
       if (!response?.data || response.data.length === 0) return {}
       const { data } = response.data[responseIndex]
 
-      console.log(data)
-
       return {
         dates: data.map(x => new Date(`${x.date}T00:00:00`)),
         fames: data.map(x => x.fame),
@@ -50,7 +49,15 @@ export const TableExpandedRow = ({
     }).then((res) => setResponse(res))
   }, [show]);
 
-  if (!show || !response) return null;
+  if (!show && !response) return null;
+
+  if (!response) return (
+    <TableRow>
+      <TableCell colSpan={colSpan} style={{ padding: 0 }}>
+        <LinearProgress />
+      </TableCell>
+    </TableRow>
+  )
 
   if (response.errors && response?.errors.length > 0)
     return (
