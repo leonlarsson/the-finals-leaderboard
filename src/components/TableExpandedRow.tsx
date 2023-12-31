@@ -95,7 +95,9 @@ export const TableExpandedRow = ({
           >
             <TabsList>
               {response.data?.map((user, index) => (
-                <TabsTrigger value={index.toString()}>{user.name}</TabsTrigger>
+                <TabsTrigger key={index} value={index.toString()}>
+                  {user.name}
+                </TabsTrigger>
               ))}
             </TabsList>
           </Tabs>
