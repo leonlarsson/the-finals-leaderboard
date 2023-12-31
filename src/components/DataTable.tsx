@@ -103,10 +103,7 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(row => (
                 <Fragment key={row.id}>
-                  <TableRow
-                    onClick={() => row.toggleExpanded()}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
+                  <TableRow>
                     {row.getVisibleCells().map(cell => (
                       <TableCell key={cell.id} className="p-3">
                         {flexRender(
