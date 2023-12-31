@@ -103,6 +103,7 @@ export const TableExpandedRow = ({
           </Tabs>
         )}
         <LineChart
+          margin={{ left: 60, right: 60 }}
           xAxis={[
             {
               data: dates,
