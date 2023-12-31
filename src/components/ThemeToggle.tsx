@@ -10,7 +10,7 @@ import {
 import { useTheme } from "@/components/ThemeProvider";
 
 export const ThemeToggle = () => {
-  const { setTheme } = useTheme();
+  const { setSelectedTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -22,13 +22,13 @@ export const ThemeToggle = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => setSelectedTheme("light")}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => setSelectedTheme("dark")}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem onClick={() => setSelectedTheme("system")}>
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
