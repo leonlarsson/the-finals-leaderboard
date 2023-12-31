@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -20,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataTableToolbar from "./DataTableToolbar";
+import { TableExpandedRow } from "./TableExpandedRow";
 import { DataTablePagination } from "./DataTablePagination";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
 import { Platforms } from "@/types";
@@ -62,6 +63,13 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  // Reset expanded rows when data changes
+  useEffect(() => {
+    table.getRowModel().rows.forEach(row => {
+      row.toggleExpanded(false);
+    });
+  }, [data]);
+
   return (
     <div className="space-y-3">
       <DataTableToolbar
@@ -94,19 +102,25 @@ export function DataTable<TData, TValue>({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map(row => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id} className="p-3">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <Fragment key={row.id}>
+                  <TableRow>
+                    {row.getVisibleCells().map(cell => (
+                      <TableCell key={cell.id} className="p-3">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+
+                  <TableExpandedRow
+                    colSpan={columns.length}
+                    show={row.getIsExpanded()}
+                    name={(data[row.id as any] as any).name as string}
+                    platform={platform}
+                  />
+                </Fragment>
               ))
             ) : (
               <TableRow>

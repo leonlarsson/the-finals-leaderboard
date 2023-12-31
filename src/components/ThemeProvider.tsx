@@ -1,4 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createTheme as createMuiTheme,
+  ThemeProvider as MuiThemeProvider,
+} from "@mui/material/styles";
 
 type Theme = "dark" | "light" | "system";
 
@@ -9,13 +13,13 @@ type ThemeProviderProps = {
 };
 
 type ThemeProviderState = {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
+  selectedTheme: Theme;
+  setSelectedTheme: (theme: Theme) => void;
 };
 
 const initialState: ThemeProviderState = {
-  theme: "system",
-  setTheme: () => null,
+  selectedTheme: "system",
+  setSelectedTheme: () => null,
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
@@ -26,16 +30,29 @@ export function ThemeProvider({
   storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
+  const [selectedTheme, setSelectedTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
   );
+
+  const muiTheme = createMuiTheme({
+    palette: {
+      mode:
+        selectedTheme === "system"
+          ? window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light"
+          : selectedTheme === "dark"
+            ? "dark"
+            : "light",
+    },
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
 
     root.classList.remove("light", "dark");
 
-    if (theme === "system") {
+    if (selectedTheme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
         .matches
         ? "dark"
@@ -45,20 +62,20 @@ export function ThemeProvider({
       return;
     }
 
-    root.classList.add(theme);
-  }, [theme]);
+    root.classList.add(selectedTheme);
+  }, [selectedTheme]);
 
   const value = {
-    theme,
-    setTheme: (theme: Theme) => {
+    selectedTheme: selectedTheme,
+    setSelectedTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+      setSelectedTheme(theme);
     },
   };
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
+      <MuiThemeProvider theme={muiTheme}>{children}</MuiThemeProvider>
     </ThemeProviderContext.Provider>
   );
 }

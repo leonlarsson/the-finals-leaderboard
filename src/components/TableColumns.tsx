@@ -1,4 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { ChevronDown, ChevronUp, Eye, EyeOff, Minus } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -6,14 +7,14 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { ChevronDown, ChevronUp, Minus } from "lucide-react";
+import { Button } from "./ui/button";
 import Icons from "./icons";
 import { cn } from "@/lib/utils";
 import fameToRankIcon from "@/helpers/fameToRankIcon";
 import fameToLeague from "@/helpers/fameToLeague";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
-import { Platforms, User } from "@/types";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
+import { Platforms, User } from "@/types";
 
 export const columns = (
   leaderboardVersion: LEADERBOARD_VERSION,
@@ -172,21 +173,62 @@ export const columns = (
     },
   } satisfies ColumnDef<User>;
 
-  const columns = [
-    rankColumn,
-    changeColumn,
-    nameColumn,
-    xpColumn,
-    levelColumn,
-    cashoutsColumn,
-    fameColumn,
-  ];
+  const chartColumn = {
+    accessorKey: "chart",
+    header: "Chart",
+    cell: ({ row }) => (
+      <Button
+        variant={"outline"}
+        size={"icon"}
+        title={
+          row.getIsExpanded()
+            ? "Close this chart."
+            : "Show a chart of this user's history."
+        }
+        onClick={() => row.toggleExpanded()}
+      >
+        <span className="text-neutral-700 dark:text-neutral-400">
+          {row.getIsExpanded() ? <EyeOff /> : <Eye />}
+        </span>
+      </Button>
+    ),
+  } satisfies ColumnDef<User>;
 
-  if (leaderboardVersion === LEADERBOARD_VERSION.CLOSED_BETA_1) return columns;
+  const columns = {
+    [LEADERBOARD_VERSION.CLOSED_BETA_1]: [
+      rankColumn,
+      changeColumn,
+      nameColumn,
+      xpColumn,
+      levelColumn,
+      cashoutsColumn,
+      fameColumn,
+    ],
+    [LEADERBOARD_VERSION.CLOSED_BETA_2]: [
+      rankColumn,
+      changeColumn,
+      nameColumn,
+      cashoutsColumn,
+      fameColumn,
+    ],
+    [LEADERBOARD_VERSION.OPEN_BETA]: [
+      rankColumn,
+      changeColumn,
+      nameColumn,
+      cashoutsColumn,
+      fameColumn,
+    ],
+    [LEADERBOARD_VERSION.LIVE]: [
+      rankColumn,
+      changeColumn,
+      nameColumn,
+      cashoutsColumn,
+      fameColumn,
+      chartColumn,
+    ],
+  };
 
-  return columns.filter(
-    column => column.accessorKey !== "xp" && column.accessorKey !== "level",
-  );
+  return columns[leaderboardVersion];
 };
 
 const platformNamesInline = (user: User) => {
