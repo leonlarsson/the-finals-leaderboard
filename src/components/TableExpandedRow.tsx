@@ -115,15 +115,15 @@ export const TableExpandedRow = ({
             {
               id: "fameAxis",
               scaleType: "linear",
-              tickMinStep: 20_000,
               max: Math.max(...fames!) * 1.2,
               min: Math.min(...fames!) * 0.2,
+              valueFormatter: value => value.toLocaleString("en"),
             },
             {
               id: "rankAxis",
               scaleType: "linear",
               tickMinStep: 1,
-              valueFormatter: value => (value * -1).toString(),
+              valueFormatter: value => (value * -1).toLocaleString("en"),
             },
           ]}
           series={[
@@ -131,12 +131,13 @@ export const TableExpandedRow = ({
               yAxisKey: "rankAxis",
               data: ranks,
               label: "Rank",
-              valueFormatter: value => (value * -1).toString(),
+              valueFormatter: value => (value * -1).toLocaleString("en"),
             },
             {
               yAxisKey: "fameAxis",
               data: fames,
               label: "Fame",
+              valueFormatter: value => value.toLocaleString("en"),
             },
           ]}
           leftAxis="fameAxis"
