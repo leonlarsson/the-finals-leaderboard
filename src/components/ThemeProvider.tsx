@@ -1,5 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { createTheme as createMuiTheme, ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
+import {
+  createTheme as createMuiTheme,
+  ThemeProvider as MuiThemeProvider,
+} from "@mui/material/styles";
 
 type Theme = "dark" | "light" | "system";
 
@@ -72,9 +75,7 @@ export function ThemeProvider({
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      <MuiThemeProvider theme={muiTheme}>
-      {children}
-      </MuiThemeProvider>
+      <MuiThemeProvider theme={muiTheme}>{children}</MuiThemeProvider>
     </ThemeProviderContext.Provider>
   );
 }

@@ -4,7 +4,7 @@ export interface FinalsTrackerResponse<T> {
 }
 
 export interface FinalsTrackerSuccessResponse<T> {
-  data: T
+  data: T;
 }
 
 export interface FinalsTrackerErrorResponse {
