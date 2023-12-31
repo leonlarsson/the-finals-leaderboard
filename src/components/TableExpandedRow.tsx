@@ -45,7 +45,7 @@ export const TableExpandedRow = ({
     }).then(res => setResponse(res));
   }, [show]);
 
-  if (!show || !response) return null;
+  if (!show) return null;
 
   if (!response)
     return (
