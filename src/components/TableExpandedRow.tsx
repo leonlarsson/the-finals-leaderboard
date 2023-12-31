@@ -8,6 +8,7 @@ import {
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useTheme } from "./ThemeProvider";
 import { Platforms } from "@/types";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 
 type TableExpandedRowProps = {
   show: boolean;
@@ -23,35 +24,44 @@ export const TableExpandedRow = ({
   colSpan,
 }: TableExpandedRowProps) => {
   const selectedTheme = useTheme().theme;
-  const [data, setData] = useState<UserLeaderboardResponse>();
+  const [response, setResponse] = useState<UserLeaderboardResponse>();
+  const [responseIndex, setResponseIndex] = useState(0)
+
+
   const { dates, fames, ranks } = useMemo(
-    () => ({
-      dates: data?.data?.map(x => new Date(`${x.date}T00:00:00`)),
-      fames: data?.data?.map(x => x.fame),
-      ranks: data?.data?.map(x => x.rank * -1),
-    }),
-    [data],
+    () => {
+      if (!response?.data || response.data.length === 0) return {}
+      const { data } = response.data[responseIndex]
+
+      console.log(data)
+
+      return {
+        dates: data.map(x => new Date(`${x.date}T00:00:00`)),
+        fames: data.map(x => x.fame),
+        ranks: data.map(x => x.rank * -1),
+      }
+    },
+    [response, responseIndex],
   );
 
   useEffect(() => {
-    if (!show || data !== undefined) return;
+    if (!show || response !== undefined) return;
 
-    getLeaderboardByUsername(name, {
+    getLeaderboardByUsername({
+      name,
       platform: platform === Platforms.PSN ? "playstation" : platform,
-    })
-      .then(res => setData(res.data))
-      .catch(e => setData(e.response.data));
+    }).then((res) => setResponse(res))
   }, [show]);
 
-  if (!show || !data) return null;
+  if (!show || !response) return null;
 
-  if (data.errors && data?.errors.length > 0)
+  if (response.errors && response?.errors.length > 0)
     return (
       <TableRow>
         <TableCell colSpan={colSpan} className="h-24 text-center">
           <span>Something went wrong while fetching table data.</span>
           <br />
-          {data.errors.map((err, i) => (
+          {response.errors.map((err, i) => (
             <span key={i}>{err}</span>
           ))}
         </TableCell>
@@ -71,9 +81,27 @@ export const TableExpandedRow = ({
     },
   });
 
+  if (!dates || !fames || !ranks || dates.length === 0 || fames.length === 0 || ranks.length === 0)
+    return (
+      <TableRow>
+        <TableCell colSpan={colSpan} className="h-24 text-center">
+          <span>No data available</span>
+        </TableCell>
+      </TableRow>
+    );
+
   return (
     <TableRow>
       <TableCell colSpan={colSpan} className="h-24 text-center">
+        {(response.data?.length || 0) > 1 && <Tabs
+          value={responseIndex.toString()}
+          onValueChange={e => setResponseIndex(parseInt(e))}>
+          <TabsList>
+            {response.data?.map((user, index) => (
+              <TabsTrigger value={index.toString()}>{user.name}</TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>}
         <ThemeProvider theme={theme}>
           <LineChart
             xAxis={[

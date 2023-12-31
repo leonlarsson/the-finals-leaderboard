@@ -5,5 +5,5 @@ export const API: AxiosInstance = axios.create({
 });
 
 export enum FinalsTrackerUrls {
-  USER_LEADERBOARD = "/v1/users/:name/leaderboard",
+  USER_LEADERBOARD = "/v1/users/leaderboard",
 }

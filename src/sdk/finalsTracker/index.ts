@@ -1,20 +1,28 @@
 import {
   FinalsTrackerResponse,
-  UserLeaderboardData,
-  UserLeaderboardQueryParams,
+  LeaderboardUser,
+  UserLeaderboardQueryParams
 } from "@/sdk/finalsTracker/models";
 import { API, FinalsTrackerUrls } from "@/sdk/finalsTracker/config";
-import { AxiosResponse } from "axios";
 
 export type UserLeaderboardResponse = FinalsTrackerResponse<
-  UserLeaderboardData[]
+  LeaderboardUser[]
 >;
 
-export const getLeaderboardByUsername = async (
-  username: string,
-  queryParams?: UserLeaderboardQueryParams,
-): Promise<AxiosResponse<UserLeaderboardResponse, any>> =>
-  API.get<UserLeaderboardResponse>(
-    FinalsTrackerUrls.USER_LEADERBOARD.replace(":name", username),
-    { params: queryParams },
-  );
+export const getLeaderboardByUsername = async (params?: UserLeaderboardQueryParams): Promise<UserLeaderboardResponse> => {
+  try {
+    const res = await API.get<UserLeaderboardResponse>(
+      FinalsTrackerUrls.USER_LEADERBOARD,
+      { params },
+    );
+
+    return res.data
+  } catch (e: any) {
+    console.error(e)
+
+    return {
+      errors: e?.response?.data || ['SOMETHING WENT WRONG']
+    }
+  }
+};
+
