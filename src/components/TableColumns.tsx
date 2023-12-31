@@ -173,17 +173,17 @@ export const columns = (
     },
   } satisfies ColumnDef<User>;
 
-  const chartColumn = {
-    accessorKey: "chart",
-    header: "Chart",
+  const historyColumn = {
+    accessorKey: "history",
+    header: "History",
     cell: ({ row }) => (
       <Button
         variant={"outline"}
         size={"icon"}
         title={
           row.getIsExpanded()
-            ? "Close this chart."
-            : "Show a chart of this user's history."
+            ? "Close this user's history."
+            : "Show this user's history."
         }
         onClick={() => row.toggleExpanded()}
       >
@@ -224,7 +224,7 @@ export const columns = (
       nameColumn,
       cashoutsColumn,
       fameColumn,
-      chartColumn,
+      historyColumn,
     ],
   };
 
