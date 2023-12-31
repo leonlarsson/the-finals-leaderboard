@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { createTheme as createMuiTheme, ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 
 type Theme = "dark" | "light" | "system";
 
@@ -30,6 +31,19 @@ export function ThemeProvider({
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
   );
 
+  const muiTheme = createMuiTheme({
+    palette: {
+      mode:
+        selectedTheme === "system"
+          ? window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light"
+          : selectedTheme === "dark"
+            ? "dark"
+            : "light",
+    },
+  });
+
   useEffect(() => {
     const root = window.document.documentElement;
 
@@ -58,7 +72,9 @@ export function ThemeProvider({
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
+      <MuiThemeProvider theme={muiTheme}>
       {children}
+      </MuiThemeProvider>
     </ThemeProviderContext.Provider>
   );
 }

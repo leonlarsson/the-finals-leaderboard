@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { LineChart } from "@mui/x-charts";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   getLeaderboardByUsername,
   UserLeaderboardResponse,
 } from "@/sdk/finalsTracker";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { useTheme } from "./ThemeProvider";
 import { Platforms } from "@/types";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 
@@ -23,7 +21,6 @@ export const TableExpandedRow = ({
   name,
   colSpan,
 }: TableExpandedRowProps) => {
-  const selectedTheme = useTheme().theme;
   const [response, setResponse] = useState<UserLeaderboardResponse>();
   const [responseIndex, setResponseIndex] = useState(0)
 
@@ -68,19 +65,6 @@ export const TableExpandedRow = ({
       </TableRow>
     );
 
-  const theme = createTheme({
-    palette: {
-      mode:
-        selectedTheme === "system"
-          ? window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light"
-          : selectedTheme === "dark"
-            ? "dark"
-            : "light",
-    },
-  });
-
   if (!dates || !fames || !ranks || dates.length === 0 || fames.length === 0 || ranks.length === 0)
     return (
       <TableRow>
@@ -102,7 +86,6 @@ export const TableExpandedRow = ({
             ))}
           </TabsList>
         </Tabs>}
-        <ThemeProvider theme={theme}>
           <LineChart
             xAxis={[
               {
@@ -144,7 +127,6 @@ export const TableExpandedRow = ({
             rightAxis="rankAxis"
             height={400}
           />
-        </ThemeProvider>
       </TableCell>
     </TableRow>
   );
