@@ -107,7 +107,12 @@ export const TableExpandedRow = ({
           xAxis={[
             {
               data: dates,
-              valueFormatter: (date: Date) => date.toLocaleDateString(),
+              valueFormatter: (date: Date) =>
+                date.toLocaleDateString(undefined, {
+                  year: "2-digit",
+                  month: "2-digit",
+                  day: "2-digit",
+                }),
               scaleType: "time",
               tickLabelInterval: (date: Date) => date.getHours() === 0,
             },
