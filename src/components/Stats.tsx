@@ -111,6 +111,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
             }))}
             index="name"
             categories={["Players"]}
+            colors={["#d31f3c"]}
             valueFormatter={v => v.toLocaleString("en")}
             customTooltip={({ label, payload }) => (
               <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
