@@ -1,7 +1,7 @@
 import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader, RefreshCw } from "lucide-react";
+import { BarChartIcon, Loader, RefreshCw } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
@@ -119,6 +119,17 @@ const App = () => {
         View leaderboards from THE FINALS and track your progress.
       </h5>
 
+      <div className="my-1 flex items-center gap-1 rounded bg-brand-red p-1 text-white">
+        <BarChartIcon className="size-5" />
+        <span>
+          I have added a rank distribution chart in the{" "}
+          <a href="#stats" className="font-medium underline underline-offset-2">
+            Stats
+          </a>{" "}
+          section below the table.
+        </span>
+      </div>
+
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
           <Tabs
@@ -212,15 +223,15 @@ const App = () => {
               columns={columns(selectedLeaderboardVersion, selectedPlatform)}
               data={data ?? []}
             />
+
+            <Stats
+              leaderboardVersion={selectedLeaderboardVersion}
+              platform={selectedPlatform}
+              users={data ?? []}
+            />
           </>
         )}
       </div>
-
-      <Stats
-        leaderboardVersion={selectedLeaderboardVersion}
-        platform={selectedPlatform}
-        users={data ?? []}
-      />
 
       <div className="mt-10 flex flex-col gap-2">
         <span>

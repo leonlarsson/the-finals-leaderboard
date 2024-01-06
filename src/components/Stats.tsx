@@ -1,3 +1,4 @@
+import { BarChart } from "@tremor/react";
 import {
   Accordion,
   AccordionContent,
@@ -33,10 +34,10 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
   const platformName = getPlatformName(platform);
 
   return (
-    <Accordion type="single" collapsible>
+    <Accordion id="stats" type="single" collapsible>
       <AccordionItem value="item-1">
         <AccordionTrigger className="rounded bg-neutral-200 p-2 text-xl dark:bg-neutral-900">
-          Stats ({platformName})
+          Stats and Rank Distribution ({platformName})
         </AccordionTrigger>
 
         <AccordionContent className="bg-neutral-100 p-2 text-sm dark:bg-neutral-800">
@@ -98,6 +99,38 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
           <span className="text-lg underline">
             Out of the top {users.length.toLocaleString("en")} players...
           </span>
+
+          <BarChart
+            className="my-2"
+            data={VERSION_LEAGUES[leaderboardVersion].map(league => ({
+              Players: users.filter(
+                user =>
+                  league.name === fameToLeague(leaderboardVersion, user.fame),
+              ).length,
+              name: league.name,
+            }))}
+            index="name"
+            categories={["Players"]}
+            valueFormatter={v => v.toLocaleString("en")}
+            customTooltip={({ label, payload }) => (
+              <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
+                <span>{getPlatformName(platform)}</span>
+                <span className="font-medium">{label}</span>
+                <hr />
+                <span>
+                  {payload?.[0]?.value?.toLocaleString("en") ?? 0} users (
+                  {(payload?.[0]?.value ?? 0 / users.length).toLocaleString(
+                    "en",
+                    {
+                      style: "percent",
+                      maximumFractionDigits: 1,
+                    },
+                  )}
+                  )
+                </span>
+              </div>
+            )}
+          />
 
           <div className="flex flex-col">
             {/* LEAGUES */}
