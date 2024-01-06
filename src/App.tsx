@@ -248,6 +248,7 @@ const App = () => {
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
           All imagery and data is owned by{" "}
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
+          Created by <Link href="https://twitter.com/mozzyfx">Mozzy</Link>.
         </span>
         <div className="flex gap-2">
           <ThemeToggle />
