@@ -113,24 +113,26 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
             categories={["Players"]}
             colors={["#d31f3c"]}
             valueFormatter={v => v.toLocaleString("en")}
-            customTooltip={({ label, payload }) => (
-              <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
-                <span>{getPlatformName(platform)}</span>
-                <span className="font-medium">{label}</span>
-                <hr />
-                <span>
-                  {payload?.[0]?.value?.toLocaleString("en") ?? 0} users (
-                  {(payload?.[0]?.value ?? 0 / users.length).toLocaleString(
-                    "en",
-                    {
-                      style: "percent",
-                      maximumFractionDigits: 1,
-                    },
+            customTooltip={({ label, payload }) => {
+              const amount = payload?.[0]?.value;
+              return (
+                <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
+                  <span>{getPlatformName(platform)}</span>
+                  <span className="font-medium">{label}</span>
+                  <hr />
+                  {typeof amount === "number" && (
+                    <span>
+                      {amount.toLocaleString("en") ?? 0} users (
+                      {(amount / users.length).toLocaleString("en", {
+                        style: "percent",
+                        maximumFractionDigits: 1,
+                      })}
+                      )
+                    </span>
                   )}
-                  )
-                </span>
-              </div>
-            )}
+                </div>
+              );
+            }}
           />
 
           <div className="flex flex-col">
