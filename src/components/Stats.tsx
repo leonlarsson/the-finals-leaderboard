@@ -100,6 +100,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
             Out of the top {users.length.toLocaleString("en")} players...
           </span>
 
+          {/* BAR CHART */}
           <BarChart
             className="my-2"
             data={VERSION_LEAGUES[leaderboardVersion].map(league => ({
@@ -122,7 +123,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                   <hr />
                   {typeof amount === "number" && (
                     <span>
-                      {amount.toLocaleString("en") ?? 0} users (
+                      {amount.toLocaleString("en") ?? 0} players (
                       {(amount / users.length).toLocaleString("en", {
                         style: "percent",
                         maximumFractionDigits: 1,
@@ -135,30 +136,35 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
             }}
           />
 
-          <div className="flex flex-col">
-            {/* LEAGUES */}
-            {VERSION_LEAGUES[leaderboardVersion].map(league => {
-              const usersInLeague = users.filter(
-                user =>
-                  league.name === fameToLeague(leaderboardVersion, user.fame),
-              ).length;
+          {/* LEAGUES */}
+          <details>
+            <summary className="w-fit cursor-pointer font-medium">
+              The same, but in text form
+            </summary>
+            <div className="flex flex-col">
+              {VERSION_LEAGUES[leaderboardVersion].map(league => {
+                const usersInLeague = users.filter(
+                  user =>
+                    league.name === fameToLeague(leaderboardVersion, user.fame),
+                ).length;
 
-              return (
-                <span key={league.name}>
-                  <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
-                    {usersInLeague.toLocaleString("en-US")} (
-                    {(usersInLeague / users.length).toLocaleString("en-US", {
-                      style: "percent",
-                      maximumFractionDigits: 1,
-                    })}
-                    )
-                  </span>{" "}
-                  {usersInLeague === 1 ? "is" : "are"} in {league.name} league{" "}
-                  {fameToRankIcon(leaderboardVersion, league.fame, 60)}
-                </span>
-              );
-            })}
-          </div>
+                return (
+                  <span key={league.name}>
+                    <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
+                      {usersInLeague.toLocaleString("en")} (
+                      {(usersInLeague / users.length).toLocaleString("en", {
+                        style: "percent",
+                        maximumFractionDigits: 1,
+                      })}
+                      )
+                    </span>{" "}
+                    {usersInLeague === 1 ? "is" : "are"} in {league.name}{" "}
+                    {fameToRankIcon(leaderboardVersion, league.fame, 60)}
+                  </span>
+                );
+              })}
+            </div>
+          </details>
         </AccordionContent>
       </AccordionItem>
     </Accordion>
