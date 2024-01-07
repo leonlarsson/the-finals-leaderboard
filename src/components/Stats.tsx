@@ -97,7 +97,8 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
           <hr className="my-2 border-black/30 dark:border-white/30" />
 
           <span className="text-lg font-medium">
-            Out of the top {users.length.toLocaleString("en")} players...
+            Out of the top {users.length.toLocaleString("en")}{" "}
+            {getPlatformName(platform)} players...
           </span>
 
           {/* BAR CHART */}
