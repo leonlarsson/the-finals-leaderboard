@@ -36,19 +36,19 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
   return (
     <Accordion id="stats" type="single" collapsible>
       <AccordionItem value="item-1">
-        <AccordionTrigger className="rounded bg-neutral-200 p-2 text-xl dark:bg-neutral-900">
+        <AccordionTrigger className="rounded-t bg-neutral-200 p-2 text-xl dark:bg-neutral-900">
           Stats and Rank Distribution ({platformName})
         </AccordionTrigger>
 
-        <AccordionContent className="bg-neutral-100 p-2 text-sm dark:bg-neutral-800">
+        <AccordionContent className="bg-neutral-100 p-2 text-sm dark:bg-neutral-900/50">
           <div className="flex flex-col gap-2">
             {/* AVERAGES */}
-            <span className="text-lg underline">Averages</span>
+            <span className="text-lg font-medium">Averages</span>
 
             {leaderboardVersion === "closedBeta1" && (
               <span>
                 Average XP:{" "}
-                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
+                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {(
                     users.map(user => user.xp!).reduce((a, b) => a + b, 0) /
                     users.length
@@ -60,7 +60,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
             {leaderboardVersion === "closedBeta1" && (
               <span>
                 Average Level:{" "}
-                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
+                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {(
                     users.map(user => user.level!).reduce((a, b) => a + b, 0) /
                     users.length
@@ -71,7 +71,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
 
             <span>
               Average Cashouts:{" "}
-              <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
+              <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                 {(
                   users.map(user => user.cashouts).reduce((a, b) => a + b, 0) /
                   users.length
@@ -85,7 +85,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
 
             <span>
               Average Fame:{" "}
-              <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
+              <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                 {(
                   users.map(user => user.fame).reduce((a, b) => a + b, 0) /
                   users.length
@@ -94,9 +94,9 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
             </span>
           </div>
 
-          <hr className="my-2 border-black/30" />
+          <hr className="my-2 border-black/30 dark:border-white/30" />
 
-          <span className="text-lg underline">
+          <span className="text-lg font-medium">
             Out of the top {users.length.toLocaleString("en")} players...
           </span>
 
@@ -150,7 +150,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
 
                 return (
                   <span key={league.name}>
-                    <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-700">
+                    <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                       {usersInLeague.toLocaleString("en")} (
                       {(usersInLeague / users.length).toLocaleString("en", {
                         style: "percent",

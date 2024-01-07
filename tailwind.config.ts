@@ -85,7 +85,7 @@ const config: Config = {
           },
           content: {
             subtle: colors.gray[400],
-            DEFAULT: colors.gray[500],
+            DEFAULT: colors.gray[800],
             emphasis: colors.gray[700],
             strong: colors.gray[900],
             inverted: colors.white,
@@ -114,7 +114,7 @@ const config: Config = {
           },
           content: {
             subtle: colors.gray[600],
-            DEFAULT: colors.gray[500],
+            DEFAULT: colors.gray[300],
             emphasis: colors.gray[200],
             strong: colors.gray[50],
             inverted: colors.gray[950],
