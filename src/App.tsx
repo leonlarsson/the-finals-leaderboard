@@ -1,7 +1,7 @@
 import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BarChartIcon, Loader, RefreshCw } from "lucide-react";
+import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
@@ -21,12 +21,13 @@ import openBetaData from "./data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
 import { cn } from "./lib/utils";
-import { Platforms } from "./types";
+import { Panels, Platforms } from "./types";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const leaderboardSearchParam = searchParams.get("leaderboard");
   const platformSearchParam = searchParams.get("platform");
+  const panelSearchParam = searchParams.get("panel");
 
   const initialLeaderboardVersion =
     leaderboardSearchParam &&
@@ -42,6 +43,12 @@ const App = () => {
       ? platformSearchParam
       : Platforms.Crossplay;
 
+  const initialPanel =
+    panelSearchParam &&
+    Object.values(Panels).includes(panelSearchParam as Panels)
+      ? panelSearchParam
+      : Panels.Table;
+
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
     useState<LEADERBOARD_VERSION>(
       initialLeaderboardVersion as LEADERBOARD_VERSION,
@@ -49,6 +56,10 @@ const App = () => {
 
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(
     initialPlatform as Platforms,
+  );
+
+  const [selectedPanel, setSelectedPanel] = useState<Panels>(
+    initialPanel as Panels,
   );
 
   const queryClient = useQueryClient();
@@ -98,12 +109,16 @@ const App = () => {
       ? searchParams.delete("platform")
       : searchParams.set("platform", selectedPlatform);
 
+    selectedPanel === Panels.Table
+      ? searchParams.delete("panel")
+      : searchParams.set("panel", selectedPanel);
+
     window.history.replaceState(
       null,
       "",
       searchParams.size > 0 ? `?${searchParams.toString()}` : "/",
     );
-  }, [selectedLeaderboardVersion, selectedPlatform]);
+  }, [selectedLeaderboardVersion, selectedPlatform, selectedPanel]);
 
   const disabled =
     selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE ||
@@ -111,22 +126,25 @@ const App = () => {
     isRefetching;
 
   return (
-    <div className="container mb-12 font-saira">
-      <h1 className="text-2xl font-medium underline min-[440px]:text-4xl">
+    <div className="container mb-12 font-saira max-sm:px-2">
+      <h1 className="text-2xl font-medium underline sm:text-4xl">
         Enhanced Leaderboard – THE FINALS
       </h1>
-      <h5 className="text-base min-[440px]:text-xl">
+      <h5 className="text-base sm:text-xl">
         View leaderboards from THE FINALS and track your progress.
       </h5>
 
-      <div className="my-1 flex items-center gap-1 rounded bg-brand-red p-1 text-white">
+      <div className="my-1 flex items-center gap-1 rounded-md bg-brand-red p-1 text-white">
         <BarChartIcon className="size-5" />
         <span>
           I have added a rank distribution chart in the{" "}
-          <a href="#stats" className="font-medium underline underline-offset-2">
+          <span
+            className="cursor-pointer font-medium underline underline-offset-2"
+            onClick={() => setSelectedPanel(Panels.Stats)}
+          >
             Stats
-          </a>{" "}
-          section below the table.
+          </span>{" "}
+          section.
         </span>
       </div>
 
@@ -215,21 +233,50 @@ const App = () => {
 
         {error && <span className="text-red-700">Error fetching data.</span>}
 
+        {/* Panel selector and panels */}
         {!error && (
-          <>
-            <DataTable
-              leaderboardVersion={selectedLeaderboardVersion}
-              platform={selectedPlatform}
-              columns={columns(selectedLeaderboardVersion, selectedPlatform)}
-              data={data ?? []}
-            />
+          <div className="space-y-3">
+            <Tabs
+              value={selectedPanel}
+              onValueChange={v => setSelectedPanel(v as Panels)}
+            >
+              <TabsList>
+                <TabsTrigger
+                  value={Panels.Table}
+                  disabled={isLoading || isRefetching}
+                >
+                  <TableIcon className="mr-2 inline size-5" />
+                  Table
+                </TabsTrigger>
 
-            <Stats
-              leaderboardVersion={selectedLeaderboardVersion}
-              platform={selectedPlatform}
-              users={data ?? []}
-            />
-          </>
+                <TabsTrigger
+                  value={Panels.Stats}
+                  disabled={isLoading || isRefetching}
+                >
+                  <BarChartIcon className="mr-2 inline size-5" />
+                  Stats
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {selectedPanel === Panels.Table && (
+              <DataTable
+                leaderboardVersion={selectedLeaderboardVersion}
+                platform={selectedPlatform}
+                columns={columns(selectedLeaderboardVersion, selectedPlatform)}
+                data={data ?? []}
+              />
+            )}
+
+            {selectedPanel === Panels.Stats && (
+              <Stats
+                isLoading={isLoading || isRefetching}
+                leaderboardVersion={selectedLeaderboardVersion}
+                platform={selectedPlatform}
+                users={data ?? []}
+              />
+            )}
+          </div>
         )}
       </div>
 

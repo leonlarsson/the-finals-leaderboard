@@ -1,21 +1,17 @@
 import { BarChart } from "@tremor/react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import fameToLeague from "@/helpers/fameToLeague";
 import fameToRankIcon from "@/helpers/fameToRankIcon";
 import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "@/helpers/leagues";
 import { Platforms, User } from "@/types";
+import { LoaderIcon } from "lucide-react";
 
 type Props = {
+  isLoading: boolean;
   leaderboardVersion: LEADERBOARD_VERSION;
   platform: Platforms;
   users: User[];
 };
-export default ({ leaderboardVersion, platform, users }: Props) => {
+export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
   const getPlatformName = (platform: Platforms) => {
     switch (platform) {
       case Platforms.Crossplay:
@@ -34,13 +30,14 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
   const platformName = getPlatformName(platform);
 
   return (
-    <Accordion id="stats" type="single" collapsible>
-      <AccordionItem value="item-1">
-        <AccordionTrigger className="rounded-t bg-neutral-200 p-2 text-xl dark:bg-neutral-900">
-          Stats and Rank Distribution ({platformName})
-        </AccordionTrigger>
+    <div className="rounded-md bg-neutral-100 p-2 text-sm dark:bg-neutral-900/50">
+      <h2 className="mb-1 text-xl font-medium">
+        Stats and Rank Distribution ({platformName})
+      </h2>
+      {isLoading && <LoaderIcon className="inline size-5 animate-spin" />}
 
-        <AccordionContent className="bg-neutral-100 p-2 text-sm dark:bg-neutral-900/50">
+      {!isLoading && (
+        <>
           <div className="flex flex-col gap-2">
             {/* AVERAGES */}
             <span className="text-lg font-medium">Averages</span>
@@ -52,7 +49,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                   {(
                     users.map(user => user.xp!).reduce((a, b) => a + b, 0) /
                     users.length
-                  ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                  ).toLocaleString("en", { maximumFractionDigits: 0 })}
                 </span>
               </span>
             )}
@@ -64,7 +61,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                   {(
                     users.map(user => user.level!).reduce((a, b) => a + b, 0) /
                     users.length
-                  ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                  ).toLocaleString("en", { maximumFractionDigits: 0 })}
                 </span>
               </span>
             )}
@@ -75,7 +72,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                 {(
                   users.map(user => user.cashouts).reduce((a, b) => a + b, 0) /
                   users.length
-                ).toLocaleString("en-US", {
+                ).toLocaleString("en", {
                   style: "currency",
                   currency: "USD",
                   maximumFractionDigits: 0,
@@ -89,7 +86,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                 {(
                   users.map(user => user.fame).reduce((a, b) => a + b, 0) /
                   users.length
-                ).toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                ).toLocaleString("en", { maximumFractionDigits: 0 })}
               </span>
             </span>
           </div>
@@ -97,8 +94,8 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
           <hr className="my-2 border-black/30 dark:border-white/30" />
 
           <span className="text-lg font-medium">
-            Out of the top {users.length.toLocaleString("en")}{" "}
-            {getPlatformName(platform)} players...
+            Out of the top {users.length.toLocaleString("en")} {platformName}{" "}
+            players...
           </span>
 
           {/* BAR CHART */}
@@ -119,7 +116,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               const amount = payload?.[0]?.value;
               return (
                 <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
-                  <span>{getPlatformName(platform)}</span>
+                  <span>{platformName}</span>
                   <span className="font-medium">{label}</span>
                   <hr />
                   {typeof amount === "number" && (
@@ -166,8 +163,8 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               })}
             </div>
           </details>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+        </>
+      )}
+    </div>
   );
 };

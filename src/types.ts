@@ -43,3 +43,8 @@ export enum Platforms {
   Xbox = "xbox",
   PSN = "psn",
 }
+
+export enum Panels {
+  Table = "table",
+  Stats = "stats",
+}
