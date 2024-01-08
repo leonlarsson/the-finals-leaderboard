@@ -32,7 +32,10 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
   return (
     <div className="rounded-md bg-neutral-100 p-2 text-sm dark:bg-neutral-900/50">
       <h2 className="mb-1 text-xl font-medium">
-        Stats and Rank Distribution ({platformName})
+        Stats and Rank Distribution{" "}
+        {leaderboardVersion === LEADERBOARD_VERSION.LIVE && (
+          <span>({platformName})</span>
+        )}
       </h2>
       {isLoading && <LoaderIcon className="inline size-5 animate-spin" />}
 
@@ -94,7 +97,8 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
           <hr className="my-2 border-black/30 dark:border-white/30" />
 
           <span className="text-lg font-medium">
-            Out of the top {users.length.toLocaleString("en")} {platformName}{" "}
+            Out of the top {users.length.toLocaleString("en")}{" "}
+            {leaderboardVersion === LEADERBOARD_VERSION.LIVE && platformName}{" "}
             players...
           </span>
 
