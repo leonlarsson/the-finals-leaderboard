@@ -116,6 +116,7 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
             categories={["Players"]}
             colors={["#d31f3c"]}
             valueFormatter={v => v.toLocaleString("en")}
+            showAnimation
             customTooltip={({ label, payload }) => {
               const amount = payload?.[0]?.value;
               return (
