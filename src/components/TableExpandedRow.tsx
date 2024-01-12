@@ -114,7 +114,6 @@ export const TableExpandedRow = ({
                   day: "2-digit",
                 }),
               scaleType: "time",
-              tickLabelInterval: (date: Date) => date.getHours() === 0,
             },
           ]}
           yAxis={[
