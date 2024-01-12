@@ -153,3 +153,33 @@ export const TableExpandedRow = ({
     </TableRow>
   );
 };
+
+// Tremor exploration
+/* <LineChart
+  data={
+    response.data?.[responseIndex].data.map(x => ({
+      date: x.date,
+      Rank: x.rank * -1,
+      Fame: x.fame,
+    })) ?? []
+  }
+  index="date"
+  categories={["Fame", "Rank"]}
+  colors={["#d31f3c", "blue"]}
+  valueFormatter={v => v.toLocaleString("en")}
+  showAnimation
+  curveType="natural"
+  minValue={Math.min(...ranks) * 0.2}
+  customTooltip={({ label, payload }) => {
+    const { Fame, Rank } = payload?.[0]?.payload ?? {};
+
+    return (
+      <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-left text-sm dark:bg-black">
+        <span className="font-medium">{label}</span>
+        <hr />
+        <span>Rank: {Rank?.toLocaleString("en")}</span>
+        <span>Fame: {Fame?.toLocaleString("en")}</span>
+      </div>
+    );
+  }}
+/> */
