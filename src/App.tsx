@@ -1,13 +1,7 @@
 import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  BarChartIcon,
-  Code2Icon,
-  Loader,
-  RefreshCw,
-  TableIcon,
-} from "lucide-react";
+import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
@@ -140,20 +134,11 @@ const App = () => {
         View leaderboards from THE FINALS and track your progress.
       </h5>
 
-      <div className="my-1 flex items-center gap-1 rounded-md bg-brand-red p-1 text-white">
-        <Code2Icon className="size-5" />
-        <span>
-          I have released a leaderboards API that anyone can use.{" "}
-          <a
-            href="https://github.com/leonlarsson/the-finals-api"
-            target="_blank"
-            className="cursor-pointer font-medium underline underline-offset-2"
-          >
-            Check it out
-          </a>
-          !
-        </span>
-      </div>
+      {/* Notice */}
+      {/* <div className="my-1 flex items-center gap-1 rounded-md bg-brand-red p-1 text-white">
+        Icon
+        <span>Message</span>
+      </div> */}
 
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
@@ -303,6 +288,8 @@ const App = () => {
           All imagery and data is owned by{" "}
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
           Created by <Link href="https://twitter.com/mozzyfx">Mozzy</Link>.
+          Check out the{" "}
+          <Link href="https://github.com/leonlarsson/the-finals-api">API</Link>.
         </span>
         <div className="flex gap-2">
           <ThemeToggle />
