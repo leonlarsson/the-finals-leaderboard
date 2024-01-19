@@ -291,19 +291,20 @@ const App = () => {
           Check out the{" "}
           <Link href="https://github.com/leonlarsson/the-finals-api">API</Link>.
         </span>
+
         <div className="flex gap-2">
           <ThemeToggle />
-          <Button variant="outline" size="icon">
-            <Link href="https://x.com/mozzyfx">
+          <Link href="https://x.com/mozzyfx">
+            <Button variant="outline" size="icon">
               <Icons.xTwitter className="size-5" />
-            </Link>
-          </Button>
+            </Button>
+          </Link>
 
-          <Button variant="outline" size="icon">
-            <Link href="https://github.com/leonlarsson/the-finals-leaderboard">
+          <Link href="https://github.com/leonlarsson/the-finals-leaderboard">
+            <Button variant="outline" size="icon">
               <Icons.github className="size-5" />
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
