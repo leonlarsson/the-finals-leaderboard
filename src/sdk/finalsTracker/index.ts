@@ -8,15 +8,15 @@ import { API, FinalsTrackerUrls } from "@/sdk/finalsTracker/config";
 export type UserLeaderboardResponse = FinalsTrackerResponse<LeaderboardUser[]>;
 
 export const getLeaderboardByUsername = async (
-  params?: UserLeaderboardQueryParams,
+  params: UserLeaderboardQueryParams,
 ): Promise<UserLeaderboardResponse> => {
   try {
-    const res = await API.get<UserLeaderboardResponse>(
-      FinalsTrackerUrls.USER_LEADERBOARD,
-      { params },
-    );
+    const res = await API.get<
+      UserLeaderboardQueryParams,
+      UserLeaderboardResponse
+    >(FinalsTrackerUrls.USER_LEADERBOARD, params);
 
-    return res.data;
+    return res;
   } catch (e: any) {
     console.error(e);
 
