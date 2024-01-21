@@ -160,7 +160,7 @@ export const columns = (
               </div>
             </PopoverTrigger>
 
-            <PopoverContent className="flex flex-col items-center justify-center">
+            <PopoverContent className="flex flex-col items-center justify-center font-saira">
               <span className="text-xl font-medium">
                 {fameToLeague(leaderboardVersion, fame)}
               </span>

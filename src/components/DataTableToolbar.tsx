@@ -131,7 +131,7 @@ export default function <TData>({
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-[200px] p-0 font-saira" align="start">
           <Command>
             <CommandInput placeholder="Filter..." />
             <CommandList>
