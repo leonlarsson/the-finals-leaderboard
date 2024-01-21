@@ -61,4 +61,10 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  /* MUI Chart font override */
+  text,
+  .MuiTypography-root {
+    font-family: "Saira", sans-serif !important;
+  }
 }
