@@ -83,18 +83,19 @@ export const columns = (
         </TooltipProvider>
       ) : (
         <span className="inline-flex gap-1">
-          {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
-            selectedPlatform === "steam" && (
-              <Icons.steam className="inline size-5 opacity-60" />
-            )}
-          {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
-            selectedPlatform === "xbox" && (
-              <Icons.xbox className="inline size-5 opacity-60" />
-            )}
-          {leaderboardVersion === LEADERBOARD_VERSION.LIVE &&
-            selectedPlatform === "psn" && (
-              <Icons.playstation className="inline size-5 opacity-60" />
-            )}{" "}
+          {leaderboardVersion === LEADERBOARD_VERSION.LIVE && (
+            <>
+              {selectedPlatform === "steam" && (
+                <Icons.steam className="inline size-5 opacity-60" />
+              )}
+              {selectedPlatform === "xbox" && (
+                <Icons.xbox className="inline size-5 opacity-60" />
+              )}
+              {selectedPlatform === "psn" && (
+                <Icons.playstation className="inline size-5 opacity-60" />
+              )}
+            </>
+          )}
           {user.name}
         </span>
       );
