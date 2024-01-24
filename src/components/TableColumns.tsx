@@ -74,9 +74,9 @@ export const columns = (
     cell: ({ row: { original: user } }) => {
       return user.steamName || user.xboxName || user.psnName ? (
         <TooltipProvider>
-          <Tooltip delayDuration={0} disableHoverableContent>
+          <Tooltip delayDuration={200}>
             <TooltipTrigger asChild className="w-fit">
-              <span className="flex flex-col">{platformNamesInline(user)}</span>
+              {platformNamesInline(user)}
             </TooltipTrigger>
             <TooltipContent>{namePopoverContent(user)}</TooltipContent>
           </Tooltip>
@@ -147,28 +147,26 @@ export const columns = (
     cell: ({ getValue }) => {
       const { fame } = getValue() as { fame: number; league: string };
       return (
-        <span className="flex items-center gap-2">
-          <Popover>
-            <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
-              <div className="size-[60px]">
-                {fameToRankIcon(leaderboardVersion, fame)}
-              </div>
+        <Popover>
+          <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
+            <div className="size-[60px]">
+              {fameToRankIcon(leaderboardVersion, fame)}
+            </div>
 
-              <div className="flex flex-col">
-                <span>{fameToLeague(leaderboardVersion, fame)}</span>
-                <span>{fame.toLocaleString("en")}</span>
-              </div>
-            </PopoverTrigger>
+            <div className="flex flex-col">
+              <span>{fameToLeague(leaderboardVersion, fame)}</span>
+              <span>{fame.toLocaleString("en")}</span>
+            </div>
+          </PopoverTrigger>
 
-            <PopoverContent className="flex flex-col items-center justify-center font-saira">
-              <span className="text-xl font-medium">
-                {fameToLeague(leaderboardVersion, fame)}
-              </span>
-              <span>{fame.toLocaleString("en")} fame points</span>
-              {fameToRankIcon(leaderboardVersion, fame, 160)}
-            </PopoverContent>
-          </Popover>
-        </span>
+          <PopoverContent className="flex flex-col items-center justify-center font-saira">
+            <span className="text-xl font-medium">
+              {fameToLeague(leaderboardVersion, fame)}
+            </span>
+            <span>{fame.toLocaleString("en")} fame points</span>
+            {fameToRankIcon(leaderboardVersion, fame, 160)}
+          </PopoverContent>
+        </Popover>
       );
     },
   } satisfies ColumnDef<User>;
