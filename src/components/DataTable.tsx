@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataTableToolbar from "./DataTableToolbar";
-import { TableExpandedRow } from "./TableExpandedRow";
+import TableUserHistory from "./TableUserHistory/TableUserHistory.tsx";
 import { DataTablePagination } from "./DataTablePagination";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
 import { Platforms } from "@/types";
@@ -114,7 +114,7 @@ export function DataTable<TData, TValue>({
                     ))}
                   </TableRow>
 
-                  <TableExpandedRow
+                  <TableUserHistory
                     colSpan={columns.length}
                     show={row.getIsExpanded()}
                     name={(data[row.id as any] as any).name as string}

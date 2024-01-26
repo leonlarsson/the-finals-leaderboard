@@ -1,23 +1,13 @@
-export interface FinalsTrackerResponse<T> {
-  data?: T;
-  errors?: string[];
-}
-
-export interface FinalsTrackerSuccessResponse<T> {
+export interface FinalsTrackerResponseSuccess<T> {
   data: T;
+  errors: undefined;
 }
 
-export interface FinalsTrackerErrorResponse {
+export interface FinalsTrackerResponseError {
+  data: undefined;
   errors: string[];
 }
 
-export interface LeaderboardUser {
-  name: string;
-  data: LeaderboardData[];
-}
-
-export interface LeaderboardData {
-  rank: number;
-  fame: number;
-  date: string;
-}
+export type FinalsTrackerResponse<T> =
+  | FinalsTrackerResponseSuccess<T>
+  | FinalsTrackerResponseError;

@@ -11,5 +11,6 @@ export const API = {
 };
 
 export enum FinalsTrackerUrls {
-  USER_LEADERBOARD = "/v1/users/leaderboard",
+  USER_QUERY = "/v1/users",
+  USER_LEADERBOARD = "/v1/users/:id/leaderboard",
 }
