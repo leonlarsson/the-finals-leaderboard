@@ -33,16 +33,17 @@ const TableUserHistoryData = ({
   return (
     <>
       <LineChart
+        margin={{ left: 63, right: 63 }}
         xAxis={[
           {
             data: dates,
             valueFormatter: (date: Date) =>
-              date.toLocaleDateString("fr-FR", {
+              date.toLocaleDateString(undefined, {
                 month: "2-digit",
                 day: "2-digit",
+                // year: "2-digit",
               }),
             scaleType: "time",
-            tickLabelInterval: (date: Date) => date.getHours() === 0,
           },
         ]}
         yAxis={[
@@ -52,25 +53,27 @@ const TableUserHistoryData = ({
             tickMinStep: 20_000,
             max: Math.max(...fames!) * 1.2,
             min: Math.min(...fames!) * 0.2,
+            valueFormatter: value => value.toLocaleString("en"),
           },
           {
             id: "rankAxis",
             scaleType: "linear",
             tickMinStep: 1,
-            valueFormatter: value => (value * -1).toString(),
+            valueFormatter: value => (value * -1).toLocaleString("en"),
           },
         ]}
         series={[
           {
-            yAxisKey: "rankAxis",
-            data: ranks,
-            label: "Rank",
-            valueFormatter: value => (value * -1).toString(),
-          },
-          {
             yAxisKey: "fameAxis",
             data: fames,
             label: "Fame",
+            valueFormatter: value => value.toLocaleString("en"),
+          },
+          {
+            yAxisKey: "rankAxis",
+            data: ranks,
+            label: "Rank",
+            valueFormatter: value => (value * -1).toLocaleString("en"),
           },
         ]}
         leftAxis="fameAxis"
@@ -99,7 +102,7 @@ const TableUserHistoryData = ({
   minValue={Math.min(...ranks) * 0.2}
   customTooltip={({ label, payload }) => {
     const { Fame, Rank } = payload?.[0]?.payload ?? {};
-
+    
     return (
       <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-left text-sm dark:bg-black">
         <span className="font-medium">{label}</span>

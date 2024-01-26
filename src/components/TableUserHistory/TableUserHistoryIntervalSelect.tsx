@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FinalsTrackerInterval } from "@/sdk/finalsTracker";
 
 export interface TableUserHistoryIntervalSelectProps {

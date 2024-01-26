@@ -1,4 +1,4 @@
-import { Platforms } from "@/types.ts";
+import { Platforms } from "@/types";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   FinalsTrackerInterval,
@@ -9,12 +9,12 @@ import {
   HistoryByUserResponse,
   UserResponse,
 } from "@/sdk/finalsTracker";
-import { TableCell, TableRow } from "@/components/ui/table.tsx";
-import TableUserHistoryError from "./TableUserHistoryError.tsx";
-import TableUserHistoryData from "@/components/TableUserHistory/TableUserHistoryData.tsx";
-import TableUserHistoryUserSelect from "@/components/TableUserHistory/TableUserHistoryUserSelect.tsx";
-import TableUserHistoryLoading from "@/components/TableUserHistory/TableUserHistoryLoading.tsx";
-import TableUserHistoryIntervalSelect from "@/components/TableUserHistory/TableUserHistoryIntervalSelect.tsx";
+import { TableCell, TableRow } from "@/components/ui/table";
+import TableUserHistoryError from "./TableUserHistoryError";
+import TableUserHistoryData from "@/components/TableUserHistory/TableUserHistoryData";
+import TableUserHistoryUserSelect from "@/components/TableUserHistory/TableUserHistoryUserSelect";
+import TableUserHistoryLoading from "@/components/TableUserHistory/TableUserHistoryLoading";
+import TableUserHistoryIntervalSelect from "@/components/TableUserHistory/TableUserHistoryIntervalSelect";
 
 type TableExpandedRowProps = {
   show: boolean;
@@ -167,14 +167,16 @@ const TableUserHistory = (props: TableExpandedRowProps) => {
       {isLoading && <TableUserHistoryLoading colSpan={colSpan} />}
       {(showUserSelect || showHistory || showNoData) && (
         <TableRow>
-          <TableCell colSpan={colSpan} className="h-24 text-center">
+          <TableCell colSpan={colSpan} className="h-24 space-y-2 text-center">
             {errors && <TableUserHistoryError errors={errors} />}
+
             {showUserSelect && (
               <TableUserHistoryUserSelect
                 users={users?.data || []}
                 setActiveUserId={id => updateActiveUserId(id, interval)}
               />
             )}
+
             {activeUserId && (
               <TableUserHistoryIntervalSelect
                 defaultInterval={interval}
@@ -183,13 +185,15 @@ const TableUserHistory = (props: TableExpandedRowProps) => {
                 }
               />
             )}
+
             {showHistory && (
               <TableUserHistoryData
                 history={history?.data || []}
                 platform={platformToFinalsTrackerPlatform(platform)}
               />
             )}
-            {showNoData && <span>No data available</span>}
+
+            {showNoData && <div>No data available</div>}
           </TableCell>
         </TableRow>
       )}

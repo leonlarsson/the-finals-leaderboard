@@ -1,4 +1,4 @@
-import { TableCell, TableRow } from "@/components/ui/table.tsx";
+import { TableCell, TableRow } from "@/components/ui/table";
 import LinearProgress from "@mui/material/LinearProgress";
 
 export interface TableUserHistoryLoadingProps {

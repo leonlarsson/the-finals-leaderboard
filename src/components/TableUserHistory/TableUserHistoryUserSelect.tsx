@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FinalsTrackerUser } from "@/sdk/finalsTracker";
 
 export interface TableUserHistoryUserSelectProps {
@@ -21,7 +21,6 @@ const TableUserHistoryUserSelect = ({
           ))}
         </TabsList>
       </Tabs>
-      <br />
     </>
   );
 };

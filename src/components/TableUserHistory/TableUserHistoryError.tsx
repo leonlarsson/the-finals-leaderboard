@@ -3,16 +3,12 @@ export interface TableUserHistoryErrorProps {
 }
 
 const TableUserHistoryError = ({ errors }: TableUserHistoryErrorProps) => (
-  <>
+  <div className="flex flex-col gap-1">
     <span>Something went wrong while fetching table data</span>
-    <br />
     {errors.map((err, i) => (
-      <>
-        <span key={i}>{err}</span>
-        <br />
-      </>
+      <span key={i}>{err}</span>
     ))}
-  </>
+  </div>
 );
 
 export default TableUserHistoryError;

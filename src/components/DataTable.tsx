@@ -20,7 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DataTableToolbar from "./DataTableToolbar";
-import TableUserHistory from "./TableUserHistory/TableUserHistory.tsx";
+import TableUserHistory from "./TableUserHistory/TableUserHistory";
 import { DataTablePagination } from "./DataTablePagination";
 import { LEADERBOARD_VERSION } from "@/helpers/leagues";
 import { Platforms } from "@/types";
