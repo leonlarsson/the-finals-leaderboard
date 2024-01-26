@@ -22,8 +22,10 @@ const TableUserHistoryData = ({
     for (const item of history) {
       dates.push(item.timestamp);
       fames.push(item.fame);
+      // Set rank to -10000 if rank is falsy (likely fell out of the top 10K)
       ranks.push(
-        item.rank[platform === FinalsTrackerPlatform.PS ? "ps" : platform] * -1,
+        item.rank[platform === FinalsTrackerPlatform.PS ? "ps" : platform] *
+          -1 || -10_000,
       );
     }
 
