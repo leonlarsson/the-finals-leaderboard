@@ -1,5 +1,6 @@
 import "./index.css";
 import { useEffect, useState } from "react";
+import { ProgressBar } from "@tremor/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -97,6 +98,21 @@ const App = () => {
     staleTime: Infinity, // Cache the data until the page is refreshed
   });
 
+  const { data: communityEventData, isError: communityEventIsError } = useQuery(
+    {
+      queryKey: ["communityEvent"],
+      queryFn: async () => {
+        const res = await fetch(
+          "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-leaderboard-discovery-live.json",
+        );
+        const json = (await res.json()) as { goal: number; total: number };
+        return { goal: json.goal, total: json.total };
+      },
+      refetchInterval: 30_000,
+      initialData: { goal: 250_000_000_000, total: 0 },
+    },
+  );
+
   // Store selected leaderboard version and platform in URL
   // Perhaps not the best way to do it, but it works
   useEffect(() => {
@@ -133,6 +149,43 @@ const App = () => {
       <h5 className="text-base sm:text-xl">
         View leaderboards from THE FINALS and track your progress.
       </h5>
+
+      {!communityEventIsError && (
+        <div className="flex flex-col flex-wrap gap-1 rounded-md border p-2 text-sm tabular-nums">
+          <Link href="https://www.reachthefinals.com/community-event">
+            Community Event | Cashouts
+          </Link>
+
+          <span className="flex flex-wrap justify-between">
+            <span>
+              {new Intl.NumberFormat("en", {
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: 0,
+              }).format(communityEventData.total)}{" "}
+              •{" "}
+              {new Intl.NumberFormat("en", {
+                style: "percent",
+                maximumFractionDigits: 1,
+              }).format(communityEventData.total / communityEventData.goal)}
+            </span>
+
+            <span>
+              {new Intl.NumberFormat("en", {
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: 0,
+              }).format(communityEventData.goal)}
+            </span>
+          </span>
+
+          <ProgressBar
+            showAnimation
+            color="red"
+            value={(communityEventData.total / communityEventData.goal) * 100}
+          />
+        </div>
+      )}
 
       {/* Notice */}
       {/* <div className="my-1 flex items-center gap-1 rounded-md bg-brand-red p-1 text-white">
