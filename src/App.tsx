@@ -106,7 +106,10 @@ const App = () => {
           "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-leaderboard-discovery-live.json",
         );
         const json = (await res.json()) as { goal: number; total: number };
-        return { goal: json.goal, total: json.total };
+        return {
+          goal: json.goal,
+          total: Math.min(json.total, 250_000_000_000),
+        };
       },
       refetchInterval: 30_000,
       initialData: { goal: 250_000_000_000, total: 0 },
