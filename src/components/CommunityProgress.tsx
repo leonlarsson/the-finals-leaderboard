@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ProgressBar } from "@tremor/react";
 import Link from "./Link";
 
-export default () => {
+const CommunityProgress = () => {
   const { data, isError } = useQuery({
     queryKey: ["communityEvent"],
     queryFn: async () => {
@@ -58,3 +58,5 @@ export default () => {
     </div>
   );
 };
+
+export default CommunityProgress;
