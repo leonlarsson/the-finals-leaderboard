@@ -1,6 +1,5 @@
 import "./index.css";
 import { useEffect, useState } from "react";
-import { ProgressBar } from "@tremor/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,6 +15,7 @@ import {
 import Stats from "./components/Stats";
 import ThemeToggle from "./components/ThemeToggle";
 import Icons from "./components/icons";
+import Link from "./components/Link";
 import transformData from "./helpers/transformData";
 import { LEADERBOARD_VERSION } from "./helpers/leagues";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
@@ -98,24 +98,6 @@ const App = () => {
     staleTime: Infinity, // Cache the data until the page is refreshed
   });
 
-  const { data: communityEventData, isError: communityEventIsError } = useQuery(
-    {
-      queryKey: ["communityEvent"],
-      queryFn: async () => {
-        const res = await fetch(
-          "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-leaderboard-discovery-live.json",
-        );
-        const json = (await res.json()) as { goal: number; total: number };
-        return {
-          goal: json.goal,
-          total: Math.min(json.total, 250_000_000_000),
-        };
-      },
-      refetchInterval: 30_000,
-      initialData: { goal: 250_000_000_000, total: 0 },
-    },
-  );
-
   // Store selected leaderboard version and platform in URL
   // Perhaps not the best way to do it, but it works
   useEffect(() => {
@@ -153,42 +135,7 @@ const App = () => {
         View leaderboards from THE FINALS and track your progress.
       </h5>
 
-      {!communityEventIsError && (
-        <div className="flex flex-col flex-wrap gap-1 rounded-md border p-2 text-sm tabular-nums">
-          <Link href="https://www.reachthefinals.com/community-event">
-            Community Event | Cashouts
-          </Link>
-
-          <span className="flex flex-wrap justify-between">
-            <span>
-              {new Intl.NumberFormat("en", {
-                style: "currency",
-                currency: "USD",
-                maximumFractionDigits: 0,
-              }).format(communityEventData.total)}{" "}
-              •{" "}
-              {new Intl.NumberFormat("en", {
-                style: "percent",
-                maximumFractionDigits: 1,
-              }).format(communityEventData.total / communityEventData.goal)}
-            </span>
-
-            <span>
-              {new Intl.NumberFormat("en", {
-                style: "currency",
-                currency: "USD",
-                maximumFractionDigits: 0,
-              }).format(communityEventData.goal)}
-            </span>
-          </span>
-
-          <ProgressBar
-            showAnimation
-            color="red"
-            value={(communityEventData.total / communityEventData.goal) * 100}
-          />
-        </div>
-      )}
+      {/* <CommunityProgress /> */}
 
       {/* Notice */}
       {/* <div className="my-1 flex items-center gap-1 rounded-md bg-brand-red p-1 text-white">
@@ -366,17 +313,5 @@ const App = () => {
     </div>
   );
 };
-
-const Link = ({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) => (
-  <a href={href} target="_blank" className="font-medium hover:underline">
-    {children}
-  </a>
-);
 
 export default App;
