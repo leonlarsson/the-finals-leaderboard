@@ -28,6 +28,7 @@ const config: Config = {
       },
       colors: {
         "brand-red": "#d31f3c",
+        "brand-purple": "#39015c",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -200,7 +201,7 @@ const config: Config = {
         /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
     // For the Tremor bar chart bar color
-    ...["[#d31f3c]"].flatMap(customColor => [
+    ...["[#d31f3c]", "[#39015c]"].flatMap(customColor => [
       `bg-${customColor}`,
       `border-${customColor}`,
       `hover:bg-${customColor}`,
