@@ -1,27 +1,52 @@
+// Docs https://api.finals-tracker.com/api/swagger/
+
 import {
   FinalsTrackerResponse,
-  LeaderboardUser,
-  UserLeaderboardQueryParams,
-} from "@/sdk/finalsTracker/models";
-import { API, FinalsTrackerUrls } from "@/sdk/finalsTracker/config";
+  FinalsTrackerResponseSuccess,
+  FinalsTrackerUser,
+  FinalsTrackerUserLeaderboard,
+  FinalsTrackerUserLeaderboardQueryParams,
+  FinalsTrackerUserLeaderboardQueryParamsRaw,
+  FinalsTrackerUserLeaderboardRaw,
+  FinalsTrackerUserQueryParams,
+} from "./models";
+import { API, FinalsTrackerUrls } from "./config";
 
-export type UserLeaderboardResponse = FinalsTrackerResponse<LeaderboardUser[]>;
+export * from "./enums";
+export * from "./models";
 
-export const getLeaderboardByUsername = async (
-  params: UserLeaderboardQueryParams,
-): Promise<UserLeaderboardResponse> => {
-  try {
-    const res = await API.get<
-      UserLeaderboardQueryParams,
-      UserLeaderboardResponse
-    >(FinalsTrackerUrls.USER_LEADERBOARD, params);
+export type UserResponse = FinalsTrackerResponse<FinalsTrackerUser[]>;
 
-    return res;
-  } catch (e: any) {
-    console.error(e);
+export type HistoryByUserResponse = FinalsTrackerResponse<
+  FinalsTrackerUserLeaderboard[]
+>;
 
-    return {
-      errors: e?.response?.data || ["SOMETHING WENT WRONG"],
-    };
-  }
+export const getUsers = async (
+  queryParams: FinalsTrackerUserQueryParams,
+): Promise<UserResponse> =>
+  API.get<FinalsTrackerUserQueryParams, UserResponse>(
+    FinalsTrackerUrls.USER_QUERY,
+    queryParams,
+  );
+
+export const getHistoryByUser = async (
+  userId: string,
+  queryParams: FinalsTrackerUserLeaderboardQueryParams,
+): Promise<HistoryByUserResponse> => {
+  const res = await API.get<
+    FinalsTrackerUserLeaderboardQueryParamsRaw,
+    FinalsTrackerResponseSuccess<FinalsTrackerUserLeaderboardRaw[]>
+  >(FinalsTrackerUrls.USER_LEADERBOARD.replace(":id", userId), {
+    ...queryParams,
+    startDate: queryParams.startDate?.toISOString(),
+    endDate: queryParams.endDate?.toISOString(),
+  });
+
+  return {
+    ...res,
+    data: (res?.data || []).map(item => ({
+      ...item,
+      timestamp: new Date(item.timestamp),
+    })),
+  };
 };
