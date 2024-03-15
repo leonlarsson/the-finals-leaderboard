@@ -1,7 +1,10 @@
 import { BarChart } from "@tremor/react";
-import fameToLeague from "@/helpers/fameToLeague";
 import fameToRankIcon from "@/helpers/fameToRankIcon";
-import { LEADERBOARD_VERSION, VERSION_LEAGUES } from "@/helpers/leagues";
+import {
+  LEADERBOARD_VERSION,
+  VERSION_LEAGUES,
+  leagueIsLive,
+} from "@/helpers/leagues";
 import { Platforms, User } from "@/types";
 import { LoaderIcon } from "lucide-react";
 
@@ -33,9 +36,7 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
     <div className="rounded-md bg-neutral-100 p-2 text-sm dark:bg-neutral-900/50">
       <h2 className="mb-1 text-xl font-medium">
         Stats and Rank Distribution{" "}
-        {leaderboardVersion === LEADERBOARD_VERSION.LIVE && (
-          <span>({platformName})</span>
-        )}
+        {leagueIsLive(leaderboardVersion) && <span>({platformName})</span>}
       </h2>
       {isLoading && <LoaderIcon className="inline size-5 animate-spin" />}
 
@@ -83,33 +84,31 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
               </span>
             </span>
 
-            <span>
-              Average Fame:{" "}
-              <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                {(
-                  users.map(user => user.fame).reduce((a, b) => a + b, 0) /
-                  users.length
-                ).toLocaleString("en", { maximumFractionDigits: 0 })}
+            {leaderboardVersion !== LEADERBOARD_VERSION.SEASON_2 && (
+              <span>
+                Average Fame:{" "}
+                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
+                  {(
+                    users.map(user => user.fame).reduce((a, b) => a + b, 0) /
+                    users.length
+                  ).toLocaleString("en", { maximumFractionDigits: 0 })}
+                </span>
               </span>
-            </span>
+            )}
           </div>
 
           <hr className="my-2 border-black/30 dark:border-white/30" />
 
           <span className="text-lg font-medium">
             Out of the top {users.length.toLocaleString("en")}{" "}
-            {leaderboardVersion === LEADERBOARD_VERSION.LIVE && platformName}{" "}
-            players...
+            {leagueIsLive(leaderboardVersion) && platformName} players...
           </span>
 
           {/* BAR CHART */}
           <BarChart
             className="my-2"
             data={VERSION_LEAGUES[leaderboardVersion].map(league => ({
-              Players: users.filter(
-                user =>
-                  league.name === fameToLeague(leaderboardVersion, user.fame),
-              ).length,
+              Players: users.filter(user => league.name === user.league).length,
               name: league.name,
             }))}
             index="name"
@@ -147,8 +146,7 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
             <div className="flex flex-col">
               {VERSION_LEAGUES[leaderboardVersion].map(league => {
                 const usersInLeague = users.filter(
-                  user =>
-                    league.name === fameToLeague(leaderboardVersion, user.fame),
+                  user => league.name === user.league,
                 ).length;
 
                 return (

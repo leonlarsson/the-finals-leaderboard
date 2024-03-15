@@ -11,8 +11,8 @@ import { Button } from "./ui/button";
 import Icons from "./icons";
 import { cn } from "@/lib/utils";
 import fameToRankIcon from "@/helpers/fameToRankIcon";
-import fameToLeague from "@/helpers/fameToLeague";
-import { LEADERBOARD_VERSION } from "@/helpers/leagues";
+import leagueNumberToIcon from "@/helpers/leagueNumberToIcon";
+import { LEADERBOARD_VERSION, leagueIsLive } from "@/helpers/leagues";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { Platforms, User } from "@/types";
 
@@ -83,7 +83,7 @@ export const columns = (
         </TooltipProvider>
       ) : (
         <span className="inline-flex gap-1">
-          {leaderboardVersion === LEADERBOARD_VERSION.LIVE && (
+          {leagueIsLive(leaderboardVersion) && (
             <>
               {selectedPlatform === "steam" && (
                 <Icons.steam className="inline size-5 opacity-60" />
@@ -135,37 +135,41 @@ export const columns = (
     accessorKey: "fame",
     accessorFn: user => ({
       fame: user.fame,
-      league: fameToLeague(leaderboardVersion, user.fame),
+      leagueNumber: user.leagueNumber,
+      league: user.league,
     }),
     filterFn: (value, _, filterValue: string[]) =>
-      !filterValue.length ||
-      filterValue.includes(
-        fameToLeague(leaderboardVersion, value.original.fame),
-      ),
+      !filterValue.length || filterValue.includes(value.original.league),
     header: ({ column }) => {
       return <DataTableColumnHeader column={column} title="Fame" />;
     },
     cell: ({ getValue }) => {
-      const { fame } = getValue() as { fame: number; league: string };
+      const { fame, leagueNumber, league } = getValue() as {
+        fame?: number;
+        leagueNumber?: number;
+        league: string;
+      };
       return (
         <Popover>
           <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
             <div className="size-[60px]">
-              {fameToRankIcon(leaderboardVersion, fame)}
+              {leagueNumber
+                ? leagueNumberToIcon(leagueNumber)
+                : fameToRankIcon(leaderboardVersion, fame ?? 0)}
             </div>
 
             <div className="flex flex-col">
-              <span>{fameToLeague(leaderboardVersion, fame)}</span>
-              <span>{fame.toLocaleString("en")}</span>
+              <span>{league}</span>
+              {fame && <span>{fame.toLocaleString("en")}</span>}
             </div>
           </PopoverTrigger>
 
           <PopoverContent className="flex flex-col items-center justify-center font-saira">
-            <span className="text-xl font-medium">
-              {fameToLeague(leaderboardVersion, fame)}
-            </span>
-            <span>{fame.toLocaleString("en")} fame points</span>
-            {fameToRankIcon(leaderboardVersion, fame, 160)}
+            <span className="text-xl font-medium">{league}</span>
+            {fame && <span>{fame.toLocaleString("en")} fame points</span>}
+            {leagueNumber
+              ? leagueNumberToIcon(leagueNumber, 160)
+              : fameToRankIcon(leaderboardVersion, fame ?? 0, 160)}
           </PopoverContent>
         </Popover>
       );
@@ -217,13 +221,20 @@ export const columns = (
       cashoutsColumn,
       fameColumn,
     ],
-    [LEADERBOARD_VERSION.LIVE]: [
+    [LEADERBOARD_VERSION.SEASON_1]: [
       rankColumn,
       changeColumn,
       nameColumn,
       cashoutsColumn,
       fameColumn,
       historyColumn,
+    ],
+    [LEADERBOARD_VERSION.SEASON_2]: [
+      rankColumn,
+      changeColumn,
+      nameColumn,
+      // cashoutsColumn,
+      fameColumn,
     ],
   };
 

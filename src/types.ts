@@ -1,6 +1,8 @@
 export type RawUser = {
   /** The user's rank. */
   r: number;
+  /** The user's rank number Maps to a league. Only in Season 2. */
+  ri?: number;
   /** The user's name. */
   name: string;
   /** The user's fame. */
@@ -26,6 +28,8 @@ export type RawUser = {
 export type User = {
   key: string;
   rank: number;
+  leagueNumber?: number;
+  league: string;
   change: number;
   name: string;
   steamName?: string;

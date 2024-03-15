@@ -2,8 +2,8 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  AlertOctagonIcon,
   BarChartIcon,
+  CheckCircle,
   Loader,
   RefreshCw,
   TableIcon,
@@ -23,7 +23,7 @@ import ThemeToggle from "./components/ThemeToggle";
 import Icons from "./components/icons";
 import Link from "./components/Link";
 import transformData from "./helpers/transformData";
-import { LEADERBOARD_VERSION } from "./helpers/leagues";
+import { LEADERBOARD_VERSION, leagueIsLive } from "./helpers/leagues";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
@@ -42,7 +42,7 @@ const App = () => {
       leaderboardSearchParam as LEADERBOARD_VERSION,
     )
       ? leaderboardSearchParam
-      : LEADERBOARD_VERSION.LIVE;
+      : LEADERBOARD_VERSION.SEASON_2;
 
   const initialPlatform =
     platformSearchParam &&
@@ -72,27 +72,38 @@ const App = () => {
   const queryClient = useQueryClient();
 
   const fetchData = async () => {
-    if (selectedLeaderboardVersion === "closedBeta1") {
-      return transformData(closedBeta1Data);
+    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.CLOSED_BETA_1) {
+      // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
+      return transformData(selectedLeaderboardVersion, closedBeta1Data);
     }
 
-    if (selectedLeaderboardVersion === "closedBeta2") {
-      return transformData(closedBeta2Data);
+    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.CLOSED_BETA_2) {
+      // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
+      return transformData(selectedLeaderboardVersion, closedBeta2Data);
     }
 
-    if (selectedLeaderboardVersion === "openBeta") {
-      return transformData(openBetaData);
+    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.OPEN_BETA) {
+      // open beta: https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-crossplay.json
+      return transformData(selectedLeaderboardVersion, openBetaData);
     }
 
-    const res = await fetch(
-      `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`,
-    );
-    // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
-    // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
-    // open beta: https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-crossplay.json
+    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.SEASON_1) {
+      const res = await fetch(
+        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`,
+      );
 
-    const json = await res.json();
-    return transformData(json);
+      const json = await res.json();
+      return transformData(selectedLeaderboardVersion, json);
+    }
+
+    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.SEASON_2) {
+      const res = await fetch(
+        `https://storage.googleapis.com/embark-discovery-leaderboard/s2-leaderboard-${selectedPlatform}-discovery-live.json`,
+      );
+
+      const json = await res.json();
+      return transformData(selectedLeaderboardVersion, json);
+    }
   };
 
   // Use TanStack Query to fetch data
@@ -106,9 +117,11 @@ const App = () => {
 
   // Store selected leaderboard version and platform in URL
   // Perhaps not the best way to do it, but it works
+  // Remove the query param if it's the default values
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    selectedLeaderboardVersion === LEADERBOARD_VERSION.LIVE
+
+    selectedLeaderboardVersion === LEADERBOARD_VERSION.SEASON_2
       ? searchParams.delete("leaderboard")
       : searchParams.set("leaderboard", selectedLeaderboardVersion);
 
@@ -128,9 +141,7 @@ const App = () => {
   }, [selectedLeaderboardVersion, selectedPlatform, selectedPanel]);
 
   const disabled =
-    selectedLeaderboardVersion !== LEADERBOARD_VERSION.LIVE ||
-    isLoading ||
-    isRefetching;
+    !leagueIsLive(selectedLeaderboardVersion) || isLoading || isRefetching;
 
   return (
     <div className="container mb-12 font-saira max-sm:px-2">
@@ -144,11 +155,11 @@ const App = () => {
       {/* <CommunityProgress /> */}
 
       {/* Notice */}
-      <div className="my-1 flex items-center gap-1 rounded-md bg-brand-purple p-1 text-white">
-        <AlertOctagonIcon className="size-5" />
+      <div className="my-1 flex items-center gap-2 rounded-md bg-brand-purple p-1 text-white">
+        <CheckCircle className="size-5 flex-shrink-0" />
         <span>
-          There will likely be disruptions while I find out what Embark have
-          planned for leaderboards and season resets.
+          Season 2 data is now available. Still WIP, so there might be issues
+          and changes.
         </span>
       </div>
 
@@ -161,18 +172,29 @@ const App = () => {
             }
           >
             <TabsList>
-              <TabsTrigger value={LEADERBOARD_VERSION.LIVE}>Live</TabsTrigger>
+              <TabsTrigger value={LEADERBOARD_VERSION.SEASON_2}>
+                <span className="hidden min-[530px]:block">Season 2</span>
+                <span className="block min-[530px]:hidden">S2</span>
+              </TabsTrigger>
+
+              <TabsTrigger value={LEADERBOARD_VERSION.SEASON_1}>
+                <span className="hidden min-[530px]:block">Season 1</span>
+                <span className="block min-[530px]:hidden">S1</span>
+              </TabsTrigger>
+
               <TabsTrigger value={LEADERBOARD_VERSION.OPEN_BETA}>
-                <span className="hidden min-[440px]:block">Open Beta</span>
-                <span className="block min-[440px]:hidden">Beta</span>
+                <span className="hidden min-[530px]:block">Open Beta</span>
+                <span className="block min-[530px]:hidden">Beta</span>
               </TabsTrigger>
+
               <TabsTrigger value={LEADERBOARD_VERSION.CLOSED_BETA_2}>
-                <span className="hidden min-[440px]:block">Closed Beta 2</span>
-                <span className="block min-[440px]:hidden">CB2</span>
+                <span className="hidden min-[530px]:block">Closed Beta 2</span>
+                <span className="block min-[530px]:hidden">CB2</span>
               </TabsTrigger>
+
               <TabsTrigger value={LEADERBOARD_VERSION.CLOSED_BETA_1}>
-                <span className="hidden min-[440px]:block">Closed Beta 1</span>
-                <span className="block min-[440px]:hidden">CB1</span>
+                <span className="hidden min-[530px]:block">Closed Beta 1</span>
+                <span className="block min-[530px]:hidden">CB1</span>
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -220,7 +242,7 @@ const App = () => {
                   onClick={() => queryClient.invalidateQueries()}
                   disabled={disabled}
                 >
-                  <span className="mr-2 hidden min-[440px]:block">Refresh</span>
+                  <span className="mr-2 hidden min-[530px]:block">Refresh</span>
 
                   <RefreshCw
                     className={cn(
