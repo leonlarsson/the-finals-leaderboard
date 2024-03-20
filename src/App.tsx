@@ -1,13 +1,7 @@
 import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  BarChartIcon,
-  CheckCircle,
-  Loader,
-  RefreshCw,
-  TableIcon,
-} from "lucide-react";
+import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
@@ -155,13 +149,10 @@ const App = () => {
       {/* <CommunityProgress /> */}
 
       {/* Notice */}
-      <div className="my-1 flex items-center gap-2 rounded-md bg-brand-purple p-1 text-white">
-        <CheckCircle className="size-5 flex-shrink-0" />
-        <span>
-          Season 2 data is now available. Still WIP, so there might be issues
-          and changes.
-        </span>
-      </div>
+      {/* <div className="my-1 flex items-center gap-2 rounded-md bg-brand-purple p-1 text-white">
+        <Icon className="size-5 flex-shrink-0" />
+        <span>Text</span>
+      </div> */}
 
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
