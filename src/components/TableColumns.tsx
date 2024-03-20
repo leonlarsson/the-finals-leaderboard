@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { ChevronDown, ChevronUp, Eye, EyeOff, Minus } from "lucide-react";
+import { ChevronDown, ChevronUp, Minus } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -7,7 +7,6 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Button } from "./ui/button";
 import Icons from "./icons";
 import { cn } from "@/lib/utils";
 import fameToRankIcon from "@/helpers/fameToRankIcon";
@@ -176,26 +175,26 @@ export const columns = (
     },
   } satisfies ColumnDef<User>;
 
-  const historyColumn = {
-    accessorKey: "history",
-    header: "History",
-    cell: ({ row }) => (
-      <Button
-        variant={"outline"}
-        size={"icon"}
-        title={
-          row.getIsExpanded()
-            ? "Close this user's history."
-            : "Show this user's history."
-        }
-        onClick={() => row.toggleExpanded()}
-      >
-        <span className="text-neutral-700 dark:text-neutral-400">
-          {row.getIsExpanded() ? <EyeOff /> : <Eye />}
-        </span>
-      </Button>
-    ),
-  } satisfies ColumnDef<User>;
+  // const historyColumn = {
+  //   accessorKey: "history",
+  //   header: "History",
+  //   cell: ({ row }) => (
+  //     <Button
+  //       variant={"outline"}
+  //       size={"icon"}
+  //       title={
+  //         row.getIsExpanded()
+  //           ? "Close this user's history."
+  //           : "Show this user's history."
+  //       }
+  //       onClick={() => row.toggleExpanded()}
+  //     >
+  //       <span className="text-neutral-700 dark:text-neutral-400">
+  //         {row.getIsExpanded() ? <EyeOff /> : <Eye />}
+  //       </span>
+  //     </Button>
+  //   ),
+  // } satisfies ColumnDef<User>;
 
   const columns = {
     [LEADERBOARD_VERSION.CLOSED_BETA_1]: [
@@ -227,13 +226,11 @@ export const columns = (
       nameColumn,
       cashoutsColumn,
       fameColumn,
-      historyColumn,
     ],
     [LEADERBOARD_VERSION.SEASON_2]: [
       rankColumn,
       changeColumn,
       nameColumn,
-      // cashoutsColumn,
       fameColumn,
     ],
   };
