@@ -29,6 +29,7 @@ const App = () => {
   const leaderboardSearchParam = searchParams.get("leaderboard");
   const platformSearchParam = searchParams.get("platform");
   const panelSearchParam = searchParams.get("panel");
+  const useOwnApi = searchParams.get("useownapi") === "true";
 
   const initialLeaderboardVersion =
     leaderboardSearchParam &&
@@ -66,6 +67,14 @@ const App = () => {
   const queryClient = useQueryClient();
 
   const fetchData = async () => {
+    if (useOwnApi) {
+      const res = await fetch(
+        `https://api.the-finals-leaderboard.com/v1/leaderboard/${selectedLeaderboardVersion.toLowerCase()}/${selectedPlatform}`,
+      );
+      const json = await res.json();
+      return json.data;
+    }
+
     if (selectedLeaderboardVersion === LEADERBOARD_VERSION.CLOSED_BETA_1) {
       // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
       return transformData(selectedLeaderboardVersion, closedBeta1Data);
