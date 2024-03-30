@@ -21,11 +21,10 @@ import {
 } from "@/components/ui/table";
 import DataTableToolbar from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
-import { LEADERBOARD_VERSION } from "@/helpers/leagues";
-import { Platforms } from "@/types";
+import { LeaderboardVersions, Platforms } from "@/types";
 
 interface DataTableProps<TData, TValue> {
-  leaderboardVersion: LEADERBOARD_VERSION;
+  leaderboardVersion: LeaderboardVersions;
   platform: Platforms;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];

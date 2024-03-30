@@ -1,7 +1,7 @@
-import { numberToLeague } from "./leagues";
+import leagueNumberToName from "./leagueNumberToName";
 
 export default (leagueNumber: number, height?: number) => {
-  const league = numberToLeague(leagueNumber);
+  const league = leagueNumberToName(leagueNumber);
 
   return (
     <img

@@ -1,15 +1,4 @@
-export enum LEADERBOARD_VERSION {
-  CLOSED_BETA_1 = "closedBeta1",
-  CLOSED_BETA_2 = "closedBeta2",
-  OPEN_BETA = "openBeta",
-  SEASON_1 = "season1",
-  SEASON_2 = "season2",
-}
-
-type FameLeague = {
-  fame: number;
-  name: string;
-};
+import { FameLeague, LeaderboardVersions } from "@/types";
 
 const CLOSED_BETA_ONE_LEAGUES = [
   { fame: 0, name: "Bronze" },
@@ -101,47 +90,10 @@ const SEASON_2_LEAGUES = [
   { fame: 42_250, name: "Diamond 1" },
 ] satisfies FameLeague[];
 
-export const VERSION_LEAGUES = {
-  [LEADERBOARD_VERSION.CLOSED_BETA_1]: CLOSED_BETA_ONE_LEAGUES,
-  [LEADERBOARD_VERSION.CLOSED_BETA_2]: CLOSED_BETA_TWO_LEAGUES,
-  [LEADERBOARD_VERSION.OPEN_BETA]: CLOSED_BETA_TWO_LEAGUES,
-  [LEADERBOARD_VERSION.SEASON_1]: SEASON_1_LEAGUES,
-  [LEADERBOARD_VERSION.SEASON_2]: SEASON_2_LEAGUES,
-} satisfies Record<LEADERBOARD_VERSION, FameLeague[]>;
-
-export const leagueIsLive = (version: LEADERBOARD_VERSION) => {
-  const liveLeagues = [
-    LEADERBOARD_VERSION.SEASON_1,
-    LEADERBOARD_VERSION.SEASON_2,
-  ];
-  return liveLeagues.includes(version);
-};
-
-export const numberToLeague = (leagueNumber: number) => {
-  // Borrowed from https://storage.googleapis.com/embark-discovery-leaderboard/s2-leaderboard-live.js/main.js?v2
-  const leagueMap: Record<number, string> = {
-    0: "Unranked",
-    1: "Bronze 4",
-    2: "Bronze 3",
-    3: "Bronze 2",
-    4: "Bronze 1",
-    5: "Silver 4",
-    6: "Silver 3",
-    7: "Silver 2",
-    8: "Silver 1",
-    9: "Gold 4",
-    10: "Gold 3",
-    11: "Gold 2",
-    12: "Gold 1",
-    13: "Platinum 4",
-    14: "Platinum 3",
-    15: "Platinum 2",
-    16: "Platinum 1",
-    17: "Diamond 4",
-    18: "Diamond 3",
-    19: "Diamond 2",
-    20: "Diamond 1",
-  };
-
-  return leagueMap[leagueNumber];
-};
+export default {
+  [LeaderboardVersions.CLOSED_BETA_1]: CLOSED_BETA_ONE_LEAGUES,
+  [LeaderboardVersions.CLOSED_BETA_2]: CLOSED_BETA_TWO_LEAGUES,
+  [LeaderboardVersions.OPEN_BETA]: CLOSED_BETA_TWO_LEAGUES,
+  [LeaderboardVersions.SEASON_1]: SEASON_1_LEAGUES,
+  [LeaderboardVersions.SEASON_2]: SEASON_2_LEAGUES,
+} satisfies Record<LeaderboardVersions, FameLeague[]>;

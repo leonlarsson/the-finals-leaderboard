@@ -1,8 +1,8 @@
+import { LeaderboardVersions } from "@/types";
 import fameToLeague from "./fameToLeague";
-import { LEADERBOARD_VERSION } from "./leagues";
 
 export default (
-  leaderboardVersion: LEADERBOARD_VERSION,
+  leaderboardVersion: LeaderboardVersions,
   fame: number,
   height?: number,
 ) => {

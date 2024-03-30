@@ -15,12 +15,11 @@ import {
 } from "./ui/command";
 import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
-import { LEADERBOARD_VERSION } from "@/helpers/leagues";
 import { cn } from "@/lib/utils";
-import { Platforms } from "@/types";
+import { LeaderboardVersions, Platforms } from "@/types";
 
 type Props<TData> = {
-  leaderboardVersion: LEADERBOARD_VERSION;
+  leaderboardVersion: LeaderboardVersions;
   platform: Platforms;
   table: Table<TData>;
 };

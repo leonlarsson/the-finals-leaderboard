@@ -1,16 +1,13 @@
 import { BarChart } from "@tremor/react";
-import fameToRankIcon from "@/helpers/fameToRankIcon";
-import {
-  LEADERBOARD_VERSION,
-  VERSION_LEAGUES,
-  leagueIsLive,
-} from "@/helpers/leagues";
-import { Platforms, User } from "@/types";
+import fameToRankIcon from "@/utils/fameToRankIcon";
+import { LeaderboardVersions, Platforms, User } from "@/types";
 import { LoaderIcon } from "lucide-react";
+import leagueIsLive from "@/utils/leagueIsLive";
+import leagueBrackets from "@/utils/leagueBrackets";
 
 type Props = {
   isLoading: boolean;
-  leaderboardVersion: LEADERBOARD_VERSION;
+  leaderboardVersion: LeaderboardVersions;
   platform: Platforms;
   users: User[];
 };
@@ -84,7 +81,7 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
               </span>
             </span>
 
-            {leaderboardVersion !== LEADERBOARD_VERSION.SEASON_2 && (
+            {leaderboardVersion !== LeaderboardVersions.SEASON_2 && (
               <span>
                 Average Fame:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
@@ -107,7 +104,7 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
           {/* LEAGUES BAR CHART */}
           <BarChart
             className="my-2"
-            data={VERSION_LEAGUES[leaderboardVersion].map(league => ({
+            data={leagueBrackets[leaderboardVersion].map(league => ({
               Players: users.filter(user => league.name === user.league).length,
               name: league.name,
             }))}
@@ -144,28 +141,26 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
               The same, but in text form
             </summary>
             <div className="flex flex-col">
-              {[...VERSION_LEAGUES[leaderboardVersion]]
-                .reverse()
-                .map(league => {
-                  const usersInLeague = users.filter(
-                    user => league.name === user.league,
-                  ).length;
+              {[...leagueBrackets[leaderboardVersion]].reverse().map(league => {
+                const usersInLeague = users.filter(
+                  user => league.name === user.league,
+                ).length;
 
-                  return (
-                    <span key={league.name}>
-                      <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                        {usersInLeague.toLocaleString("en")} (
-                        {(usersInLeague / users.length).toLocaleString("en", {
-                          style: "percent",
-                          maximumFractionDigits: 1,
-                        })}
-                        )
-                      </span>{" "}
-                      {usersInLeague === 1 ? "is" : "are"} in {league.name}{" "}
-                      {fameToRankIcon(leaderboardVersion, league.fame, 60)}
-                    </span>
-                  );
-                })}
+                return (
+                  <span key={league.name}>
+                    <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
+                      {usersInLeague.toLocaleString("en")} (
+                      {(usersInLeague / users.length).toLocaleString("en", {
+                        style: "percent",
+                        maximumFractionDigits: 1,
+                      })}
+                      )
+                    </span>{" "}
+                    {usersInLeague === 1 ? "is" : "are"} in {league.name}{" "}
+                    {fameToRankIcon(leaderboardVersion, league.fame, 60)}
+                  </span>
+                );
+              })}
             </div>
           </details>
         </>

@@ -16,13 +16,13 @@ import Stats from "./components/Stats";
 import ThemeToggle from "./components/ThemeToggle";
 import Icons from "./components/icons";
 import Link from "./components/Link";
-import transformData from "./helpers/transformData";
-import { LEADERBOARD_VERSION, leagueIsLive } from "./helpers/leagues";
+import transformData from "./utils/transformData";
 import openBetaData from "./data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
 import { cn } from "./lib/utils";
-import { Panels, Platforms } from "./types";
+import { LeaderboardVersions, Panels, Platforms } from "./types";
+import leagueIsLive from "./utils/leagueIsLive";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -33,11 +33,11 @@ const App = () => {
 
   const initialLeaderboardVersion =
     leaderboardSearchParam &&
-    Object.values(LEADERBOARD_VERSION).includes(
-      leaderboardSearchParam as LEADERBOARD_VERSION,
+    Object.values(LeaderboardVersions).includes(
+      leaderboardSearchParam as LeaderboardVersions,
     )
       ? leaderboardSearchParam
-      : LEADERBOARD_VERSION.SEASON_2;
+      : LeaderboardVersions.SEASON_2;
 
   const initialPlatform =
     platformSearchParam &&
@@ -52,8 +52,8 @@ const App = () => {
       : Panels.Table;
 
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
-    useState<LEADERBOARD_VERSION>(
-      initialLeaderboardVersion as LEADERBOARD_VERSION,
+    useState<LeaderboardVersions>(
+      initialLeaderboardVersion as LeaderboardVersions,
     );
 
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(
@@ -75,22 +75,22 @@ const App = () => {
       return json.data;
     }
 
-    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.CLOSED_BETA_1) {
+    if (selectedLeaderboardVersion === LeaderboardVersions.CLOSED_BETA_1) {
       // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
       return transformData(selectedLeaderboardVersion, closedBeta1Data);
     }
 
-    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.CLOSED_BETA_2) {
+    if (selectedLeaderboardVersion === LeaderboardVersions.CLOSED_BETA_2) {
       // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
       return transformData(selectedLeaderboardVersion, closedBeta2Data);
     }
 
-    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.OPEN_BETA) {
+    if (selectedLeaderboardVersion === LeaderboardVersions.OPEN_BETA) {
       // open beta: https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-crossplay.json
       return transformData(selectedLeaderboardVersion, openBetaData);
     }
 
-    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.SEASON_1) {
+    if (selectedLeaderboardVersion === LeaderboardVersions.SEASON_1) {
       const res = await fetch(
         `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`,
       );
@@ -99,7 +99,7 @@ const App = () => {
       return transformData(selectedLeaderboardVersion, json);
     }
 
-    if (selectedLeaderboardVersion === LEADERBOARD_VERSION.SEASON_2) {
+    if (selectedLeaderboardVersion === LeaderboardVersions.SEASON_2) {
       const res = await fetch(
         `https://storage.googleapis.com/embark-discovery-leaderboard/s2-leaderboard-${selectedPlatform}-discovery-live.json`,
       );
@@ -124,7 +124,7 @@ const App = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
 
-    selectedLeaderboardVersion === LEADERBOARD_VERSION.SEASON_2
+    selectedLeaderboardVersion === LeaderboardVersions.SEASON_2
       ? searchParams.delete("leaderboard")
       : searchParams.set("leaderboard", selectedLeaderboardVersion);
 
@@ -168,31 +168,31 @@ const App = () => {
           <Tabs
             value={selectedLeaderboardVersion}
             onValueChange={e =>
-              setSelectedLeaderboardVersion(e as LEADERBOARD_VERSION)
+              setSelectedLeaderboardVersion(e as LeaderboardVersions)
             }
           >
             <TabsList>
-              <TabsTrigger value={LEADERBOARD_VERSION.SEASON_2}>
+              <TabsTrigger value={LeaderboardVersions.SEASON_2}>
                 <span className="hidden min-[530px]:block">Season 2</span>
                 <span className="block min-[530px]:hidden">S2</span>
               </TabsTrigger>
 
-              <TabsTrigger value={LEADERBOARD_VERSION.SEASON_1}>
+              <TabsTrigger value={LeaderboardVersions.SEASON_1}>
                 <span className="hidden min-[530px]:block">Season 1</span>
                 <span className="block min-[530px]:hidden">S1</span>
               </TabsTrigger>
 
-              <TabsTrigger value={LEADERBOARD_VERSION.OPEN_BETA}>
+              <TabsTrigger value={LeaderboardVersions.OPEN_BETA}>
                 <span className="hidden min-[530px]:block">Open Beta</span>
                 <span className="block min-[530px]:hidden">Beta</span>
               </TabsTrigger>
 
-              <TabsTrigger value={LEADERBOARD_VERSION.CLOSED_BETA_2}>
+              <TabsTrigger value={LeaderboardVersions.CLOSED_BETA_2}>
                 <span className="hidden min-[530px]:block">Closed Beta 2</span>
                 <span className="block min-[530px]:hidden">CB2</span>
               </TabsTrigger>
 
-              <TabsTrigger value={LEADERBOARD_VERSION.CLOSED_BETA_1}>
+              <TabsTrigger value={LeaderboardVersions.CLOSED_BETA_1}>
                 <span className="hidden min-[530px]:block">Closed Beta 1</span>
                 <span className="block min-[530px]:hidden">CB1</span>
               </TabsTrigger>

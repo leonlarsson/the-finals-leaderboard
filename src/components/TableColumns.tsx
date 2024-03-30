@@ -9,14 +9,14 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import Icons from "./icons";
 import { cn } from "@/lib/utils";
-import fameToRankIcon from "@/helpers/fameToRankIcon";
-import leagueNumberToIcon from "@/helpers/leagueNumberToIcon";
-import { LEADERBOARD_VERSION, leagueIsLive } from "@/helpers/leagues";
+import fameToRankIcon from "@/utils/fameToRankIcon";
+import leagueNumberToIcon from "@/utils/leagueNumberToIcon";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
-import { Platforms, User } from "@/types";
+import { LeaderboardVersions, Platforms, User } from "@/types";
+import leagueIsLive from "@/utils/leagueIsLive";
 
 export const columns = (
-  leaderboardVersion: LEADERBOARD_VERSION,
+  leaderboardVersion: LeaderboardVersions,
   selectedPlatform: Platforms,
 ): ColumnDef<User>[] => {
   const rankColumn = {
@@ -197,7 +197,7 @@ export const columns = (
   // } satisfies ColumnDef<User>;
 
   const columns = {
-    [LEADERBOARD_VERSION.CLOSED_BETA_1]: [
+    [LeaderboardVersions.CLOSED_BETA_1]: [
       rankColumn,
       changeColumn,
       nameColumn,
@@ -206,28 +206,28 @@ export const columns = (
       cashoutsColumn,
       fameColumn,
     ],
-    [LEADERBOARD_VERSION.CLOSED_BETA_2]: [
+    [LeaderboardVersions.CLOSED_BETA_2]: [
       rankColumn,
       changeColumn,
       nameColumn,
       cashoutsColumn,
       fameColumn,
     ],
-    [LEADERBOARD_VERSION.OPEN_BETA]: [
+    [LeaderboardVersions.OPEN_BETA]: [
       rankColumn,
       changeColumn,
       nameColumn,
       cashoutsColumn,
       fameColumn,
     ],
-    [LEADERBOARD_VERSION.SEASON_1]: [
+    [LeaderboardVersions.SEASON_1]: [
       rankColumn,
       changeColumn,
       nameColumn,
       cashoutsColumn,
       fameColumn,
     ],
-    [LEADERBOARD_VERSION.SEASON_2]: [
+    [LeaderboardVersions.SEASON_2]: [
       rankColumn,
       changeColumn,
       nameColumn,

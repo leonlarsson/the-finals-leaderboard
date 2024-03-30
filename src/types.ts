@@ -52,3 +52,16 @@ export enum Panels {
   Table = "table",
   Stats = "stats",
 }
+
+export type FameLeague = {
+  fame: number;
+  name: string;
+};
+
+export enum LeaderboardVersions {
+  CLOSED_BETA_1 = "closedBeta1",
+  CLOSED_BETA_2 = "closedBeta2",
+  OPEN_BETA = "openBeta",
+  SEASON_1 = "season1",
+  SEASON_2 = "season2",
+}
