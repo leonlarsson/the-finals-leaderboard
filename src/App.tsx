@@ -296,7 +296,6 @@ const App = () => {
 
             {selectedPanel === Panels.Stats && (
               <Stats
-                isLoading={isLoading || isRefetching}
                 leaderboardVersion={selectedLeaderboardVersion}
                 platform={selectedPlatform}
                 users={data ?? []}

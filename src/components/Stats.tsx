@@ -8,13 +8,12 @@ import getLeaderboardName from "@/utils/getLeaderboardName";
 import leagueIsLiveFunc from "@/utils/leagueIsLive";
 
 type Props = {
-  isLoading: boolean;
   leaderboardVersion: LeaderboardVersions;
   platform: Platforms;
   users: User[];
 };
 
-export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
+export default ({ leaderboardVersion, platform, users }: Props) => {
   const leaderboardName = getLeaderboardName(leaderboardVersion);
   const platformName = getPlatformName(platform);
   const leagueIsLive = leagueIsLiveFunc(leaderboardVersion);
@@ -28,9 +27,11 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
           {leagueIsLive && <span> - {platformName}</span>})
         </span>
       </h2>
-      {isLoading && <LoaderIcon className="inline size-5 animate-spin" />}
+      {users.length === 0 && (
+        <LoaderIcon className="inline size-5 animate-spin" />
+      )}
 
-      {!isLoading && (
+      {users.length !== 0 && (
         <>
           <div className="flex flex-col gap-2">
             {/* AVERAGES */}
