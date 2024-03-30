@@ -2,8 +2,10 @@ import { BarChart } from "@tremor/react";
 import fameToRankIcon from "@/utils/fameToRankIcon";
 import { LeaderboardVersions, Platforms, User } from "@/types";
 import { LoaderIcon } from "lucide-react";
-import leagueIsLive from "@/utils/leagueIsLive";
 import leagueBrackets from "@/utils/leagueBrackets";
+import getPlatformName from "@/utils/getPlatformName";
+import getLeaderboardName from "@/utils/getLeaderboardName";
+import leagueIsLiveFunc from "@/utils/leagueIsLive";
 
 type Props = {
   isLoading: boolean;
@@ -11,29 +13,20 @@ type Props = {
   platform: Platforms;
   users: User[];
 };
-export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
-  const getPlatformName = (platform: Platforms) => {
-    switch (platform) {
-      case Platforms.Crossplay:
-        return "Crossplay";
-      case Platforms.Steam:
-        return "Steam";
-      case Platforms.Xbox:
-        return "Xbox";
-      case Platforms.PSN:
-        return "PlayStation";
-      default:
-        return "Crossplay";
-    }
-  };
 
+export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
+  const leaderboardName = getLeaderboardName(leaderboardVersion);
   const platformName = getPlatformName(platform);
+  const leagueIsLive = leagueIsLiveFunc(leaderboardVersion);
 
   return (
     <div className="rounded-md bg-neutral-100 p-2 text-sm dark:bg-neutral-900/50">
       <h2 className="mb-1 text-xl font-medium">
         Stats and Rank Distribution{" "}
-        {leagueIsLive(leaderboardVersion) && <span>({platformName})</span>}
+        <span>
+          ({leaderboardName}
+          {leagueIsLive && <span> - {platformName}</span>})
+        </span>
       </h2>
       {isLoading && <LoaderIcon className="inline size-5 animate-spin" />}
 
@@ -98,7 +91,7 @@ export default ({ isLoading, leaderboardVersion, platform, users }: Props) => {
 
           <span className="text-lg font-medium">
             Out of the top {users.length.toLocaleString("en")}{" "}
-            {leagueIsLive(leaderboardVersion) && platformName} players...
+            {leagueIsLive && platformName} players...
           </span>
 
           {/* LEAGUES BAR CHART */}
