@@ -16,20 +16,16 @@ import Stats from "./components/Stats";
 import ThemeToggle from "./components/ThemeToggle";
 import Icons from "./components/icons";
 import Link from "./components/Link";
-import transformData from "./utils/transformData";
-import openBetaData from "./data/leaderboard-open-beta-1.json";
-import closedBeta2Data from "./data/leaderboard-closed-beta-2.json";
-import closedBeta1Data from "./data/leaderboard-closed-beta-1.json";
 import { cn } from "./lib/utils";
 import { LeaderboardVersions, Panels, Platforms } from "./types";
 import leagueIsLive from "./utils/leagueIsLive";
+import { fetchData } from "./utils/fetchData";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
   const leaderboardSearchParam = searchParams.get("leaderboard");
   const platformSearchParam = searchParams.get("platform");
   const panelSearchParam = searchParams.get("panel");
-  const useOwnApi = searchParams.get("useownapi") === "true";
 
   const initialLeaderboardVersion =
     leaderboardSearchParam &&
@@ -66,57 +62,39 @@ const App = () => {
 
   const queryClient = useQueryClient();
 
-  const fetchData = async () => {
-    if (useOwnApi) {
-      const res = await fetch(
-        `https://api.the-finals-leaderboard.com/v1/leaderboard/${selectedLeaderboardVersion.toLowerCase()}/${selectedPlatform}`,
-      );
-      const json = await res.json();
-      return json.data;
-    }
-
-    if (selectedLeaderboardVersion === LeaderboardVersions.CLOSED_BETA_1) {
-      // cb1: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard-beta-1.json
-      return transformData(selectedLeaderboardVersion, closedBeta1Data);
-    }
-
-    if (selectedLeaderboardVersion === LeaderboardVersions.CLOSED_BETA_2) {
-      // cb2: https://embark-discovery-leaderboard.storage.googleapis.com/leaderboard.json
-      return transformData(selectedLeaderboardVersion, closedBeta2Data);
-    }
-
-    if (selectedLeaderboardVersion === LeaderboardVersions.OPEN_BETA) {
-      // open beta: https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-crossplay.json
-      return transformData(selectedLeaderboardVersion, openBetaData);
-    }
-
-    if (selectedLeaderboardVersion === LeaderboardVersions.SEASON_1) {
-      const res = await fetch(
-        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${selectedPlatform}-discovery-live.json`,
-      );
-
-      const json = await res.json();
-      return transformData(selectedLeaderboardVersion, json);
-    }
-
-    if (selectedLeaderboardVersion === LeaderboardVersions.SEASON_2) {
-      const res = await fetch(
-        `https://storage.googleapis.com/embark-discovery-leaderboard/s2-leaderboard-${selectedPlatform}-discovery-live.json`,
-      );
-
-      const json = await res.json();
-      return transformData(selectedLeaderboardVersion, json);
-    }
-  };
-
   // Use TanStack Query to fetch data
   // This will cache all cpmbinations of leaderboard version and platform infinitely
   // Or until the page is refreshed or the cache is invalidated (refresh button is pressed)
   const { isLoading, data, error, dataUpdatedAt, isRefetching } = useQuery({
     queryKey: ["leaderboard", selectedLeaderboardVersion, selectedPlatform],
-    queryFn: () => fetchData(),
+    queryFn: () => fetchData(selectedLeaderboardVersion, selectedPlatform),
     staleTime: Infinity, // Cache the data until the page is refreshed
   });
+
+  // Prefetch data for the other leaderboard version and platform
+  // User when hovering over the tabs
+  // Defaults to the current selected values in state, but can be overridden
+  const prefetchData = ({
+    leaderboard,
+    platform,
+  }: {
+    leaderboard?: LeaderboardVersions;
+    platform?: Platforms;
+  }) => {
+    queryClient.prefetchQuery({
+      queryKey: [
+        "leaderboard",
+        leaderboard ?? selectedLeaderboardVersion,
+        platform ?? selectedPlatform,
+      ],
+      queryFn: () =>
+        fetchData(
+          leaderboard ?? selectedLeaderboardVersion,
+          platform ?? selectedPlatform,
+        ),
+      staleTime: Infinity,
+    });
+  };
 
   // Store selected leaderboard version and platform in URL
   // Perhaps not the best way to do it, but it works
@@ -165,6 +143,7 @@ const App = () => {
 
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
+          {/* LEADERBOARD VERSION */}
           <Tabs
             value={selectedLeaderboardVersion}
             onValueChange={e =>
@@ -172,33 +151,48 @@ const App = () => {
             }
           >
             <TabsList>
-              <TabsTrigger value={LeaderboardVersions.SEASON_2}>
-                <span className="hidden min-[530px]:block">Season 2</span>
-                <span className="block min-[530px]:hidden">S2</span>
-              </TabsTrigger>
-
-              <TabsTrigger value={LeaderboardVersions.SEASON_1}>
-                <span className="hidden min-[530px]:block">Season 1</span>
-                <span className="block min-[530px]:hidden">S1</span>
-              </TabsTrigger>
-
-              <TabsTrigger value={LeaderboardVersions.OPEN_BETA}>
-                <span className="hidden min-[530px]:block">Open Beta</span>
-                <span className="block min-[530px]:hidden">Beta</span>
-              </TabsTrigger>
-
-              <TabsTrigger value={LeaderboardVersions.CLOSED_BETA_2}>
-                <span className="hidden min-[530px]:block">Closed Beta 2</span>
-                <span className="block min-[530px]:hidden">CB2</span>
-              </TabsTrigger>
-
-              <TabsTrigger value={LeaderboardVersions.CLOSED_BETA_1}>
-                <span className="hidden min-[530px]:block">Closed Beta 1</span>
-                <span className="block min-[530px]:hidden">CB1</span>
-              </TabsTrigger>
+              {[
+                {
+                  leaderboardVersion: LeaderboardVersions.SEASON_2,
+                  label: "Season 2",
+                  labelShort: "S2",
+                },
+                {
+                  leaderboardVersion: LeaderboardVersions.SEASON_1,
+                  label: "Season 1",
+                  labelShort: "S1",
+                },
+                {
+                  leaderboardVersion: LeaderboardVersions.OPEN_BETA,
+                  label: "Open Beta",
+                  labelShort: "Beta",
+                },
+                {
+                  leaderboardVersion: LeaderboardVersions.CLOSED_BETA_2,
+                  label: "Closed Beta 2",
+                  labelShort: "CB2",
+                },
+                {
+                  leaderboardVersion: LeaderboardVersions.CLOSED_BETA_1,
+                  label: "Closed Beta 1",
+                  labelShort: "CB1",
+                },
+              ].map(({ leaderboardVersion, label, labelShort }) => (
+                <TabsTrigger
+                  key={leaderboardVersion}
+                  value={leaderboardVersion}
+                  onPointerEnter={() =>
+                    prefetchData({ leaderboard: leaderboardVersion })
+                  }
+                >
+                  <span className="hidden min-[530px]:block">{label}</span>
+                  <span className="block min-[530px]:hidden">{labelShort}</span>
+                </TabsTrigger>
+              ))}
             </TabsList>
           </Tabs>
 
+          {/* LEADERBOARD PLATFORM */}
           <Tabs
             defaultValue={selectedPlatform}
             onValueChange={e => setSelectedPlatform(e as Platforms)}
@@ -206,27 +200,32 @@ const App = () => {
             <TabsList>
               {[
                 {
-                  value: Platforms.Crossplay,
+                  leaderboardPlatform: Platforms.Crossplay,
                   title: "Crossplay",
                   icon: <Icons.crossplay className="inline size-5" />,
                 },
                 {
-                  value: Platforms.Steam,
+                  leaderboardPlatform: Platforms.Steam,
                   title: "Steam",
                   icon: <Icons.steam className="inline size-5" />,
                 },
                 {
-                  value: Platforms.Xbox,
+                  leaderboardPlatform: Platforms.Xbox,
                   title: "Xbox",
                   icon: <Icons.xbox className="inline size-5" />,
                 },
                 {
-                  value: Platforms.PSN,
+                  leaderboardPlatform: Platforms.PSN,
                   title: "PlayStation",
                   icon: <Icons.playstation className="inline size-5" />,
                 },
-              ].map(({ value, icon }) => (
-                <TabsTrigger key={value} value={value} disabled={disabled}>
+              ].map(({ leaderboardPlatform: value, icon }) => (
+                <TabsTrigger
+                  key={value}
+                  value={value}
+                  disabled={disabled}
+                  onPointerEnter={() => prefetchData({ platform: value })}
+                >
                   {icon}
                 </TabsTrigger>
               ))}
