@@ -91,8 +91,8 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
           <hr className="my-2 border-black/30 dark:border-white/30" />
 
           <span className="text-lg font-medium">
-            Out of the top {users.length.toLocaleString("en")}{" "}
-            {leagueIsLive && platformName} players...
+            Out of the top {users.length.toLocaleString("en")} {leaderboardName}
+            {leagueIsLive && <span> {platformName}</span>} players...
           </span>
 
           {/* LEAGUES BAR CHART */}
@@ -111,7 +111,10 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               const amount = payload?.[0]?.value;
               return (
                 <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
-                  <span>{platformName}</span>
+                  <span>
+                    {leaderboardName}{" "}
+                    {leagueIsLive && <span> - {platformName}</span>}
+                  </span>
                   <span className="font-medium">{label}</span>
                   <hr />
                   {typeof amount === "number" && (
