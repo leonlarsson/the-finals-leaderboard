@@ -5,7 +5,7 @@ const Link = ({
   href: string;
   children: React.ReactNode;
 }) => (
-  <a href={href} target="_blank" className="font-medium hover:underline">
+  <a href={href} target="_blank" className="w-fit font-medium hover:underline">
     {children}
   </a>
 );

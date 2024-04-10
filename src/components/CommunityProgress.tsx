@@ -2,21 +2,26 @@ import { useQuery } from "@tanstack/react-query";
 import { ProgressBar } from "@tremor/react";
 import Link from "./Link";
 
-const CommunityProgress = () => {
+type Props = {
+  enabled: boolean;
+  eventData: CommunityEvent;
+};
+
+const CommunityProgress = ({ enabled, eventData }: Props) => {
+  if (!enabled || !eventData) return null;
+
   const { data, isError } = useQuery({
-    queryKey: ["communityEvent"],
+    queryKey: ["communityEvent", eventData.name],
     queryFn: async () => {
-      const res = await fetch(
-        "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-leaderboard-discovery-live.json",
-      );
+      const res = await fetch(eventData.apiUrl);
       const json = (await res.json()) as { goal: number; total: number };
       return {
         goal: json.goal,
-        total: Math.min(json.total, 250_000_000_000),
+        total: Math.min(json.total, eventData.initialGoal),
       };
     },
-    refetchInterval: 30_000,
-    initialData: { goal: 250_000_000_000, total: 0 },
+    refetchInterval: 60_000,
+    initialData: { goal: eventData.initialGoal, total: 0 },
   });
 
   if (isError) return null;
@@ -24,30 +29,58 @@ const CommunityProgress = () => {
   return (
     <div className="flex flex-col flex-wrap gap-1 rounded-md border p-2 text-sm tabular-nums">
       <Link href="https://www.reachthefinals.com/community-event">
-        Community Event | Cashouts
+        Community Event | {eventData.name}
       </Link>
 
       <span className="flex flex-wrap justify-between">
-        <span>
-          {new Intl.NumberFormat("en", {
-            style: "currency",
-            currency: "USD",
-            maximumFractionDigits: 0,
-          }).format(data.total)}{" "}
-          •{" "}
-          {new Intl.NumberFormat("en", {
-            style: "percent",
-            maximumFractionDigits: 1,
-          }).format(data.total / data.goal)}
-        </span>
+        {eventData.type === "cash" && (
+          <>
+            <span>
+              {new Intl.NumberFormat("en", {
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: 0,
+              }).format(data.total)}{" "}
+              •{" "}
+              {new Intl.NumberFormat("en", {
+                style: "percent",
+                maximumFractionDigits: 1,
+              }).format(data.total / data.goal)}
+            </span>
 
-        <span>
-          {new Intl.NumberFormat("en", {
-            style: "currency",
-            currency: "USD",
-            maximumFractionDigits: 0,
-          }).format(data.goal)}
-        </span>
+            <span>
+              {new Intl.NumberFormat("en", {
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: 0,
+              }).format(data.goal)}
+            </span>
+          </>
+        )}
+
+        {eventData.type === "distance" && (
+          <>
+            <span>
+              {new Intl.NumberFormat("en", {
+                style: "decimal",
+                maximumFractionDigits: 0,
+              }).format(data.total)}{" "}
+              km •{" "}
+              {new Intl.NumberFormat("en", {
+                style: "percent",
+                maximumFractionDigits: 1,
+              }).format(data.total / data.goal)}
+            </span>
+
+            <span>
+              {new Intl.NumberFormat("en", {
+                style: "decimal",
+                maximumFractionDigits: 0,
+              }).format(data.goal)}{" "}
+              km
+            </span>
+          </>
+        )}
       </span>
 
       <ProgressBar
@@ -60,3 +93,27 @@ const CommunityProgress = () => {
 };
 
 export default CommunityProgress;
+
+export const communityEvents = {
+  february2024Cachouts: {
+    name: "Cashouts",
+    type: "cash",
+    initialGoal: 250_000_000_000,
+    apiUrl:
+      "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-leaderboard-discovery-live.json",
+  },
+  april2024PushThePlatform: {
+    name: "Push the Platform",
+    type: "distance",
+    initialGoal: 400_750,
+    apiUrl:
+      "https://storage.googleapis.com/embark-discovery-leaderboard/platform-push-event-leaderboard-discovery-live.json",
+  },
+} satisfies Record<string, CommunityEvent>;
+
+type CommunityEvent = {
+  name: string;
+  type: "cash" | "distance";
+  initialGoal: number;
+  apiUrl: string;
+};

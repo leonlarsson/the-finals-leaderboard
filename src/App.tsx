@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CommunityProgress, {
+  communityEvents,
+} from "./components/CommunityProgress";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
 import { Button } from "./components/ui/button";
@@ -133,7 +136,10 @@ const App = () => {
         View leaderboards from THE FINALS and track your progress.
       </h5>
 
-      {/* <CommunityProgress /> */}
+      <CommunityProgress
+        enabled={true}
+        eventData={communityEvents.april2024PushThePlatform}
+      />
 
       {/* Notice */}
       {/* <div className="my-1 flex items-center gap-2 rounded-md bg-brand-purple p-1 text-white">
