@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CommunityProgress, {
-  communityEvents,
-} from "./components/CommunityProgress";
+import CommunityProgress from "./components/CommunityProgress";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
 import { Button } from "./components/ui/button";
@@ -23,6 +21,7 @@ import { cn } from "./lib/utils";
 import { LeaderboardVersions, Panels, Platforms } from "./types";
 import leagueIsLive from "./utils/leagueIsLive";
 import { fetchData } from "./utils/fetchData";
+import { communityEvents } from "./utils/communityEvents";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
