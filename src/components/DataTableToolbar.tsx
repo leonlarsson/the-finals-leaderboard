@@ -72,7 +72,7 @@ export default function <TData>({
     <div className="flex flex-wrap gap-2">
       <Input
         className="max-w-xs data-[active=true]:border-black/50 dark:data-[active=true]:border-white/50"
-        data-active={table.getColumn("name")?.getIsFiltered()}
+        data-active={!!table.getColumn("name")?.getFilterValue()}
         placeholder="Filter usernames..."
         maxLength={20}
         value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
