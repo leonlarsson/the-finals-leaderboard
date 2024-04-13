@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
         <Table className="min-w-[800px]">
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="hover:bg-inherit">
                 {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
