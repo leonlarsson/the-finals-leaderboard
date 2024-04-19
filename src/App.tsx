@@ -136,7 +136,7 @@ const App = () => {
       </h5>
 
       <CommunityProgress
-        enabled={true}
+        enabled={false}
         eventData={communityEvents.april2024PushThePlatform}
       />
 
