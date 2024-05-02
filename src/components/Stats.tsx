@@ -1,20 +1,20 @@
 import { BarChart } from "@tremor/react";
 import fameToRankIcon from "@/utils/fameToRankIcon";
-import { LeaderboardVersions, Platforms, User } from "@/types";
+import { Platforms, User } from "@/types";
 import { LoaderIcon } from "lucide-react";
 import leagueBrackets from "@/utils/leagueBrackets";
 import getPlatformName from "@/utils/getPlatformName";
-import getLeaderboardName from "@/utils/getLeaderboardName";
 import leagueIsLiveFunc from "@/utils/leagueIsLive";
+import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 
 type Props = {
-  leaderboardVersion: LeaderboardVersions;
+  leaderboardVersion: LeaderboardId;
   platform: Platforms;
   users: User[];
 };
 
 export default ({ leaderboardVersion, platform, users }: Props) => {
-  const leaderboardName = getLeaderboardName(leaderboardVersion);
+  const leaderboardName = leaderboards[leaderboardVersion].name;
   const platformName = getPlatformName(platform);
   const leagueIsLive = leagueIsLiveFunc(leaderboardVersion);
 
@@ -37,7 +37,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
             {/* AVERAGES */}
             <span className="text-lg font-medium">Averages</span>
 
-            {leaderboardVersion === "closedBeta1" && (
+            {leaderboardVersion === leaderboards.closedBeta1.id && (
               <span>
                 Average XP:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
@@ -49,7 +49,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               </span>
             )}
 
-            {leaderboardVersion === "closedBeta1" && (
+            {leaderboardVersion === leaderboards.closedBeta1.id && (
               <span>
                 Average Level:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
@@ -75,7 +75,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               </span>
             </span>
 
-            {leaderboardVersion !== LeaderboardVersions.SEASON_2 && (
+            {leaderboardVersion !== "season2" && (
               <span>
                 Average Fame:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">

@@ -1,6 +1,4 @@
-import { LeaderboardVersions } from "@/types";
+import { LeaderboardId, leaderboards } from "./leaderboards";
 
-export default (version: LeaderboardVersions) =>
-  [LeaderboardVersions.SEASON_1, LeaderboardVersions.SEASON_2].includes(
-    version,
-  );
+export default (version: LeaderboardId) =>
+  version === leaderboards.season1.id || version === leaderboards.season2.id;

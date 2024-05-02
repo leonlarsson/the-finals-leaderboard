@@ -16,10 +16,11 @@ import {
 import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
 import { cn } from "@/lib/utils";
-import { LeaderboardVersions, Platforms } from "@/types";
+import { Platforms } from "@/types";
+import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 
 type Props<TData> = {
-  leaderboardVersion: LeaderboardVersions;
+  leaderboardVersion: LeaderboardId;
   platform: Platforms;
   table: Table<TData>;
 };
@@ -30,7 +31,9 @@ export default function <TData>({
   table,
 }: Props<TData>) {
   const [didMount, setDidMount] = useState(false);
-  const fameColumn = table.getColumn("fame");
+  const fameColumn = leaderboards[leaderboardVersion].disableLeagueFilter
+    ? null
+    : table.getColumn("fame");
   const uniqueLeagues = [
     ...new Set(
       Array.from(fameColumn?.getFacetedUniqueValues()?.keys() ?? []).map(
@@ -39,7 +42,7 @@ export default function <TData>({
     ),
   ];
 
-  const selectedValues = new Set(fameColumn!.getFilterValue() as string[]);
+  const selectedValues = new Set(fameColumn?.getFilterValue() as string[]);
 
   // Setting didMount to true upon mounting
   useEffect(() => {
@@ -91,122 +94,124 @@ export default function <TData>({
         }}
       />
 
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-10 border-dashed data-[active=true]:border-black/50 dark:data-[active=true]:border-white/50"
-            data-active={selectedValues.size > 0}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Filter leagues
-            {selectedValues.size > 0 && (
-              <>
-                <Separator orientation="vertical" className="mx-2 h-4" />
-                <Badge
-                  variant="secondary"
-                  className="rounded-sm px-1 font-medium md:hidden"
-                >
-                  {selectedValues.size}
-                </Badge>
+      {!leaderboards[leaderboardVersion].disableLeagueFilter && (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-10 border-dashed data-[active=true]:border-black/50 dark:data-[active=true]:border-white/50"
+              data-active={selectedValues.size > 0}
+            >
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Filter leagues
+              {selectedValues.size > 0 && (
+                <>
+                  <Separator orientation="vertical" className="mx-2 h-4" />
+                  <Badge
+                    variant="secondary"
+                    className="rounded-sm px-1 font-medium md:hidden"
+                  >
+                    {selectedValues.size}
+                  </Badge>
 
-                <div className="hidden gap-1 font-medium md:flex">
-                  {selectedValues.size > 2 ? (
-                    <Badge
-                      variant="secondary"
-                      className="rounded-sm px-1 font-medium"
-                    >
-                      {selectedValues.size} selected
-                    </Badge>
-                  ) : (
-                    Array.from(selectedValues).map(value => (
+                  <div className="hidden gap-1 font-medium md:flex">
+                    {selectedValues.size > 2 ? (
                       <Badge
-                        key={value}
                         variant="secondary"
                         className="rounded-sm px-1 font-medium"
                       >
-                        {value}
+                        {selectedValues.size} selected
                       </Badge>
-                    ))
-                  )}
-                </div>
-              </>
-            )}
-          </Button>
-        </PopoverTrigger>
-
-        <PopoverContent className="w-[200px] p-0 font-saira" align="start">
-          <Command>
-            <CommandInput placeholder="Filter..." />
-            <CommandList>
-              <CommandEmpty>No league found.</CommandEmpty>
-
-              <CommandGroup>
-                {uniqueLeagues.map(league => {
-                  const isSelected = selectedValues.has(league);
-
-                  // TODO: Take current filters into account?
-                  const amountOfPlayersInLeague = Array.from(
-                    fameColumn?.getFacetedUniqueValues().keys() ?? [],
-                  ).filter(({ league: l }) => l === league).length;
-
-                  return (
-                    <CommandItem
-                      // https://github.com/shadcn-ui/ui/pull/1522
-                      value={league}
-                      key={league}
-                      onSelect={() => {
-                        isSelected
-                          ? selectedValues.delete(league)
-                          : selectedValues.add(league);
-
-                        const filterValues = Array.from(selectedValues);
-                        fameColumn?.setFilterValue(filterValues);
-                      }}
-                    >
-                      <div
-                        className={cn(
-                          "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                          isSelected
-                            ? "bg-primary text-primary-foreground"
-                            : "opacity-50 [&_svg]:invisible",
-                        )}
-                      >
-                        <CheckIcon className={cn("h-4 w-4")} />
-                      </div>
-
-                      <div className="flex w-full items-center justify-between">
-                        <span>{league}</span>
+                    ) : (
+                      Array.from(selectedValues).map(value => (
                         <Badge
+                          key={value}
                           variant="secondary"
-                          className="rounded-sm px-1 text-xs"
+                          className="rounded-sm px-1 font-medium"
                         >
-                          {amountOfPlayersInLeague.toLocaleString("en")}
+                          {value}
                         </Badge>
-                      </div>
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
-
-              {selectedValues.size > 0 && (
-                <>
-                  <CommandSeparator />
-                  <CommandGroup>
-                    <CommandItem
-                      onSelect={() => fameColumn?.setFilterValue(undefined)}
-                      className="justify-center text-center"
-                    >
-                      Clear filters
-                    </CommandItem>
-                  </CommandGroup>
+                      ))
+                    )}
+                  </div>
                 </>
               )}
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent className="w-[200px] p-0 font-saira" align="start">
+            <Command>
+              <CommandInput placeholder="Filter..." />
+              <CommandList>
+                <CommandEmpty>No league found.</CommandEmpty>
+
+                <CommandGroup>
+                  {uniqueLeagues.map(league => {
+                    const isSelected = selectedValues.has(league);
+
+                    // TODO: Take current filters into account?
+                    const amountOfPlayersInLeague = Array.from(
+                      fameColumn?.getFacetedUniqueValues().keys() ?? [],
+                    ).filter(({ league: l }) => l === league).length;
+
+                    return (
+                      <CommandItem
+                        // https://github.com/shadcn-ui/ui/pull/1522
+                        value={league}
+                        key={league}
+                        onSelect={() => {
+                          isSelected
+                            ? selectedValues.delete(league)
+                            : selectedValues.add(league);
+
+                          const filterValues = Array.from(selectedValues);
+                          fameColumn?.setFilterValue(filterValues);
+                        }}
+                      >
+                        <div
+                          className={cn(
+                            "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                            isSelected
+                              ? "bg-primary text-primary-foreground"
+                              : "opacity-50 [&_svg]:invisible",
+                          )}
+                        >
+                          <CheckIcon className={cn("h-4 w-4")} />
+                        </div>
+
+                        <div className="flex w-full items-center justify-between">
+                          <span>{league}</span>
+                          <Badge
+                            variant="secondary"
+                            className="rounded-sm px-1 text-xs"
+                          >
+                            {amountOfPlayersInLeague.toLocaleString("en")}
+                          </Badge>
+                        </div>
+                      </CommandItem>
+                    );
+                  })}
+                </CommandGroup>
+
+                {selectedValues.size > 0 && (
+                  <>
+                    <CommandSeparator />
+                    <CommandGroup>
+                      <CommandItem
+                        onSelect={() => fameColumn?.setFilterValue(undefined)}
+                        className="justify-center text-center"
+                      >
+                        Clear filters
+                      </CommandItem>
+                    </CommandGroup>
+                  </>
+                )}
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      )}
     </div>
   );
 }

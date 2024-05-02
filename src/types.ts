@@ -1,5 +1,5 @@
 export type RawUser = {
-  /** The user's rank. */
+  /** The user's rank or position. */
   r: number;
   /** The user's rank number Maps to a league. Only in Season 2. */
   ri?: number;
@@ -23,6 +23,18 @@ export type RawUser = {
   xbox?: string;
   /** The user's PSN name. */
   psn?: string;
+
+  // Terminal Attack
+  /** Games Won */
+  wg?: number;
+  /** Rounds Won */
+  wr?: number;
+  /** Total Rounds */
+  tr?: number;
+  /** Eliminations */
+  k?: number;
+  /** Score */
+  s?: number;
 };
 
 export type User = {
@@ -39,6 +51,13 @@ export type User = {
   level?: number;
   cashouts: number;
   fame: number;
+
+  // Exclusive to Terminal Attack
+  gamesWon?: number;
+  roundsWon?: number;
+  totalRounds?: number;
+  eliminations?: number;
+  score?: number;
 };
 
 export enum Platforms {
@@ -57,11 +76,3 @@ export type FameLeague = {
   fame: number;
   name: string;
 };
-
-export enum LeaderboardVersions {
-  CLOSED_BETA_1 = "closedBeta1",
-  CLOSED_BETA_2 = "closedBeta2",
-  OPEN_BETA = "openBeta",
-  SEASON_1 = "season1",
-  SEASON_2 = "season2",
-}

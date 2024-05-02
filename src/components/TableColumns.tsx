@@ -1,4 +1,4 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp, Minus } from "lucide-react";
 import {
   Tooltip,
@@ -12,29 +12,33 @@ import { cn } from "@/lib/utils";
 import fameToRankIcon from "@/utils/fameToRankIcon";
 import leagueNumberToIcon from "@/utils/leagueNumberToIcon";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
-import { LeaderboardVersions, Platforms, User } from "@/types";
+import { Platforms, User } from "@/types";
 import leagueIsLive from "@/utils/leagueIsLive";
+import { LeaderboardId } from "@/utils/leaderboards";
+
+const columnHelper = createColumnHelper<User>();
 
 export const columns = (
-  leaderboardVersion: LeaderboardVersions,
+  leaderboardId: LeaderboardId,
   selectedPlatform: Platforms,
-): ColumnDef<User>[] => {
-  const rankColumn = {
-    accessorKey: "rank",
-    // invertSorting: true,
+) => [
+  // Rank
+  columnHelper.accessor("rank", {
+    id: "rank",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Rank" />
     ),
-    cell: ({ getValue }) => (getValue() as number).toLocaleString("en"),
-  } satisfies ColumnDef<User>;
+    cell: ({ getValue }) => getValue().toLocaleString("en"),
+  }),
 
-  const changeColumn = {
-    accessorKey: "change",
+  // Change
+  columnHelper.accessor("change", {
+    id: "change",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="24h change" />
     ),
     cell: ({ getValue }) => {
-      const value = getValue() as number;
+      const value = getValue();
       return (
         <span
           className={cn(
@@ -60,183 +64,169 @@ export const columns = (
         </span>
       );
     },
-  } satisfies ColumnDef<User>;
+  }),
 
-  const nameColumn = {
-    accessorKey: "name",
-    // This to make filtering easier
-    accessorFn: user =>
+  // Name
+  columnHelper.accessor(
+    user =>
       `${user.name} ${user.steamName ?? ""} ${user.xboxName ?? ""} ${
         user.psnName ?? ""
       }`.toLowerCase(),
-    header: "Name",
-    cell: ({ row: { original: user } }) => {
-      return user.steamName || user.xboxName || user.psnName ? (
-        <TooltipProvider>
-          <Tooltip delayDuration={200}>
-            <TooltipTrigger asChild className="w-fit">
-              {platformNamesInline(user)}
-            </TooltipTrigger>
-            <TooltipContent>{namePopoverContent(user)}</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      ) : (
-        <span className="inline-flex gap-1">
-          {leagueIsLive(leaderboardVersion) && (
-            <>
-              {selectedPlatform === "steam" && (
-                <Icons.steam className="inline size-5 opacity-60" />
-              )}
-              {selectedPlatform === "xbox" && (
-                <Icons.xbox className="inline size-5 opacity-60" />
-              )}
-              {selectedPlatform === "psn" && (
-                <Icons.playstation className="inline size-5 opacity-60" />
-              )}
-            </>
-          )}
-          {user.name}
-        </span>
-      );
+    {
+      id: "name",
+      header: "Name",
+      cell: ({ row: { original: user } }) => {
+        return user.steamName || user.xboxName || user.psnName ? (
+          <TooltipProvider>
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger asChild className="w-fit">
+                {platformNamesInline(user)}
+              </TooltipTrigger>
+              <TooltipContent>{namePopoverContent(user)}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <span className="inline-flex gap-1">
+            {leagueIsLive(leaderboardId) && (
+              <>
+                {selectedPlatform === "steam" && (
+                  <Icons.steam className="inline size-5 opacity-60" />
+                )}
+                {selectedPlatform === "xbox" && (
+                  <Icons.xbox className="inline size-5 opacity-60" />
+                )}
+                {selectedPlatform === "psn" && (
+                  <Icons.playstation className="inline size-5 opacity-60" />
+                )}
+              </>
+            )}
+            {user.name}
+          </span>
+        );
+      },
     },
-  } satisfies ColumnDef<User>;
+  ),
 
-  const xpColumn = {
-    accessorKey: "xp",
+  // XP
+  columnHelper.accessor("xp", {
+    id: "xp",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="XP" />
     ),
-    cell: ({ getValue }) => ((getValue() as number) ?? 0).toLocaleString("en"),
-  } satisfies ColumnDef<User>;
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
 
-  const levelColumn = {
-    accessorKey: "level",
+  columnHelper.accessor("level", {
+    id: "level",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Level" />
     ),
-    cell: ({ getValue }) => ((getValue() as number) ?? 0).toLocaleString("en"),
-  } satisfies ColumnDef<User>;
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
 
-  const cashoutsColumn = {
-    accessorKey: "cashouts",
+  // Cashouts
+  columnHelper.accessor("cashouts", {
+    id: "cashouts",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Cashouts" />
     ),
     cell: ({ getValue }) =>
-      (getValue() as number).toLocaleString("en", {
+      getValue().toLocaleString("en", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 0,
       }),
-  } satisfies ColumnDef<User>;
+  }),
 
-  const fameColumn = {
-    accessorKey: "fame",
-    accessorFn: user => ({
+  // Fame
+  columnHelper.accessor(
+    user => ({
       fame: user.fame,
       leagueNumber: user.leagueNumber,
       league: user.league,
     }),
-    filterFn: (value, _, filterValue: string[]) =>
-      !filterValue.length || filterValue.includes(value.original.league),
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Fame" />;
-    },
-    cell: ({ getValue }) => {
-      const { fame, leagueNumber, league } = getValue() as {
-        fame?: number;
-        leagueNumber?: number;
-        league: string;
-      };
-      return (
-        <Popover>
-          <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
-            <div className="size-[60px]">
+    {
+      id: "fame",
+      filterFn: (value, _, filterValue: string[]) =>
+        !filterValue.length || filterValue.includes(value.original.league),
+      header: ({ column }) => {
+        return <DataTableColumnHeader column={column} title="Fame" />;
+      },
+      cell: ({ getValue }) => {
+        const { fame, leagueNumber, league } = getValue();
+        return (
+          <Popover>
+            <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
+              <div className="size-[60px]">
+                {leagueNumber
+                  ? leagueNumberToIcon(leagueNumber)
+                  : fameToRankIcon(leaderboardId, fame ?? 0)}
+              </div>
+
+              <div className="flex flex-col">
+                <span>{league}</span>
+                {fame && <span>{fame.toLocaleString("en")}</span>}
+              </div>
+            </PopoverTrigger>
+
+            <PopoverContent className="flex flex-col items-center justify-center font-saira">
+              <span className="text-xl font-medium">{league}</span>
+              {fame && <span>{fame.toLocaleString("en")} fame points</span>}
               {leagueNumber
-                ? leagueNumberToIcon(leagueNumber)
-                : fameToRankIcon(leaderboardVersion, fame ?? 0)}
-            </div>
-
-            <div className="flex flex-col">
-              <span>{league}</span>
-              {fame && <span>{fame.toLocaleString("en")}</span>}
-            </div>
-          </PopoverTrigger>
-
-          <PopoverContent className="flex flex-col items-center justify-center font-saira">
-            <span className="text-xl font-medium">{league}</span>
-            {fame && <span>{fame.toLocaleString("en")} fame points</span>}
-            {leagueNumber
-              ? leagueNumberToIcon(leagueNumber, 160)
-              : fameToRankIcon(leaderboardVersion, fame ?? 0, 160)}
-          </PopoverContent>
-        </Popover>
-      );
+                ? leagueNumberToIcon(leagueNumber, 160)
+                : fameToRankIcon(leaderboardId, fame ?? 0, 160)}
+            </PopoverContent>
+          </Popover>
+        );
+      },
     },
-  } satisfies ColumnDef<User>;
+  ),
 
-  // const historyColumn = {
-  //   accessorKey: "history",
-  //   header: "History",
-  //   cell: ({ row }) => (
-  //     <Button
-  //       variant={"outline"}
-  //       size={"icon"}
-  //       title={
-  //         row.getIsExpanded()
-  //           ? "Close this user's history."
-  //           : "Show this user's history."
-  //       }
-  //       onClick={() => row.toggleExpanded()}
-  //     >
-  //       <span className="text-neutral-700 dark:text-neutral-400">
-  //         {row.getIsExpanded() ? <EyeOff /> : <Eye />}
-  //       </span>
-  //     </Button>
-  //   ),
-  // } satisfies ColumnDef<User>;
+  // Games Won
+  columnHelper.accessor("gamesWon", {
+    id: "gamesWon",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Games Won" />
+    ),
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
 
-  const columns = {
-    [LeaderboardVersions.CLOSED_BETA_1]: [
-      rankColumn,
-      changeColumn,
-      nameColumn,
-      xpColumn,
-      levelColumn,
-      cashoutsColumn,
-      fameColumn,
-    ],
-    [LeaderboardVersions.CLOSED_BETA_2]: [
-      rankColumn,
-      changeColumn,
-      nameColumn,
-      cashoutsColumn,
-      fameColumn,
-    ],
-    [LeaderboardVersions.OPEN_BETA]: [
-      rankColumn,
-      changeColumn,
-      nameColumn,
-      cashoutsColumn,
-      fameColumn,
-    ],
-    [LeaderboardVersions.SEASON_1]: [
-      rankColumn,
-      changeColumn,
-      nameColumn,
-      cashoutsColumn,
-      fameColumn,
-    ],
-    [LeaderboardVersions.SEASON_2]: [
-      rankColumn,
-      changeColumn,
-      nameColumn,
-      fameColumn,
-    ],
-  };
+  // Rounds Won
+  columnHelper.accessor("roundsWon", {
+    id: "roundsWon",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Rounds Won" />
+    ),
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
 
-  return columns[leaderboardVersion];
-};
+  // Total Rounds
+  columnHelper.accessor("totalRounds", {
+    id: "totalRounds",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Total Rounds" />
+    ),
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
+
+  // Eliminations
+  columnHelper.accessor("eliminations", {
+    id: "eliminations",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Eliminations" />
+    ),
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
+
+  // Score
+  columnHelper.accessor("score", {
+    id: "score" as const,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Score" />
+    ),
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
+];
 
 const platformNamesInline = (user: User) => {
   return (

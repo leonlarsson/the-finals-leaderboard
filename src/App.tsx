@@ -18,10 +18,11 @@ import ThemeToggle from "./components/ThemeToggle";
 import Icons from "./components/icons";
 import Link from "./components/Link";
 import { cn } from "./lib/utils";
-import { LeaderboardVersions, Panels, Platforms } from "./types";
-import leagueIsLive from "./utils/leagueIsLive";
+import { Panels, Platforms } from "./types";
 import { fetchData } from "./utils/fetchData";
 import { communityEvents } from "./utils/communityEvents";
+import { LeaderboardId, leaderboards } from "./utils/leaderboards";
+import { ColumnDef } from "@tanstack/react-table";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -31,11 +32,9 @@ const App = () => {
 
   const initialLeaderboardVersion =
     leaderboardSearchParam &&
-    Object.values(LeaderboardVersions).includes(
-      leaderboardSearchParam as LeaderboardVersions,
-    )
+    Object.keys(leaderboards).includes(leaderboardSearchParam as LeaderboardId)
       ? leaderboardSearchParam
-      : LeaderboardVersions.SEASON_2;
+      : leaderboards.season2.id;
 
   const initialPlatform =
     platformSearchParam &&
@@ -43,16 +42,17 @@ const App = () => {
       ? platformSearchParam
       : Platforms.Crossplay;
 
+  const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
+    useState<LeaderboardId>(initialLeaderboardVersion as LeaderboardId);
+
+  // Set the initial panel to Stats if the panel query param is set to Stats
+  // and the Stats panel is not disabled
   const initialPanel =
     panelSearchParam &&
-    Object.values(Panels).includes(panelSearchParam as Panels)
+    Object.values(Panels).includes(panelSearchParam as Panels) &&
+    !leaderboards[selectedLeaderboardVersion].disableStatsPanel
       ? panelSearchParam
       : Panels.Table;
-
-  const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
-    useState<LeaderboardVersions>(
-      initialLeaderboardVersion as LeaderboardVersions,
-    );
 
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(
     initialPlatform as Platforms,
@@ -80,7 +80,7 @@ const App = () => {
     leaderboard,
     platform,
   }: {
-    leaderboard?: LeaderboardVersions;
+    leaderboard?: LeaderboardId;
     platform?: Platforms;
   }) => {
     queryClient.prefetchQuery({
@@ -104,7 +104,7 @@ const App = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
 
-    selectedLeaderboardVersion === LeaderboardVersions.SEASON_2
+    selectedLeaderboardVersion === "season2"
       ? searchParams.delete("leaderboard")
       : searchParams.set("leaderboard", selectedLeaderboardVersion);
 
@@ -123,8 +123,7 @@ const App = () => {
     );
   }, [selectedLeaderboardVersion, selectedPlatform, selectedPanel]);
 
-  const disabled =
-    !leagueIsLive(selectedLeaderboardVersion) || isLoading || isRefetching;
+  const disabled = isLoading || isRefetching;
 
   return (
     <div className="container mb-12 font-saira max-sm:px-2">
@@ -151,47 +150,33 @@ const App = () => {
           {/* LEADERBOARD VERSION */}
           <Tabs
             value={selectedLeaderboardVersion}
-            onValueChange={e =>
-              setSelectedLeaderboardVersion(e as LeaderboardVersions)
-            }
+            onValueChange={e => {
+              // Switch to Table panel if the Stats panel is disabled
+              if (
+                leaderboards[e as LeaderboardId].disableStatsPanel &&
+                selectedPanel === Panels.Stats
+              ) {
+                setSelectedPanel(Panels.Table);
+              }
+              setSelectedLeaderboardVersion(e as LeaderboardId);
+            }}
           >
             <TabsList>
               {[
-                {
-                  leaderboardVersion: LeaderboardVersions.SEASON_2,
-                  label: "Season 2",
-                  labelShort: "S2",
-                },
-                {
-                  leaderboardVersion: LeaderboardVersions.SEASON_1,
-                  label: "Season 1",
-                  labelShort: "S1",
-                },
-                {
-                  leaderboardVersion: LeaderboardVersions.OPEN_BETA,
-                  label: "Open Beta",
-                  labelShort: "Beta",
-                },
-                {
-                  leaderboardVersion: LeaderboardVersions.CLOSED_BETA_2,
-                  label: "Closed Beta 2",
-                  labelShort: "CB2",
-                },
-                {
-                  leaderboardVersion: LeaderboardVersions.CLOSED_BETA_1,
-                  label: "Closed Beta 1",
-                  labelShort: "CB1",
-                },
-              ].map(({ leaderboardVersion, label, labelShort }) => (
+                leaderboards.eventTerminalAttack,
+                leaderboards.season2,
+                leaderboards.season1,
+                leaderboards.openBeta,
+                leaderboards.closedBeta2,
+                leaderboards.closedBeta1,
+              ].map(({ id, name, nameShort }) => (
                 <TabsTrigger
-                  key={leaderboardVersion}
-                  value={leaderboardVersion}
-                  onPointerEnter={() =>
-                    prefetchData({ leaderboard: leaderboardVersion })
-                  }
+                  key={id}
+                  value={id}
+                  onPointerEnter={() => prefetchData({ leaderboard: id })}
                 >
-                  <span className="hidden min-[530px]:block">{label}</span>
-                  <span className="block min-[530px]:hidden">{labelShort}</span>
+                  <span className="hidden min-[530px]:block">{name}</span>
+                  <span className="block min-[530px]:hidden">{nameShort}</span>
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -228,7 +213,11 @@ const App = () => {
                 <TabsTrigger
                   key={value}
                   value={value}
-                  disabled={disabled}
+                  disabled={
+                    disabled ||
+                    leaderboards[selectedLeaderboardVersion]
+                      .disablePlatformSelection
+                  }
                   onPointerEnter={() => prefetchData({ platform: value })}
                 >
                   {icon}
@@ -244,7 +233,13 @@ const App = () => {
                   variant="outline"
                   className="select-none"
                   onClick={() => queryClient.invalidateQueries()}
-                  disabled={disabled}
+                  disabled={
+                    disabled ||
+                    Object.hasOwn(
+                      leaderboards[selectedLeaderboardVersion],
+                      "localData",
+                    )
+                  }
                 >
                   <span className="mr-2 hidden min-[530px]:block">Refresh</span>
 
@@ -281,7 +276,11 @@ const App = () => {
 
                 <TabsTrigger
                   value={Panels.Stats}
-                  disabled={isLoading || isRefetching}
+                  disabled={
+                    isLoading ||
+                    isRefetching ||
+                    leaderboards[selectedLeaderboardVersion].disableStatsPanel
+                  }
                 >
                   <BarChartIcon className="mr-2 inline size-5" />
                   Stats
@@ -291,9 +290,21 @@ const App = () => {
 
             {selectedPanel === Panels.Table && (
               <DataTable
+                key={selectedLeaderboardVersion}
                 leaderboardVersion={selectedLeaderboardVersion}
                 platform={selectedPlatform}
-                columns={columns(selectedLeaderboardVersion, selectedPlatform)}
+                // https://github.com/TanStack/table/issues/4382#issuecomment-2081153305
+                columns={(
+                  columns(
+                    selectedLeaderboardVersion,
+                    selectedPlatform,
+                  ) as ColumnDef<unknown>[]
+                ).filter(col =>
+                  leaderboards[
+                    selectedLeaderboardVersion
+                    // @ts-ignore This does exist because I create it
+                  ].tableColumns.includes(col.id),
+                )}
                 data={data ?? []}
               />
             )}

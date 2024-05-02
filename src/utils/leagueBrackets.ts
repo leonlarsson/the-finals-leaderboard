@@ -1,4 +1,5 @@
-import { FameLeague, LeaderboardVersions } from "@/types";
+import { FameLeague } from "@/types";
+import { LeaderboardId, leaderboards } from "./leaderboards";
 
 const CLOSED_BETA_ONE_LEAGUES = [
   { fame: 0, name: "Bronze" },
@@ -91,9 +92,9 @@ const SEASON_2_LEAGUES = [
 ] satisfies FameLeague[];
 
 export default {
-  [LeaderboardVersions.CLOSED_BETA_1]: CLOSED_BETA_ONE_LEAGUES,
-  [LeaderboardVersions.CLOSED_BETA_2]: CLOSED_BETA_TWO_LEAGUES,
-  [LeaderboardVersions.OPEN_BETA]: CLOSED_BETA_TWO_LEAGUES,
-  [LeaderboardVersions.SEASON_1]: SEASON_1_LEAGUES,
-  [LeaderboardVersions.SEASON_2]: SEASON_2_LEAGUES,
-} satisfies Record<LeaderboardVersions, FameLeague[]>;
+  [leaderboards.closedBeta1.id]: CLOSED_BETA_ONE_LEAGUES,
+  [leaderboards.closedBeta2.id]: CLOSED_BETA_TWO_LEAGUES,
+  [leaderboards.openBeta.id]: CLOSED_BETA_TWO_LEAGUES,
+  [leaderboards.season1.id]: SEASON_1_LEAGUES,
+  [leaderboards.season2.id]: SEASON_2_LEAGUES,
+} satisfies Record<LeaderboardId, FameLeague[]>;

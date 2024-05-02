@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -21,10 +21,11 @@ import {
 } from "@/components/ui/table";
 import DataTableToolbar from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
-import { LeaderboardVersions, Platforms } from "@/types";
+import { Platforms } from "@/types";
+import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 
 interface DataTableProps<TData, TValue> {
-  leaderboardVersion: LeaderboardVersions;
+  leaderboardVersion: LeaderboardId;
   platform: Platforms;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -42,7 +43,9 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: "name", value: search ?? "" },
-    { id: "fame", value: leagues?.split(",") ?? [] },
+    ...(!leaderboards[leaderboardVersion].disableLeagueFilter
+      ? [{ id: "fame", value: leagues?.split(",") ?? [] }]
+      : []),
   ]);
 
   const table = useReactTable({
@@ -61,12 +64,13 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  // NO LONGER NEEDED AS WE NO LONGER HAVE AN EXPANDED ROW
   // Reset expanded rows when data changes
-  useEffect(() => {
-    table.getRowModel().rows.forEach(row => {
-      row.toggleExpanded(false);
-    });
-  }, [data]);
+  // useEffect(() => {
+  //   table.getRowModel().rows.forEach(row => {
+  //     row.toggleExpanded(false);
+  //   });
+  // }, [data]);
 
   return (
     <div className="space-y-3">
