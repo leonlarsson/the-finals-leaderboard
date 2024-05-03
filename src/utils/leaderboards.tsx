@@ -2,7 +2,7 @@ import { TerminalSquareIcon } from "lucide-react";
 import openBetaData from "../data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "../data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
-import { RawUser } from "@/types";
+import { RawUser, User } from "@/types";
 
 export const leaderboards: Record<string, Leaderboard> = {
   closedBeta1: {
@@ -96,7 +96,7 @@ export type Leaderboard = {
   name: string;
   nameShort: string;
   tabIcon?: JSX.Element;
-  tableColumns: string[];
+  tableColumns: (keyof User)[];
   disablePlatformSelection: boolean;
   disableStatsPanel: boolean;
   disableLeagueFilter: boolean;
