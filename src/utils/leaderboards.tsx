@@ -1,3 +1,4 @@
+import { TerminalSquareIcon } from "lucide-react";
 import openBetaData from "../data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "../data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
@@ -71,6 +72,7 @@ export const leaderboards: Record<string, Leaderboard> = {
     id: "eventTerminalAttack",
     name: "Terminal Attack",
     nameShort: "TA",
+    tabIcon: <TerminalSquareIcon size={16} />,
     disableStatsPanel: true,
     disablePlatformSelection: true,
     disableLeagueFilter: true,
@@ -93,6 +95,7 @@ export type Leaderboard = {
   id: string;
   name: string;
   nameShort: string;
+  tabIcon?: JSX.Element;
   tableColumns: string[];
   disablePlatformSelection: boolean;
   disableStatsPanel: boolean;
