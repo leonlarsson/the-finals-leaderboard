@@ -74,7 +74,7 @@ export default function <TData>({
   return (
     <div className="flex flex-wrap gap-2">
       <Input
-        className="max-w-xs data-[active=true]:border-black/50 dark:data-[active=true]:border-white/50"
+        className="max-w-xs select-none data-[active=true]:border-black/50 dark:data-[active=true]:border-white/50"
         data-active={!!table.getColumn("name")?.getFilterValue()}
         placeholder="Filter usernames..."
         maxLength={20}
@@ -100,7 +100,7 @@ export default function <TData>({
             <Button
               variant="outline"
               size="sm"
-              className="h-10 border-dashed data-[active=true]:border-black/50 dark:data-[active=true]:border-white/50"
+              className="h-10 select-none border-dashed data-[active=true]:border-black/50 dark:data-[active=true]:border-white/50"
               data-active={selectedValues.size > 0}
             >
               <PlusCircle className="mr-2 h-4 w-4" />

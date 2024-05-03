@@ -151,7 +151,7 @@ const App = () => {
 
           {/* Special leaderboards */}
           <Tabs
-            className="flex flex-wrap gap-2"
+            className="flex select-none flex-wrap gap-2"
             value={selectedLeaderboardVersion}
             onValueChange={e => {
               // Switch to Table panel if the Stats panel is disabled
@@ -208,6 +208,7 @@ const App = () => {
 
           {/* LEADERBOARD PLATFORM */}
           <Tabs
+            className="select-none"
             defaultValue={selectedPlatform}
             onValueChange={e => setSelectedPlatform(e as Platforms)}
           >
@@ -286,6 +287,7 @@ const App = () => {
         {!error && (
           <div className="space-y-3">
             <Tabs
+              className="select-none"
               value={selectedPanel}
               onValueChange={v => setSelectedPanel(v as Panels)}
             >
