@@ -149,7 +149,6 @@ const App = () => {
         <div className="flex flex-wrap gap-2">
           {/* LEADERBOARD VERSION */}
 
-          {/* Special leaderboards */}
           <Tabs
             className="flex select-none flex-wrap gap-2"
             value={selectedLeaderboardVersion}
@@ -164,6 +163,7 @@ const App = () => {
               setSelectedLeaderboardVersion(e as LeaderboardId);
             }}
           >
+            {/* Special leaderboards */}
             <TabsList>
               {[leaderboards.eventTerminalAttack].map(
                 ({ id, name, nameShort, tabIcon }) => (
