@@ -175,8 +175,8 @@ const App = () => {
                     <span className="hidden items-center gap-1 min-[530px]:flex">
                       {tabIcon} {name}
                     </span>
-                    <span className="block min-[530px]:hidden">
-                      {nameShort}
+                    <span className="flex items-center gap-1 min-[530px]:hidden">
+                      {tabIcon} {nameShort}
                     </span>
                   </TabsTrigger>
                 ),
