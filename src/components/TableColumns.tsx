@@ -157,9 +157,9 @@ export const columns = (
         return (
           <Popover>
             <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
-              <div className="size-[60px]">
+              <div className="size-[50px]">
                 {leagueNumber
-                  ? leagueNumberToIcon(leagueNumber)
+                  ? leagueNumberToIcon(leagueNumber, 50)
                   : fameToRankIcon(leaderboardId, fame ?? 0)}
               </div>
 
