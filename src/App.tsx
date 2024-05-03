@@ -148,7 +148,10 @@ const App = () => {
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
           {/* LEADERBOARD VERSION */}
+
+          {/* Special leaderboards */}
           <Tabs
+            className="flex flex-wrap gap-2"
             value={selectedLeaderboardVersion}
             onValueChange={e => {
               // Switch to Table panel if the Stats panel is disabled
@@ -162,20 +165,41 @@ const App = () => {
             }}
           >
             <TabsList>
+              {[leaderboards.eventTerminalAttack].map(
+                ({ id, name, nameShort, tabIcon }) => (
+                  <TabsTrigger
+                    key={id}
+                    value={id}
+                    onPointerEnter={() => prefetchData({ leaderboard: id })}
+                  >
+                    <span className="hidden items-center gap-1 min-[530px]:flex">
+                      {tabIcon} {name}
+                    </span>
+                    <span className="block min-[530px]:hidden">
+                      {nameShort}
+                    </span>
+                  </TabsTrigger>
+                ),
+              )}
+            </TabsList>
+
+            {/* Regular leaderboards */}
+            <TabsList>
               {[
-                leaderboards.eventTerminalAttack,
                 leaderboards.season2,
                 leaderboards.season1,
                 leaderboards.openBeta,
                 leaderboards.closedBeta2,
                 leaderboards.closedBeta1,
-              ].map(({ id, name, nameShort }) => (
+              ].map(({ id, name, nameShort, tabIcon }) => (
                 <TabsTrigger
                   key={id}
                   value={id}
                   onPointerEnter={() => prefetchData({ leaderboard: id })}
                 >
-                  <span className="hidden min-[530px]:block">{name}</span>
+                  <span className="hidden items-center gap-1 min-[530px]:flex">
+                    {tabIcon} {name}
+                  </span>
                   <span className="block min-[530px]:hidden">{nameShort}</span>
                 </TabsTrigger>
               ))}
