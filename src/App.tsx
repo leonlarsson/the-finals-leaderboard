@@ -126,12 +126,46 @@ const App = () => {
   const disabled = isLoading || isRefetching;
 
   return (
-    <div className="container mb-12 font-saira max-sm:px-2">
-      <h1 className="text-2xl font-medium underline sm:text-4xl">
+    <div className="container mb-12 mt-2 font-saira max-sm:px-2">
+      <h1 className="text-2xl font-medium sm:text-3xl">
         Enhanced Leaderboard – THE FINALS
       </h1>
-      <h5 className="text-base sm:text-xl">
-        View leaderboards from THE FINALS and track your progress.
+
+      <h5>
+        Select a leaderboard and platform to view the current standings.{" "}
+        <button
+          id="share-button"
+          title="Copy link to clipboard"
+          className="w-40 text-left font-semibold hover:underline"
+          onClick={() => {
+            const shareData = {
+              title: document.title,
+              text: "Check out the Enhanced Leaderboard for THE FINALS!",
+              url: "https://the-finals-leaderboard.com",
+            };
+
+            if (
+              typeof navigator.canShare === "function" &&
+              navigator.canShare(shareData)
+            ) {
+              navigator.share(shareData);
+            } else {
+              navigator.clipboard.writeText(shareData.url).then(() => {
+                const button = document.getElementById(
+                  "share-button",
+                ) as HTMLButtonElement;
+                button.textContent = "Link copied!";
+                button.disabled = true;
+                setTimeout(() => {
+                  button.textContent = "Share this website!";
+                  button.disabled = false;
+                }, 1500);
+              });
+            }
+          }}
+        >
+          Share this website!
+        </button>
       </h5>
 
       <CommunityProgress
