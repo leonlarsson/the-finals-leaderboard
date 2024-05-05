@@ -40,7 +40,12 @@ export function DataTable<TData, TValue>({
   const searchParams = new URLSearchParams(window.location.search);
   const search = searchParams.get("name");
   const leagues = searchParams.get("leagues");
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "rank",
+      desc: false,
+    },
+  ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: "name", value: search ?? "" },
     ...(!leaderboards[leaderboardVersion].disableLeagueFilter
