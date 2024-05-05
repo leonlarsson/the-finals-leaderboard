@@ -24,6 +24,10 @@ export type RawUser = {
   /** The user's PSN name. */
   psn?: string;
 
+  // Platform Push
+  /** The user's distance in kilometers. */
+  d?: number;
+
   // Terminal Attack
   /** Games Won */
   wg?: number;
@@ -51,6 +55,9 @@ export type User = {
   level?: number;
   cashouts: number;
   fame: number;
+
+  // Exclusive to Platform Push
+  distance?: number;
 
   // Exclusive to Terminal Attack
   gamesWon?: number;

@@ -69,7 +69,12 @@ const App = () => {
   // Or until the page is refreshed or the cache is invalidated (refresh button is pressed)
   const { isLoading, data, error, dataUpdatedAt, isRefetching } = useQuery({
     queryKey: ["leaderboard", selectedLeaderboardVersion, selectedPlatform],
-    queryFn: () => fetchData(selectedLeaderboardVersion, selectedPlatform),
+    queryFn: () =>
+      fetchData(
+        selectedLeaderboardVersion,
+        selectedPlatform,
+        leaderboards[selectedLeaderboardVersion].jsonDataPath,
+      ),
     staleTime: Infinity, // Cache the data until the page is refreshed
   });
 
@@ -79,9 +84,11 @@ const App = () => {
   const prefetchData = ({
     leaderboard,
     platform,
+    jsonDataPath,
   }: {
     leaderboard?: LeaderboardId;
     platform?: Platforms;
+    jsonDataPath?: string;
   }) => {
     queryClient.prefetchQuery({
       queryKey: [
@@ -93,6 +100,7 @@ const App = () => {
         fetchData(
           leaderboard ?? selectedLeaderboardVersion,
           platform ?? selectedPlatform,
+          jsonDataPath,
         ),
       staleTime: Infinity,
     });

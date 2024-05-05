@@ -182,6 +182,19 @@ export const columns = (
     },
   ),
 
+  // Distance
+  columnHelper.accessor("distance", {
+    id: "distance",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Distance" />
+    ),
+    cell: ({ getValue }) =>
+      `${(getValue() ?? 0).toLocaleString("en", {
+        style: "decimal",
+        maximumFractionDigits: 2,
+      })} km`,
+  }),
+
   // Games Won
   columnHelper.accessor("gamesWon", {
     id: "gamesWon",

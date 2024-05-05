@@ -5,6 +5,7 @@ import { LeaderboardId, leaderboards } from "./leaderboards";
 export const fetchData = async (
   leaderboardVersion: LeaderboardId,
   platform: Platforms,
+  jsonDataPath?: string,
 ) => {
   const searchParams = new URLSearchParams(window.location.search);
   const useOwnApi = searchParams.get("useownapi") === "true";
@@ -20,18 +21,22 @@ export const fetchData = async (
   const leaderboard = leaderboards[leaderboardVersion];
 
   if ("localData" in leaderboard) {
-    return transformData(leaderboardVersion, leaderboard.localData);
+    return transformData(
+      leaderboardVersion,
+      jsonDataPath
+        ? leaderboard.localData[jsonDataPath]
+        : leaderboard.localData,
+    );
   }
 
-  if (typeof leaderboard.apiUrl === "function") {
-    const res = await fetch(leaderboard.apiUrl(platform));
-    const json = await res.json();
-    return transformData(leaderboardVersion, json);
-  }
-
-  if (typeof leaderboard.apiUrl === "string") {
-    const res = await fetch(leaderboard.apiUrl);
-    const json = await res.json();
-    return transformData(leaderboardVersion, json);
-  }
+  const res = await fetch(
+    typeof leaderboard.apiUrl === "function"
+      ? leaderboard.apiUrl(platform)
+      : leaderboard.apiUrl,
+  );
+  const json = await res.json();
+  return transformData(
+    leaderboardVersion,
+    jsonDataPath ? json[jsonDataPath] : json,
+  );
 };

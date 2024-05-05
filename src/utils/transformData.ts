@@ -25,6 +25,9 @@ export default (leaderboard: LeaderboardId, data: RawUser[]): User[] =>
     cashouts: user.c,
     fame: user.f,
 
+    // Exclusive to Platform Push
+    distance: user.d,
+
     // Exclusive to Terminal Attack
     gamesWon: user.wg,
     roundsWon: user.wr,

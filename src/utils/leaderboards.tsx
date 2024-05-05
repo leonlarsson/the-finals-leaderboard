@@ -2,7 +2,8 @@ import { TerminalSquareIcon } from "lucide-react";
 import openBetaData from "../data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "../data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
-import { RawUser, User } from "@/types";
+// import eventPlatformPushData from "../data/leaderboard-event-platform-push.json";
+import { User } from "@/types";
 
 export const leaderboards: Record<string, Leaderboard> = {
   closedBeta1: {
@@ -67,6 +68,21 @@ export const leaderboards: Record<string, Leaderboard> = {
     tableColumns: ["rank", "change", "name", "fame"],
   },
 
+  // Old Platform Push event. Disabled while I figure out if I want to show it
+  // eventPlatformPush: {
+  //   type: "event",
+  //   id: "eventPlatformPush",
+  //   name: "Platform Push",
+  //   nameShort: "PP",
+  //   tabIcon: <TerminalSquareIcon size={16} />,
+  //   disableStatsPanel: true,
+  //   disablePlatformSelection: true,
+  //   disableLeagueFilter: true,
+  //   localData: eventPlatformPushData.entries,
+  //   tableColumns: ["rank", "name", "distance"],
+  //   jsonDataPath: "entries",
+  // },
+
   eventTerminalAttack: {
     type: "event",
     id: "eventTerminalAttack",
@@ -100,9 +116,8 @@ export type Leaderboard = {
   disablePlatformSelection: boolean;
   disableStatsPanel: boolean;
   disableLeagueFilter: boolean;
-} & (
-  | { apiUrl: ((platform: string) => string) | string }
-  | { localData: RawUser[] }
-);
+  /** Where in the json the leaderboard entries array is located. It's in the root for regular leaderboards, but in "entries" for other types. */
+  jsonDataPath?: string;
+} & ({ apiUrl: ((platform: string) => string) | string } | { localData: any });
 
 export type LeaderboardId = keyof typeof leaderboards;
