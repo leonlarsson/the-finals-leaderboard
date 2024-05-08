@@ -1,7 +1,13 @@
 import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
+import {
+  BarChartIcon,
+  Loader,
+  RefreshCw,
+  TableIcon,
+  TerminalSquareIcon,
+} from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CommunityProgress from "./components/CommunityProgress";
 import { DataTable } from "./components/DataTable";
@@ -23,6 +29,7 @@ import { fetchData } from "./utils/fetchData";
 import { communityEvents } from "./utils/communityEvents";
 import { LeaderboardId, leaderboards } from "./utils/leaderboards";
 import { ColumnDef } from "@tanstack/react-table";
+import Notice from "./components/Notice";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -182,15 +189,15 @@ const App = () => {
       />
 
       {/* Notice */}
-      {/* <div className="my-1 flex items-center gap-2 rounded-md bg-brand-purple p-1 text-white">
-        <Icon className="size-5 flex-shrink-0" />
-        <span>Text</span>
-      </div> */}
+      <Notice
+        icon={<TerminalSquareIcon />}
+        message="Terminal Attack PSA: If you have not received your CNS hoodie, make sure
+      to play 14 games instead of 10."
+      />
 
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
           {/* LEADERBOARD VERSION */}
-
           <Tabs
             className="flex select-none flex-wrap gap-2"
             value={selectedLeaderboardVersion}
