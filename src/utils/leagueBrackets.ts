@@ -97,4 +97,5 @@ export default {
   [leaderboards.openBeta.id]: CLOSED_BETA_TWO_LEAGUES,
   [leaderboards.season1.id]: SEASON_1_LEAGUES,
   [leaderboards.season2.id]: SEASON_2_LEAGUES,
+  // @ts-ignore Some leaderboards do not have leagues
 } satisfies Record<LeaderboardId, FameLeague[]>;
