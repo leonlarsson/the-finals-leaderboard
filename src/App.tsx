@@ -193,6 +193,13 @@ const App = () => {
 
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
+          <div className="block w-full min-[530px]:hidden">
+            Leaderboard:{" "}
+            <span className="font-medium">
+              {leaderboards[selectedLeaderboardVersion].name}
+            </span>
+          </div>
+
           {/* LEADERBOARD VERSION */}
           <Tabs
             className="flex select-none flex-wrap gap-2"
