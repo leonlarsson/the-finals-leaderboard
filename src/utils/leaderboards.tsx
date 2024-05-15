@@ -83,6 +83,21 @@ export const leaderboards: Record<string, Leaderboard> = {
   //   jsonDataPath: "entries",
   // },
 
+  eventTerminalAttackEliminations: {
+    type: "event",
+    id: "eventTerminalAttackEliminations",
+    name: "Event: Terminal Attack Eliminations",
+    nameShort: "E:TAE",
+    tabIcon: <TerminalSquareIcon size={16} />,
+    disableStatsPanel: true,
+    disablePlatformSelection: true,
+    disableLeagueFilter: true,
+    apiUrl:
+      "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
+    jsonDataPath: "entries",
+    tableColumns: ["rank", "name", "eliminations"],
+  },
+
   eventTerminalAttack: {
     type: "event",
     id: "eventTerminalAttack",

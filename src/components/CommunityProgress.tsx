@@ -82,6 +82,20 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
             </span>
           </>
         )}
+
+        {eventData.type === "eliminations" && (
+          <>
+            <span>
+              {data.total.toLocaleString("en")} eliminations •{" "}
+              {new Intl.NumberFormat("en", {
+                style: "percent",
+                maximumFractionDigits: 1,
+              }).format(data.total / data.goal)}
+            </span>
+
+            <span>{data.goal.toLocaleString("en")} eliminations</span>
+          </>
+        )}
       </span>
 
       <ProgressBar

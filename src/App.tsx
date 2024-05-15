@@ -1,13 +1,7 @@
 import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  BarChartIcon,
-  Loader,
-  RefreshCw,
-  TableIcon,
-  TerminalSquareIcon,
-} from "lucide-react";
+import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CommunityProgress from "./components/CommunityProgress";
 import { DataTable } from "./components/DataTable";
@@ -29,7 +23,6 @@ import { fetchData } from "./utils/fetchData";
 import { communityEvents } from "./utils/communityEvents";
 import { LeaderboardId, leaderboards } from "./utils/leaderboards";
 import { ColumnDef } from "@tanstack/react-table";
-import Notice from "./components/Notice";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -183,17 +176,19 @@ const App = () => {
         </button>
       </h5>
 
-      <CommunityProgress
-        enabled={false}
-        eventData={communityEvents.april2024PushThePlatform}
-      />
+      <div className="my-2">
+        <CommunityProgress
+          enabled={true}
+          eventData={communityEvents.may2024TerminalAttackEliminations}
+        />
+      </div>
 
       {/* Notice */}
-      <Notice
+      {/* <Notice
         icon={<TerminalSquareIcon />}
         message="Terminal Attack PSA: If you have not received your CNS hoodie, make sure
       to play 14 games instead of 10."
-      />
+      /> */}
 
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
@@ -214,22 +209,23 @@ const App = () => {
           >
             {/* Special leaderboards */}
             <TabsList>
-              {[leaderboards.eventTerminalAttack].map(
-                ({ id, name, nameShort, tabIcon }) => (
-                  <TabsTrigger
-                    key={id}
-                    value={id}
-                    onPointerEnter={() => prefetchData({ leaderboard: id })}
-                  >
-                    <span className="hidden items-center gap-1 min-[530px]:flex">
-                      {tabIcon} {name}
-                    </span>
-                    <span className="flex items-center gap-1 min-[530px]:hidden">
-                      {tabIcon} {nameShort}
-                    </span>
-                  </TabsTrigger>
-                ),
-              )}
+              {[
+                leaderboards.eventTerminalAttack,
+                leaderboards.eventTerminalAttackEliminations,
+              ].map(({ id, name, nameShort, tabIcon }) => (
+                <TabsTrigger
+                  key={id}
+                  value={id}
+                  onPointerEnter={() => prefetchData({ leaderboard: id })}
+                >
+                  <span className="hidden items-center gap-1 min-[530px]:flex">
+                    {tabIcon} {name}
+                  </span>
+                  <span className="flex items-center gap-1 min-[530px]:hidden">
+                    {tabIcon} {nameShort}
+                  </span>
+                </TabsTrigger>
+              ))}
             </TabsList>
 
             {/* Regular leaderboards */}
