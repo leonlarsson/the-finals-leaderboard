@@ -18,13 +18,14 @@ export const fetchData = async (
     return json.data;
   }
 
-  const leaderboard = leaderboards[leaderboardVersion];
+  const leaderboard = leaderboards[leaderboardVersion as LeaderboardId];
 
   if ("localData" in leaderboard) {
     return transformData(
       leaderboardVersion,
       jsonDataPath
-        ? leaderboard.localData[jsonDataPath]
+        ? // @ts-ignore Considering becoming a farmer
+          leaderboard.localData[jsonDataPath]
         : leaderboard.localData,
     );
   }

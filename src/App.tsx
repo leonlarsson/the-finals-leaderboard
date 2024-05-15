@@ -21,7 +21,7 @@ import { cn } from "./lib/utils";
 import { Panels, Platforms } from "./types";
 import { fetchData } from "./utils/fetchData";
 import { communityEvents } from "./utils/communityEvents";
-import { LeaderboardId, leaderboards } from "./utils/leaderboards";
+import { Leaderboard, LeaderboardId, leaderboards } from "./utils/leaderboards";
 import { ColumnDef } from "@tanstack/react-table";
 
 const App = () => {
@@ -73,7 +73,8 @@ const App = () => {
       fetchData(
         selectedLeaderboardVersion,
         selectedPlatform,
-        leaderboards[selectedLeaderboardVersion].jsonDataPath,
+        (leaderboards[selectedLeaderboardVersion] as Leaderboard | undefined)
+          ?.jsonDataPath,
       ),
     staleTime: Infinity, // Cache the data until the page is refreshed
   });
@@ -212,11 +213,13 @@ const App = () => {
               {[
                 leaderboards.eventTerminalAttack,
                 leaderboards.eventTerminalAttackEliminations,
-              ].map(({ id, name, nameShort, tabIcon }) => (
+              ].map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
                 <TabsTrigger
                   key={id}
                   value={id}
-                  onPointerEnter={() => prefetchData({ leaderboard: id })}
+                  onPointerEnter={() =>
+                    prefetchData({ leaderboard: id as LeaderboardId })
+                  }
                 >
                   <span className="hidden items-center gap-1 min-[530px]:flex">
                     {tabIcon} {name}
@@ -236,11 +239,13 @@ const App = () => {
                 leaderboards.openBeta,
                 leaderboards.closedBeta2,
                 leaderboards.closedBeta1,
-              ].map(({ id, name, nameShort, tabIcon }) => (
+              ].map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
                 <TabsTrigger
                   key={id}
                   value={id}
-                  onPointerEnter={() => prefetchData({ leaderboard: id })}
+                  onPointerEnter={() =>
+                    prefetchData({ leaderboard: id as LeaderboardId })
+                  }
                 >
                   <span className="hidden items-center gap-1 min-[530px]:flex">
                     {tabIcon} {name}

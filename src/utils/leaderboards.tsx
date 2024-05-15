@@ -5,7 +5,7 @@ import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
 // import eventPlatformPushData from "../data/leaderboard-event-platform-push.json";
 import { User } from "@/types";
 
-export const leaderboards: Record<string, Leaderboard> = {
+export const leaderboards = {
   closedBeta1: {
     type: "regular",
     id: "closedBeta1",
@@ -119,7 +119,7 @@ export const leaderboards: Record<string, Leaderboard> = {
       "score",
     ],
   },
-} as const satisfies Record<string, Leaderboard>;
+} satisfies Record<string, Leaderboard>;
 
 export type Leaderboard = {
   type: "regular" | "event";
