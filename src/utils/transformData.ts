@@ -22,7 +22,9 @@ export default (leaderboard: LeaderboardId, data: RawUser[]): User[] =>
     psnName: user.psn,
     xp: user.x,
     level: user.mx,
-    cashouts: user.c,
+    // If the leaderboard is eventCommunityEvent210, use damageDone instead of cashouts. Embark, why the hell is the c key not consistent?
+    [leaderboard === "eventCommunityEvent210" ? "damageDone" : "cashouts"]:
+      user.c,
     fame: user.f,
 
     // Exclusive to Platform Push

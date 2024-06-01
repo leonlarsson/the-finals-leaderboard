@@ -180,7 +180,7 @@ const App = () => {
       <div className="my-2">
         <CommunityProgress
           enabled={true}
-          eventData={communityEvents.may2024TerminalAttackEliminations}
+          eventData={communityEvents.may2024CommunityEvent210}
         />
       </div>
 
@@ -218,8 +218,8 @@ const App = () => {
             {/* Special leaderboards */}
             <TabsList>
               {[
-                leaderboards.eventTerminalAttack,
-                leaderboards.eventTerminalAttackEliminations,
+                leaderboards.terminalAttack,
+                leaderboards.eventCommunityEvent210,
               ].map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
                 <TabsTrigger
                   key={id}

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ProgressBar } from "@tremor/react";
-import Link from "./Link";
 import { CommunityEvent } from "@/utils/communityEvents";
+import getDeepProperty from "@/utils/getDeepProperty";
 
 type Props = {
   enabled: boolean;
@@ -15,10 +15,17 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
     queryKey: ["communityEvent", eventData.name],
     queryFn: async () => {
       const res = await fetch(eventData.apiUrl);
-      const json = (await res.json()) as { goal: number; total: number };
+      const json = await res.json();
       return {
-        goal: json.goal,
-        total: Math.min(json.total, eventData.initialGoal),
+        goal: eventData.goalDataPath
+          ? getDeepProperty(json, eventData.goalDataPath)
+          : json.goal,
+        total: Math.min(
+          eventData.currentDataPath
+            ? getDeepProperty(json, eventData.currentDataPath)
+            : json.total,
+          eventData.initialGoal,
+        ),
       };
     },
     refetchInterval: 60_000,
@@ -29,9 +36,7 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
 
   return (
     <div className="flex flex-col flex-wrap gap-1 rounded-md border p-2 text-sm tabular-nums">
-      <Link href="https://www.reachthefinals.com/community-event">
-        Community Event | {eventData.name}
-      </Link>
+      <span className="font-medium">Community Event | {eventData.name}</span>
 
       <span className="flex flex-wrap justify-between">
         {eventData.type === "cash" && (
@@ -96,8 +101,21 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
             <span>{data.goal.toLocaleString("en")} eliminations</span>
           </>
         )}
-      </span>
 
+        {eventData.type === "damage" && (
+          <>
+            <span>
+              {data.total.toLocaleString("en")} damage •{" "}
+              {new Intl.NumberFormat("en", {
+                style: "percent",
+                maximumFractionDigits: 1,
+              }).format(data.total / data.goal)}
+            </span>
+
+            <span>{data.goal.toLocaleString("en")} damage</span>
+          </>
+        )}
+      </span>
       <ProgressBar
         showAnimation
         color="red"

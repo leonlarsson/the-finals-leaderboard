@@ -1,6 +1,7 @@
 import { Platforms } from "@/types";
 import transformData from "./transformData";
 import { LeaderboardId, leaderboards } from "./leaderboards";
+import getDeepProperty from "./getDeepProperty";
 
 export const fetchData = async (
   leaderboardVersion: LeaderboardId,
@@ -24,8 +25,7 @@ export const fetchData = async (
     return transformData(
       leaderboardVersion,
       jsonDataPath
-        ? // @ts-ignore Considering becoming a farmer
-          leaderboard.localData[jsonDataPath]
+        ? getDeepProperty(leaderboard.localData, jsonDataPath)
         : leaderboard.localData,
     );
   }
@@ -38,6 +38,6 @@ export const fetchData = async (
   const json = await res.json();
   return transformData(
     leaderboardVersion,
-    jsonDataPath ? json[jsonDataPath] : json,
+    jsonDataPath ? getDeepProperty(json, jsonDataPath) : json,
   );
 };

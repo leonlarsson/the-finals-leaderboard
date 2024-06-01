@@ -53,7 +53,7 @@ export type User = {
   psnName?: string;
   xp?: number;
   level?: number;
-  cashouts: number;
+  cashouts?: number;
   fame: number;
 
   // Exclusive to Platform Push
@@ -65,6 +65,9 @@ export type User = {
   totalRounds?: number;
   eliminations?: number;
   score?: number;
+
+  // Exclusive to Community Event 2.10
+  damageDone?: number;
 };
 
 export enum Platforms {

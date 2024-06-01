@@ -1,4 +1,4 @@
-import { TerminalSquareIcon } from "lucide-react";
+import { ShieldIcon, TerminalSquareIcon } from "lucide-react";
 import openBetaData from "../data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "../data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
@@ -83,24 +83,39 @@ export const leaderboards = {
   //   jsonDataPath: "entries",
   // },
 
-  eventTerminalAttackEliminations: {
+  // eventTerminalAttackEliminations: {
+  //   type: "event",
+  //   id: "eventTerminalAttackEliminations",
+  //   name: "Event: Terminal Attack Eliminations",
+  //   nameShort: "E:TAE",
+  //   tabIcon: <TerminalSquareIcon size={16} />,
+  //   disableStatsPanel: true,
+  //   disablePlatformSelection: true,
+  //   disableLeagueFilter: true,
+  //   apiUrl:
+  //     "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
+  //   jsonDataPath: "entries",
+  //   tableColumns: ["rank", "name", "eliminations"],
+  // },
+
+  eventCommunityEvent210: {
     type: "event",
-    id: "eventTerminalAttackEliminations",
-    name: "Event: Terminal Attack Eliminations",
-    nameShort: "E:TAE",
-    tabIcon: <TerminalSquareIcon size={16} />,
+    id: "eventCommunityEvent210",
+    name: "Event: 2.10",
+    nameShort: "E:2.10",
+    tabIcon: <ShieldIcon size={16} />,
     disableStatsPanel: true,
     disablePlatformSelection: true,
     disableLeagueFilter: true,
     apiUrl:
-      "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
-    jsonDataPath: "entries",
-    tableColumns: ["rank", "name", "eliminations"],
+      "https://the-finals-api.ragnarok.workers.dev/proxy?url=https://id.embark.games/_next/data/VYDJeG-K6I8xvpp7W-9Ic/en/leaderboards/community-event-2-10.json?slug=community-event-2-10",
+    jsonDataPath: "pageProps.entries",
+    tableColumns: ["rank", "name", "damageDone"],
   },
 
-  eventTerminalAttack: {
+  terminalAttack: {
     type: "event",
-    id: "eventTerminalAttack",
+    id: "terminalAttack",
     name: "Terminal Attack",
     nameShort: "TA",
     tabIcon: <TerminalSquareIcon size={16} />,

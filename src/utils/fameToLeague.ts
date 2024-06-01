@@ -2,7 +2,7 @@ import { LeaderboardId } from "./leaderboards";
 import leagueBrackets from "./leagueBrackets";
 
 export default (leaderboard: LeaderboardId, fame: number): string => {
-  if (leaderboard === "eventTerminalAttack") return "Unknown";
+  if (leaderboard === "terminalAttack") return "Unknown";
 
   return (
     leagueBrackets[leaderboard]

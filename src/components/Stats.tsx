@@ -65,8 +65,9 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               Average Cashouts:{" "}
               <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                 {(
-                  users.map(user => user.cashouts).reduce((a, b) => a + b, 0) /
-                  users.length
+                  users
+                    .map(user => user.cashouts ?? 0)
+                    .reduce((a, b) => a + b, 0) / users.length
                 ).toLocaleString("en", {
                   style: "currency",
                   currency: "USD",

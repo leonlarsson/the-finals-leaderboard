@@ -131,7 +131,7 @@ export const columns = (
       <DataTableColumnHeader column={column} title="Cashouts" />
     ),
     cell: ({ getValue }) =>
-      getValue().toLocaleString("en", {
+      (getValue() ?? 0).toLocaleString("en", {
         style: "currency",
         currency: "USD",
         maximumFractionDigits: 0,
@@ -236,6 +236,15 @@ export const columns = (
     id: "score" as const,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Score" />
+    ),
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
+
+  // Score
+  columnHelper.accessor("damageDone", {
+    id: "damageDone" as const,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Total Damage Done" />
     ),
     cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
   }),
