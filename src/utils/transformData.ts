@@ -4,7 +4,7 @@ import leagueNumberToName from "./leagueNumberToName";
 import { LeaderboardId } from "./leaderboards";
 
 // The goal of this is to transform multiple formats into a universal format
-export default (leaderboard: LeaderboardId, data: RawUser[]): User[] =>
+export default (leaderboardId: LeaderboardId, data: RawUser[]): User[] =>
   data.map(user => ({
     key: `${user.r}-${user.name}`,
     rank: user.r,
@@ -13,7 +13,7 @@ export default (leaderboard: LeaderboardId, data: RawUser[]): User[] =>
       "ri" in user || "f" in user
         ? user.ri
           ? leagueNumberToName(user.ri)
-          : fameToLeague(leaderboard, user.f)
+          : fameToLeague(leaderboardId, user.f)
         : "N/A",
     change: user.or - user.r,
     name: user.name,
@@ -22,9 +22,8 @@ export default (leaderboard: LeaderboardId, data: RawUser[]): User[] =>
     psnName: user.psn,
     xp: user.x,
     level: user.mx,
-    // If the leaderboard is eventCommunityEvent210, use damageDone instead of cashouts. Embark, why the hell is the c key not consistent?
-    [leaderboard === "eventCommunityEvent210" ? "damageDone" : "cashouts"]:
-      user.c,
+    // If the leaderboard is communityEvent210, use damageDone instead of cashouts. Embark, why the hell is the c key not consistent?
+    [leaderboardId === "communityEvent210" ? "damageDone" : "cashouts"]: user.c,
     fame: user.f,
 
     // Exclusive to Platform Push

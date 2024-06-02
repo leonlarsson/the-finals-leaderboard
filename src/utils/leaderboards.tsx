@@ -2,12 +2,13 @@ import { ShieldIcon, TerminalSquareIcon } from "lucide-react";
 import openBetaData from "../data/leaderboard-open-beta-1.json";
 import closedBeta2Data from "../data/leaderboard-closed-beta-2.json";
 import closedBeta1Data from "../data/leaderboard-closed-beta-1.json";
-// import eventPlatformPushData from "../data/leaderboard-event-platform-push.json";
+import eventPlatformPushData from "../data/leaderboard-event-platform-push.json";
 import { User } from "@/types";
 
 export const leaderboards = {
   closedBeta1: {
     type: "regular",
+    enabled: true,
     id: "closedBeta1",
     name: "Closed Beta 1",
     nameShort: "CB1",
@@ -20,6 +21,7 @@ export const leaderboards = {
 
   closedBeta2: {
     type: "regular",
+    enabled: true,
     id: "closedBeta2",
     name: "Closed Beta 2",
     nameShort: "CB2",
@@ -33,6 +35,7 @@ export const leaderboards = {
   openBeta: {
     type: "regular",
     id: "openBeta",
+    enabled: true,
     name: "Open Beta",
     nameShort: "OB",
     disableLeagueFilter: false,
@@ -45,6 +48,7 @@ export const leaderboards = {
   season1: {
     type: "regular",
     id: "season1",
+    enabled: true,
     name: "Season 1",
     nameShort: "S1",
     disableLeagueFilter: false,
@@ -58,6 +62,7 @@ export const leaderboards = {
   season2: {
     type: "regular",
     id: "season2",
+    enabled: true,
     name: "Season 2",
     nameShort: "S2",
     disableLeagueFilter: false,
@@ -68,39 +73,43 @@ export const leaderboards = {
     tableColumns: ["rank", "change", "name", "fame"],
   },
 
-  // Old Platform Push event. Disabled while I figure out if I want to show it
-  // eventPlatformPush: {
-  //   type: "event",
-  //   id: "eventPlatformPush",
-  //   name: "Platform Push",
-  //   nameShort: "PP",
-  //   tabIcon: <TerminalSquareIcon size={16} />,
-  //   disableStatsPanel: true,
-  //   disablePlatformSelection: true,
-  //   disableLeagueFilter: true,
-  //   localData: eventPlatformPushData.entries,
-  //   tableColumns: ["rank", "name", "distance"],
-  //   jsonDataPath: "entries",
-  // },
-
-  // eventTerminalAttackEliminations: {
-  //   type: "event",
-  //   id: "eventTerminalAttackEliminations",
-  //   name: "Event: Terminal Attack Eliminations",
-  //   nameShort: "E:TAE",
-  //   tabIcon: <TerminalSquareIcon size={16} />,
-  //   disableStatsPanel: true,
-  //   disablePlatformSelection: true,
-  //   disableLeagueFilter: true,
-  //   apiUrl:
-  //     "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
-  //   jsonDataPath: "entries",
-  //   tableColumns: ["rank", "name", "eliminations"],
-  // },
-
-  eventCommunityEvent210: {
+  platformPushEvent: {
     type: "event",
-    id: "eventCommunityEvent210",
+    id: "platformPushEvent",
+    enabled: true,
+    archived: true,
+    name: "Event: Platform Push",
+    nameShort: "PP",
+    tabIcon: <TerminalSquareIcon size={16} />,
+    disableStatsPanel: true,
+    disablePlatformSelection: true,
+    disableLeagueFilter: true,
+    localData: eventPlatformPushData,
+    tableColumns: ["rank", "name", "distance"],
+    jsonDataPath: "entries",
+  },
+
+  terminalAttackEliminations: {
+    type: "event",
+    id: "terminalAttackEliminations",
+    enabled: true,
+    archived: true,
+    name: "Event: TA Eliminations",
+    nameShort: "E:TAE",
+    tabIcon: <TerminalSquareIcon size={16} />,
+    disableStatsPanel: true,
+    disablePlatformSelection: true,
+    disableLeagueFilter: true,
+    apiUrl:
+      "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
+    jsonDataPath: "entries",
+    tableColumns: ["rank", "name", "eliminations"],
+  },
+
+  communityEvent210: {
+    type: "event",
+    id: "communityEvent210",
+    enabled: true,
     name: "Event: 2.10",
     nameShort: "E:2.10",
     tabIcon: <ShieldIcon size={16} />,
@@ -114,8 +123,9 @@ export const leaderboards = {
   },
 
   terminalAttack: {
-    type: "event",
+    type: "mode",
     id: "terminalAttack",
+    enabled: true,
     name: "Terminal Attack",
     nameShort: "TA",
     tabIcon: <TerminalSquareIcon size={16} />,
@@ -137,8 +147,10 @@ export const leaderboards = {
 } satisfies Record<string, Leaderboard>;
 
 export type Leaderboard = {
-  type: "regular" | "event";
+  type: "regular" | "mode" | "event";
   id: string;
+  enabled: boolean;
+  archived?: boolean;
   name: string;
   nameShort: string;
   tabIcon?: JSX.Element;

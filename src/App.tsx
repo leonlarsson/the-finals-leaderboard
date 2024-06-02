@@ -217,51 +217,74 @@ const App = () => {
               setSelectedLeaderboardVersion(e as LeaderboardId);
             }}
           >
-            {/* Special leaderboards */}
+            {/* Mode leaderboards */}
             <TabsList>
-              {[
-                leaderboards.terminalAttack,
-                leaderboards.eventCommunityEvent210,
-              ].map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
-                <TabsTrigger
-                  key={id}
-                  value={id}
-                  onPointerEnter={() =>
-                    prefetchData({ leaderboard: id as LeaderboardId })
-                  }
-                >
-                  <span className="hidden items-center gap-1 min-[530px]:flex">
-                    {tabIcon} {name}
-                  </span>
-                  <span className="flex items-center gap-1 min-[530px]:hidden">
-                    {tabIcon} {nameShort}
-                  </span>
-                </TabsTrigger>
-              ))}
+              {Object.values(leaderboards)
+                .filter(x => x.type === "mode")
+                .filter(x => x.enabled)
+                .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
+                  <TabsTrigger
+                    key={id}
+                    value={id}
+                    onPointerEnter={() =>
+                      prefetchData({ leaderboard: id as LeaderboardId })
+                    }
+                  >
+                    <span className="hidden items-center gap-1 min-[530px]:flex">
+                      {tabIcon} {name}
+                    </span>
+                    <span className="flex items-center gap-1 min-[530px]:hidden">
+                      {tabIcon} {nameShort}
+                    </span>
+                  </TabsTrigger>
+                ))}
+            </TabsList>
+
+            {/* Event leaderboards */}
+            <TabsList>
+              {Object.values(leaderboards)
+                .filter((x: Leaderboard) => x.type === "event" && !x.archived)
+                .filter(x => x.enabled)
+                .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
+                  <TabsTrigger
+                    key={id}
+                    value={id}
+                    onPointerEnter={() =>
+                      prefetchData({ leaderboard: id as LeaderboardId })
+                    }
+                  >
+                    <span className="hidden items-center gap-1 min-[530px]:flex">
+                      {tabIcon} {name}
+                    </span>
+                    <span className="flex items-center gap-1 min-[530px]:hidden">
+                      {tabIcon} {nameShort}
+                    </span>
+                  </TabsTrigger>
+                ))}
             </TabsList>
 
             {/* Regular leaderboards */}
             <TabsList>
-              {[
-                leaderboards.season2,
-                leaderboards.season1,
-                leaderboards.openBeta,
-                leaderboards.closedBeta2,
-                leaderboards.closedBeta1,
-              ].map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
-                <TabsTrigger
-                  key={id}
-                  value={id}
-                  onPointerEnter={() =>
-                    prefetchData({ leaderboard: id as LeaderboardId })
-                  }
-                >
-                  <span className="hidden items-center gap-1 min-[530px]:flex">
-                    {tabIcon} {name}
-                  </span>
-                  <span className="block min-[530px]:hidden">{nameShort}</span>
-                </TabsTrigger>
-              ))}
+              {Object.values(leaderboards)
+                .filter(x => x.type === "regular")
+                .filter(x => x.enabled)
+                .toReversed()
+                .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
+                  <TabsTrigger
+                    key={id}
+                    value={id}
+                    onPointerEnter={() =>
+                      prefetchData({ leaderboard: id as LeaderboardId })
+                    }
+                  >
+                    <span className="hidden items-center gap-1 min-[530px]:flex">
+                      {tabIcon} {name}
+                    </span>
+                    <span className="block min-[530px]:hidden">
+                      {nameShort}
+                    </span>
+                  </TabsTrigger>
+                ))}
             </TabsList>
           </Tabs>
 
