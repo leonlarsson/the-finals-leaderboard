@@ -85,11 +85,9 @@ const App = () => {
   const prefetchData = ({
     leaderboard,
     platform,
-    jsonDataPath,
   }: {
     leaderboard?: LeaderboardId;
     platform?: Platforms;
-    jsonDataPath?: string;
   }) => {
     queryClient.prefetchQuery({
       queryKey: [
@@ -101,7 +99,11 @@ const App = () => {
         fetchData(
           leaderboard ?? selectedLeaderboardVersion,
           platform ?? selectedPlatform,
-          jsonDataPath,
+          (
+            leaderboards[leaderboard ?? selectedLeaderboardVersion] as
+              | Leaderboard
+              | undefined
+          )?.jsonDataPath,
         ),
       staleTime: Infinity,
     });
