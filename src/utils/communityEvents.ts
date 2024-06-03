@@ -24,10 +24,9 @@ export const communityEvents = {
     name: "Community Event 2.10",
     type: "damage",
     initialGoal: 18_000_000_000,
-    apiUrl:
-      "https://the-finals-api.ragnarok.workers.dev/proxy?url=https://id.embark.games/_next/data/VYDJeG-K6I8xvpp7W-9Ic/en/leaderboards/community-event-2-10.json?slug=community-event-2-10",
-    goalDataPath: "pageProps.progress.goal",
-    currentDataPath: "pageProps.progress.current",
+    apiUrl: "https://the-finals-api.ragnarok.workers.dev/210event",
+    goalDataPath: "progress.goal",
+    currentDataPath: "progress.current",
   },
 } satisfies Record<string, CommunityEvent>;
 

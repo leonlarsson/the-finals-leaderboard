@@ -116,9 +116,8 @@ export const leaderboards = {
     disableStatsPanel: true,
     disablePlatformSelection: true,
     disableLeagueFilter: true,
-    apiUrl:
-      "https://the-finals-api.ragnarok.workers.dev/proxy?url=https://id.embark.games/_next/data/VYDJeG-K6I8xvpp7W-9Ic/en/leaderboards/community-event-2-10.json?slug=community-event-2-10",
-    jsonDataPath: "pageProps.entries",
+    apiUrl: "https://the-finals-api.ragnarok.workers.dev/210event",
+    jsonDataPath: "entries",
     tableColumns: ["rank", "name", "damageDone"],
   },
 
