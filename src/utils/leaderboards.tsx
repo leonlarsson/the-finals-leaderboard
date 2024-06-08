@@ -15,7 +15,7 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: true,
     disableStatsPanel: false,
-    localData: closedBeta1Data,
+    fetchData: async () => closedBeta1Data,
     tableColumns: ["rank", "change", "name", "xp", "level", "cashouts", "fame"],
   },
 
@@ -28,7 +28,7 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: true,
     disableStatsPanel: false,
-    localData: closedBeta2Data,
+    fetchData: async () => closedBeta2Data,
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
 
@@ -41,7 +41,7 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: true,
     disableStatsPanel: false,
-    localData: openBetaData,
+    fetchData: async () => openBetaData,
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
 
@@ -54,8 +54,12 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: false,
     disableStatsPanel: false,
-    apiUrl: (platform: string) =>
-      `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${platform}-discovery-live.json`,
+    fetchData: async (platform: string) => {
+      const res = await fetch(
+        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${platform}-discovery-live.json`,
+      );
+      return res.json();
+    },
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
 
@@ -68,8 +72,12 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: false,
     disableStatsPanel: false,
-    apiUrl: (platform: string) =>
-      `https://storage.googleapis.com/embark-discovery-leaderboard/s2-leaderboard-${platform}-discovery-live.json`,
+    fetchData: async (platform: string) => {
+      const res = await fetch(
+        `https://storage.googleapis.com/embark-discovery-leaderboard/s2-leaderboard-${platform}-discovery-live.json`,
+      );
+      return res.json();
+    },
     tableColumns: ["rank", "change", "name", "fame"],
   },
 
@@ -84,9 +92,8 @@ export const leaderboards = {
     disableStatsPanel: true,
     disablePlatformSelection: true,
     disableLeagueFilter: true,
-    localData: eventPlatformPushData,
+    fetchData: async () => eventPlatformPushData.entries,
     tableColumns: ["rank", "name", "distance"],
-    jsonDataPath: "entries",
   },
 
   terminalAttackEliminations: {
@@ -100,9 +107,12 @@ export const leaderboards = {
     disableStatsPanel: true,
     disablePlatformSelection: true,
     disableLeagueFilter: true,
-    apiUrl:
-      "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
-    jsonDataPath: "entries",
+    fetchData: async () => {
+      const res = await fetch(
+        "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
+      );
+      return (await res.json()).entries;
+    },
     tableColumns: ["rank", "name", "eliminations"],
   },
 
@@ -116,8 +126,12 @@ export const leaderboards = {
     disableStatsPanel: true,
     disablePlatformSelection: true,
     disableLeagueFilter: true,
-    apiUrl: "https://the-finals-api.ragnarok.workers.dev/210event",
-    jsonDataPath: "entries",
+    fetchData: async () => {
+      const res = await fetch(
+        "https://the-finals-api.ragnarok.workers.dev/210event",
+      );
+      return (await res.json()).entries;
+    },
     tableColumns: ["rank", "name", "damageDone"],
   },
 
@@ -131,8 +145,12 @@ export const leaderboards = {
     disableStatsPanel: true,
     disablePlatformSelection: true,
     disableLeagueFilter: true,
-    apiUrl:
-      "https://storage.googleapis.com/embark-discovery-leaderboard/terminal-attack-leaderboard-discovery-live.json",
+    fetchData: async () => {
+      const res = await fetch(
+        "https://storage.googleapis.com/embark-discovery-leaderboard/terminal-attack-leaderboard-discovery-live.json",
+      );
+      return res.json();
+    },
     tableColumns: [
       "rank",
       "name",
@@ -157,8 +175,7 @@ export type Leaderboard = {
   disablePlatformSelection: boolean;
   disableStatsPanel: boolean;
   disableLeagueFilter: boolean;
-  /** Where in the json the leaderboard entries array is located. It's in the root for regular leaderboards, but in "entries" for other types. */
-  jsonDataPath?: string;
-} & ({ apiUrl: ((platform: string) => string) | string } | { localData: any });
+  fetchData: (platform: string) => Promise<any>;
+};
 
 export type LeaderboardId = keyof typeof leaderboards;

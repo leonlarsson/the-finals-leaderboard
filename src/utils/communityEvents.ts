@@ -3,30 +3,73 @@ export const communityEvents = {
     name: "Cashouts",
     type: "cash",
     initialGoal: 250_000_000_000,
-    apiUrl:
-      "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-leaderboard-discovery-live.json",
+    fetchData: async () => {
+      const res = await fetch(
+        "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-leaderboard-discovery-live.json",
+      );
+      const data = await res.json();
+      return {
+        entries: data.entries,
+        progress: {
+          goal: data.goal,
+          current: data.total,
+        },
+      };
+    },
   },
   april2024PushThePlatform: {
     name: "Push the Platform",
     type: "distance",
     initialGoal: 400_750,
-    apiUrl:
-      "https://storage.googleapis.com/embark-discovery-leaderboard/platform-push-event-leaderboard-discovery-live.json",
+    fetchData: async () => {
+      const res = await fetch(
+        "https://storage.googleapis.com/embark-discovery-leaderboard/platform-push-event-leaderboard-discovery-live.json",
+      );
+      const data = await res.json();
+      return {
+        entries: data.entries,
+        progress: {
+          goal: data.goal,
+          current: data.total,
+        },
+      };
+    },
   },
   may2024TerminalAttackEliminations: {
     name: "Terminal Attack Eliminations",
     type: "eliminations",
     initialGoal: 7_000_000,
-    apiUrl:
-      "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
+    fetchData: async () => {
+      const res = await fetch(
+        "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
+      );
+      const data = await res.json();
+      return {
+        entries: data.entries,
+        progress: {
+          goal: data.goal,
+          current: data.total,
+        },
+      };
+    },
   },
   may2024CommunityEvent210: {
     name: "Community Event 2.10",
     type: "damage",
     initialGoal: 18_000_000_000,
-    apiUrl: "https://the-finals-api.ragnarok.workers.dev/210event",
-    goalDataPath: "progress.goal",
-    currentDataPath: "progress.current",
+    fetchData: async () => {
+      const res = await fetch(
+        "https://the-finals-api.ragnarok.workers.dev/210event",
+      );
+      const data = await res.json();
+      return {
+        entries: data.entries,
+        progress: {
+          goal: data.progress.goal,
+          current: data.progress.current,
+        },
+      };
+    },
   },
 } satisfies Record<string, CommunityEvent>;
 
@@ -34,9 +77,11 @@ export type CommunityEvent = {
   name: string;
   type: "cash" | "distance" | "eliminations" | "damage";
   initialGoal: number;
-  apiUrl: string;
-  /** Where in the json the goal data is located. */
-  goalDataPath?: string;
-  /** Where in the json the current data is located. */
-  currentDataPath?: string;
+  fetchData: () => Promise<{
+    entries: any[];
+    progress: {
+      goal: number;
+      current: number;
+    };
+  }>;
 };

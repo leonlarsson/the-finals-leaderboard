@@ -1,12 +1,10 @@
 import { Platforms } from "@/types";
 import transformData from "./transformData";
 import { LeaderboardId, leaderboards } from "./leaderboards";
-import getDeepProperty from "./getDeepProperty";
 
 export const fetchData = async (
   leaderboardVersion: LeaderboardId,
   platform: Platforms,
-  jsonDataPath?: string,
 ) => {
   const searchParams = new URLSearchParams(window.location.search);
   const useOwnApi = searchParams.get("useownapi") === "true";
@@ -21,23 +19,6 @@ export const fetchData = async (
 
   const leaderboard = leaderboards[leaderboardVersion as LeaderboardId];
 
-  if ("localData" in leaderboard) {
-    return transformData(
-      leaderboardVersion,
-      jsonDataPath
-        ? getDeepProperty(leaderboard.localData, jsonDataPath)
-        : leaderboard.localData,
-    );
-  }
-
-  const res = await fetch(
-    typeof leaderboard.apiUrl === "function"
-      ? leaderboard.apiUrl(platform)
-      : leaderboard.apiUrl,
-  );
-  const json = await res.json();
-  return transformData(
-    leaderboardVersion,
-    jsonDataPath ? getDeepProperty(json, jsonDataPath) : json,
-  );
+  const data = await leaderboard.fetchData(platform);
+  return transformData(leaderboardVersion, data);
 };

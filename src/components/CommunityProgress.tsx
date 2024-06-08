@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { ProgressBar } from "@tremor/react";
 import { CommunityEvent } from "@/utils/communityEvents";
-import getDeepProperty from "@/utils/getDeepProperty";
 
 type Props = {
   enabled: boolean;
@@ -14,22 +13,14 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
   const { data, isError } = useQuery({
     queryKey: ["communityEvent", eventData.name],
     queryFn: async () => {
-      const res = await fetch(eventData.apiUrl);
-      const json = await res.json();
+      const data = await eventData.fetchData();
       return {
-        goal: eventData.goalDataPath
-          ? getDeepProperty(json, eventData.goalDataPath)
-          : json.goal,
-        total: Math.min(
-          eventData.currentDataPath
-            ? getDeepProperty(json, eventData.currentDataPath)
-            : json.total,
-          eventData.initialGoal,
-        ),
+        goal: data.progress.goal,
+        current: Math.min(data.progress.current, eventData.initialGoal),
       };
     },
     refetchInterval: 60_000,
-    initialData: { goal: eventData.initialGoal, total: 0 },
+    initialData: { goal: eventData.initialGoal, current: 0 },
   });
 
   if (isError) return null;
@@ -46,12 +37,12 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
                 style: "currency",
                 currency: "USD",
                 maximumFractionDigits: 0,
-              }).format(data.total)}{" "}
+              }).format(data.current)}{" "}
               •{" "}
               {new Intl.NumberFormat("en", {
                 style: "percent",
                 maximumFractionDigits: 1,
-              }).format(data.total / data.goal)}
+              }).format(data.current / data.goal)}
             </span>
 
             <span>
@@ -70,12 +61,12 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
               {new Intl.NumberFormat("en", {
                 style: "decimal",
                 maximumFractionDigits: 0,
-              }).format(data.total)}{" "}
+              }).format(data.current)}{" "}
               km •{" "}
               {new Intl.NumberFormat("en", {
                 style: "percent",
                 maximumFractionDigits: 1,
-              }).format(data.total / data.goal)}
+              }).format(data.current / data.goal)}
             </span>
 
             <span>
@@ -91,11 +82,11 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
         {eventData.type === "eliminations" && (
           <>
             <span>
-              {data.total.toLocaleString("en")} eliminations •{" "}
+              {data.current.toLocaleString("en")} eliminations •{" "}
               {new Intl.NumberFormat("en", {
                 style: "percent",
                 maximumFractionDigits: 1,
-              }).format(data.total / data.goal)}
+              }).format(data.current / data.goal)}
             </span>
 
             <span>{data.goal.toLocaleString("en")} eliminations</span>
@@ -105,11 +96,11 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
         {eventData.type === "damage" && (
           <>
             <span>
-              {data.total.toLocaleString("en")} damage •{" "}
+              {data.current.toLocaleString("en")} damage •{" "}
               {new Intl.NumberFormat("en", {
                 style: "percent",
                 maximumFractionDigits: 1,
-              }).format(data.total / data.goal)}
+              }).format(data.current / data.goal)}
             </span>
 
             <span>{data.goal.toLocaleString("en")} damage</span>
@@ -119,7 +110,7 @@ const CommunityProgress = ({ enabled, eventData }: Props) => {
       <ProgressBar
         showAnimation
         color="red"
-        value={(data.total / data.goal) * 100}
+        value={(data.current / data.goal) * 100}
       />
     </div>
   );
