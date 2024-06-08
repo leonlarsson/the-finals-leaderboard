@@ -1,7 +1,13 @@
 import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BarChartIcon, Loader, RefreshCw, TableIcon } from "lucide-react";
+import {
+  BarChartIcon,
+  Loader,
+  RefreshCw,
+  TableIcon,
+  TerminalSquareIcon,
+} from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CommunityProgress from "./components/CommunityProgress";
 import { DataTable } from "./components/DataTable";
@@ -23,6 +29,7 @@ import { fetchData } from "./utils/fetchData";
 import { communityEvents } from "./utils/communityEvents";
 import { Leaderboard, LeaderboardId, leaderboards } from "./utils/leaderboards";
 import { ColumnDef } from "@tanstack/react-table";
+import Notice from "./components/Notice";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -179,19 +186,29 @@ const App = () => {
         </button>
       </h5>
 
+      {/* Notice */}
+      <Notice
+        icon={<TerminalSquareIcon />}
+        message={
+          <span>
+            <Link href="https://www.youtube.com/watch?v=8kWYWa3Jv2Q">
+              Season 3 has just been announced
+            </Link>{" "}
+            with{" "}
+            <Link href="https://store.steampowered.com/news/app/2073850/view/4164220603447083354">
+              some changes
+            </Link>
+            . Stay tuned to see what changes are coming to the leaderboards.
+          </span>
+        }
+      />
+
       <div className="my-2">
         <CommunityProgress
           enabled={true}
           eventData={communityEvents.may2024CommunityEvent210}
         />
       </div>
-
-      {/* Notice */}
-      {/* <Notice
-        icon={<TerminalSquareIcon />}
-        message="Terminal Attack PSA: If you have not received your CNS hoodie, make sure
-      to play 14 games instead of 10."
-      /> */}
 
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
