@@ -76,13 +76,7 @@ const App = () => {
   // Or until the page is refreshed or the cache is invalidated (refresh button is pressed)
   const { isLoading, data, error, dataUpdatedAt, isRefetching } = useQuery({
     queryKey: ["leaderboard", selectedLeaderboardVersion, selectedPlatform],
-    queryFn: () =>
-      fetchData(
-        selectedLeaderboardVersion,
-        selectedPlatform,
-        (leaderboards[selectedLeaderboardVersion] as Leaderboard | undefined)
-          ?.jsonDataPath,
-      ),
+    queryFn: () => fetchData(selectedLeaderboardVersion, selectedPlatform),
     staleTime: Infinity, // Cache the data until the page is refreshed
   });
 
@@ -106,11 +100,6 @@ const App = () => {
         fetchData(
           leaderboard ?? selectedLeaderboardVersion,
           platform ?? selectedPlatform,
-          (
-            leaderboards[leaderboard ?? selectedLeaderboardVersion] as
-              | Leaderboard
-              | undefined
-          )?.jsonDataPath,
         ),
       staleTime: Infinity,
     });
