@@ -3,12 +3,11 @@ import { ProgressBar } from "@tremor/react";
 import { CommunityEvent } from "@/utils/communityEvents";
 
 type Props = {
-  enabled: boolean;
-  eventData: CommunityEvent;
+  eventData?: CommunityEvent;
 };
 
-const CommunityProgress = ({ enabled, eventData }: Props) => {
-  if (!enabled || !eventData) return null;
+const CommunityProgress = ({ eventData }: Props) => {
+  if (!eventData) return null;
 
   const { data, isError } = useQuery({
     queryKey: ["communityEvent", eventData.name],

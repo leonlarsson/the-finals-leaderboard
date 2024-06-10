@@ -1,6 +1,7 @@
 export const communityEvents = {
   february2024Cachouts: {
     name: "Cashouts",
+    active: false,
     type: "cash",
     initialGoal: 250_000_000_000,
     fetchData: async () => {
@@ -19,6 +20,7 @@ export const communityEvents = {
   },
   april2024PushThePlatform: {
     name: "Push the Platform",
+    active: false,
     type: "distance",
     initialGoal: 400_750,
     fetchData: async () => {
@@ -37,6 +39,7 @@ export const communityEvents = {
   },
   may2024TerminalAttackEliminations: {
     name: "Terminal Attack Eliminations",
+    active: false,
     type: "eliminations",
     initialGoal: 7_000_000,
     fetchData: async () => {
@@ -55,6 +58,7 @@ export const communityEvents = {
   },
   may2024CommunityEvent210: {
     name: "Community Event 2.10",
+    active: false,
     type: "damage",
     initialGoal: 18_000_000_000,
     fetchData: async () => {
@@ -75,6 +79,7 @@ export const communityEvents = {
 
 export type CommunityEvent = {
   name: string;
+  active: boolean;
   type: "cash" | "distance" | "eliminations" | "damage";
   initialGoal: number;
   fetchData: () => Promise<{

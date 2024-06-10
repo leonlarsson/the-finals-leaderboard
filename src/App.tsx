@@ -194,8 +194,7 @@ const App = () => {
 
       <div className="my-2">
         <CommunityProgress
-          enabled={true}
-          eventData={communityEvents.may2024CommunityEvent210}
+          eventData={Object.values(communityEvents).find(x => x.active)}
         />
       </div>
 
