@@ -105,7 +105,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
             }))}
             index="name"
             categories={["Players"]}
-            colors={["#39015c"]}
+            colors={["#d31f3c"]}
             valueFormatter={v => v.toLocaleString("en")}
             showAnimation
             customTooltip={({ label, payload }) => {
