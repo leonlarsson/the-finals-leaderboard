@@ -198,3 +198,5 @@ export type Leaderboard = {
 };
 
 export type LeaderboardId = keyof typeof leaderboards;
+
+export const defaultLeaderboardId: LeaderboardId = "season2";

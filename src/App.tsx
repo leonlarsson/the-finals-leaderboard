@@ -27,7 +27,12 @@ import { cn } from "./lib/utils";
 import { Panels, Platforms } from "./types";
 import { fetchData } from "./utils/fetchData";
 import { communityEvents } from "./utils/communityEvents";
-import { Leaderboard, LeaderboardId, leaderboards } from "./utils/leaderboards";
+import {
+  Leaderboard,
+  LeaderboardId,
+  defaultLeaderboardId,
+  leaderboards,
+} from "./utils/leaderboards";
 import { ColumnDef } from "@tanstack/react-table";
 import Notice from "./components/Notice";
 
@@ -37,12 +42,24 @@ const App = () => {
   const platformSearchParam = searchParams.get("platform");
   const panelSearchParam = searchParams.get("panel");
 
+  // Set the initial leaderboard version to the query param if:
+  // - The query param is set
+  // - The query param is a valid leaderboard version
+  // - The leaderboard version is enabled
+  // Otherwise, use the default leaderboard version
   const initialLeaderboardVersion =
     leaderboardSearchParam &&
-    Object.keys(leaderboards).includes(leaderboardSearchParam as LeaderboardId)
+    Object.keys(leaderboards).includes(
+      leaderboardSearchParam as LeaderboardId,
+    ) &&
+    leaderboards[leaderboardSearchParam as LeaderboardId].enabled
       ? leaderboardSearchParam
-      : leaderboards.season2.id;
+      : defaultLeaderboardId;
 
+  // Set the initial platform to the query param if:
+  // - The query param is set
+  // - The query param is a valid platform
+  // Otherwise, use the default platform (Crossplay)
   const initialPlatform =
     platformSearchParam &&
     Object.values(Platforms).includes(platformSearchParam as Platforms)
@@ -52,8 +69,11 @@ const App = () => {
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
     useState<LeaderboardId>(initialLeaderboardVersion as LeaderboardId);
 
-  // Set the initial panel to Stats if the panel query param is set to Stats
-  // and the Stats panel is not disabled
+  // Set the initial panel to the query param if:
+  // - The query param is set
+  // - The query param is a valid panel
+  // - The Stats panel is not disabled
+  // Otherwise, use the default panel (Table)
   const initialPanel =
     panelSearchParam &&
     Object.values(Panels).includes(panelSearchParam as Panels) &&
@@ -111,7 +131,7 @@ const App = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
 
-    selectedLeaderboardVersion === "season2"
+    selectedLeaderboardVersion === defaultLeaderboardId
       ? searchParams.delete("leaderboard")
       : searchParams.set("leaderboard", selectedLeaderboardVersion);
 
