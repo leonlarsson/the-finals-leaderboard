@@ -81,6 +81,25 @@ export const leaderboards = {
     tableColumns: ["rank", "change", "name", "fame"],
   },
 
+  season3: {
+    type: "regular",
+    id: "season3",
+    enabled: false,
+    name: "Season 3",
+    nameShort: "S3",
+    disableLeagueFilter: false,
+    disablePlatformSelection: false,
+    disableStatsPanel: false,
+    fetchData: async (platform: string) => {
+      // TODO: Update URL. Own API or Embark?
+      const res = await fetch(
+        `https://storage.googleapis.com/embark-discovery-leaderboard/s3-leaderboard-${platform}-discovery-live.json`,
+      );
+      return res.json();
+    },
+    tableColumns: ["rank", "change", "name", "fame"],
+  },
+
   platformPushEvent: {
     type: "event",
     id: "platformPushEvent",
