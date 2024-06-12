@@ -120,13 +120,6 @@ export function DataTable<TData, TValue>({
                       </TableCell>
                     ))}
                   </TableRow>
-
-                  {/* <TableExpandedRow
-                    colSpan={columns.length}
-                    show={row.getIsExpanded()}
-                    name={(data[row.id as any] as any).name as string}
-                    platform={platform}
-                  /> */}
                 </Fragment>
               ))
             ) : (
