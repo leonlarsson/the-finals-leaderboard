@@ -4,8 +4,8 @@ type Theme = "dark" | "light" | "system";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
+  defaultTheme: Theme;
+  storageKey: string;
 };
 
 type ThemeProviderState = {
@@ -22,10 +22,12 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
-  storageKey = "vite-ui-theme",
+  defaultTheme,
+  storageKey,
   ...props
 }: ThemeProviderProps) {
+  // Remove old theme key
+  localStorage.removeItem("vite-ui-theme");
   const [selectedTheme, setSelectedTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
   );
