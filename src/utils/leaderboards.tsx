@@ -1,9 +1,5 @@
 import { ShieldIcon, TerminalSquareIcon } from "lucide-react";
-import openBetaData from "../data/openbeta/data.json";
-import closedBeta2Data from "../data/closedbeta2/data.json";
-import closedBeta1Data from "../data/closedbeta1/data.json";
-import eventPlatformPushData from "../data/events/leaderboard-event-platform-push.json";
-import { User } from "@/types";
+import type { User } from "@/types";
 
 export const leaderboards = {
   closedBeta1: {
@@ -15,7 +11,13 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: true,
     disableStatsPanel: false,
-    fetchData: async () => closedBeta1Data,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb1?raw=true",
+      );
+      const data = await res.json();
+      return data.data;
+    },
     tableColumns: ["rank", "change", "name", "xp", "level", "cashouts", "fame"],
   },
 
@@ -28,7 +30,13 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: true,
     disableStatsPanel: false,
-    fetchData: async () => closedBeta2Data,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb2?raw=true",
+      );
+      const data = await res.json();
+      return data.data;
+    },
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
 
@@ -39,9 +47,15 @@ export const leaderboards = {
     name: "Open Beta",
     nameShort: "OB",
     disableLeagueFilter: false,
-    disablePlatformSelection: true,
+    disablePlatformSelection: false,
     disableStatsPanel: false,
-    fetchData: async () => openBetaData,
+    fetchData: async platform => {
+      const res = await fetch(
+        `https://api.the-finals-leaderboard.com/v1/leaderboard/ob/${platform}?raw=true`,
+      );
+      const data = await res.json();
+      return data.data;
+    },
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
 
@@ -54,11 +68,12 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: false,
     disableStatsPanel: false,
-    fetchData: async (platform: string) => {
+    fetchData: async platform => {
       const res = await fetch(
-        `https://storage.googleapis.com/embark-discovery-leaderboard/leaderboard-${platform}-discovery-live.json`,
+        `https://api.the-finals-leaderboard.com/v1/leaderboard/s1/${platform}?raw=true`,
       );
-      return res.json();
+      const data = await res.json();
+      return data.data;
     },
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
@@ -72,7 +87,7 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: false,
     disableStatsPanel: false,
-    fetchData: async (platform: string) => {
+    fetchData: async platform => {
       const res = await fetch(
         `https://storage.googleapis.com/embark-discovery-leaderboard/s2-leaderboard-${platform}-discovery-live.json`,
       );
@@ -90,7 +105,7 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: false,
     disableStatsPanel: false,
-    fetchData: async (platform: string) => {
+    fetchData: async platform => {
       // TODO: Update URL. Own API or Embark?
       const res = await fetch(
         `https://storage.googleapis.com/embark-discovery-leaderboard/s3-leaderboard-${platform}-discovery-live.json`,
@@ -98,21 +113,6 @@ export const leaderboards = {
       return res.json();
     },
     tableColumns: ["rank", "change", "name", "fame"],
-  },
-
-  platformPushEvent: {
-    type: "event",
-    id: "platformPushEvent",
-    enabled: true,
-    archived: true,
-    name: "Event: Platform Push",
-    nameShort: "PP",
-    tabIcon: <TerminalSquareIcon size={16} />,
-    disableStatsPanel: true,
-    disablePlatformSelection: true,
-    disableLeagueFilter: true,
-    fetchData: async () => eventPlatformPushData.entries,
-    tableColumns: ["rank", "name", "distance"],
   },
 
   terminalAttackEliminations: {
@@ -147,7 +147,7 @@ export const leaderboards = {
     disableLeagueFilter: true,
     fetchData: async () => {
       const res = await fetch(
-        "https://the-finals-api.ragnarok.workers.dev/210event",
+        "https://api.the-finals-leaderboard.com/210event",
       );
       return (await res.json()).entries;
     },
