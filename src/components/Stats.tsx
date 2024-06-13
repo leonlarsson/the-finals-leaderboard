@@ -1,6 +1,6 @@
 import { BarChart } from "@tremor/react";
 import fameToRankIcon from "@/utils/fameToRankIcon";
-import { Platforms, User } from "@/types";
+import { Platforms, BaseUser } from "@/types";
 import { LoaderIcon } from "lucide-react";
 import leagueBrackets from "@/utils/leagueBrackets";
 import getPlatformName from "@/utils/getPlatformName";
@@ -10,7 +10,7 @@ import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 type Props = {
   leaderboardVersion: LeaderboardId;
   platform: Platforms;
-  users: User[];
+  users: BaseUser[];
 };
 
 export default ({ leaderboardVersion, platform, users }: Props) => {
@@ -81,8 +81,9 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                 Average Fame:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {(
-                    users.map(user => user.fame).reduce((a, b) => a + b, 0) /
-                    users.length
+                    users
+                      .map(user => user.fame ?? 0)
+                      .reduce((a, b) => a + b, 0) / users.length
                   ).toLocaleString("en", { maximumFractionDigits: 0 })}
                 </span>
               </span>
