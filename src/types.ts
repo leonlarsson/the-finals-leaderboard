@@ -11,6 +11,7 @@ export type BaseUser = {
   level?: number;
   cashouts?: number;
   fame?: number;
+  rankScore?: number;
 };
 
 /** A type with the base values plus any additional extras (special events, modes) */

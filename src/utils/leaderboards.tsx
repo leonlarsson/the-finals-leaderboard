@@ -100,20 +100,48 @@ export const leaderboards = {
   season3: {
     type: "regular",
     id: "season3",
-    enabled: false,
+    enabled: true,
     name: "Season 3",
     nameShort: "S3",
     disableLeagueFilter: false,
-    disablePlatformSelection: false,
+    disablePlatformSelection: true,
     disableStatsPanel: false,
-    fetchData: async platform => {
-      // TODO: Update URL. Own API or Embark?
+    fetchData: async () => {
       const res = await fetch(
-        `https://storage.googleapis.com/embark-discovery-leaderboard/s3-leaderboard-${platform}-discovery-live.json`,
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s3/crossplay",
       );
-      return res.json();
+      const data = await res.json();
+      return data.data as BaseUser[];
     },
     tableColumns: ["rank", "change", "name", "fame"],
+  },
+
+  season3WorldTour: {
+    type: "event",
+    id: "season3WorldTour",
+    enabled: true,
+    name: "World Tour",
+    nameShort: "WT",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/s3worldtour",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    transformData: data =>
+      data.map(x => ({
+        rank: x.r,
+        name: x.name,
+        cashouts: x.p,
+        steamName: x.steam,
+        xboxName: x.xbox,
+        psnName: x.psn,
+      })),
+    tableColumns: ["rank", "name", "cashouts"],
   },
 
   terminalAttackEliminations: {
@@ -166,7 +194,7 @@ export const leaderboards = {
   terminalAttack: {
     type: "mode",
     id: "terminalAttack",
-    enabled: true,
+    enabled: false,
     name: "Terminal Attack",
     nameShort: "TA",
     tabIcon: <TerminalSquareIcon size={16} />,
@@ -221,4 +249,4 @@ export type Leaderboard = {
 
 export type LeaderboardId = keyof typeof leaderboards;
 
-export const defaultLeaderboardId: LeaderboardId = "season2";
+export const defaultLeaderboardId: LeaderboardId = "season3";

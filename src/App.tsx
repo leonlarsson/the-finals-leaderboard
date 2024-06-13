@@ -200,8 +200,8 @@ const App = () => {
         icon={<AlertCircleIcon />}
         message={
           <span>
-            I am currently waiting and investigating to see if this website can
-            support Season 3.
+            Season 3 support is here! Expect some issues while I iron things
+            out.
           </span>
         }
       />
@@ -214,7 +214,7 @@ const App = () => {
 
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
-          <div className="block w-full min-[530px]:hidden">
+          <div className="block w-full min-[600px]:hidden">
             Leaderboard:{" "}
             <span className="font-medium">
               {leaderboards[selectedLeaderboardVersion].name}
@@ -252,10 +252,10 @@ const App = () => {
                         prefetchData({ leaderboard: id as LeaderboardId })
                       }
                     >
-                      <span className="hidden items-center gap-1 min-[530px]:flex">
+                      <span className="hidden items-center gap-1 min-[600px]:flex">
                         {tabIcon} {name}
                       </span>
-                      <span className="flex items-center gap-1 min-[530px]:hidden">
+                      <span className="flex items-center gap-1 min-[600px]:hidden">
                         {tabIcon} {nameShort}
                       </span>
                     </TabsTrigger>
@@ -279,10 +279,10 @@ const App = () => {
                         prefetchData({ leaderboard: id as LeaderboardId })
                       }
                     >
-                      <span className="hidden items-center gap-1 min-[530px]:flex">
+                      <span className="hidden items-center gap-1 min-[300px]:flex">
                         {tabIcon} {name}
                       </span>
-                      <span className="flex items-center gap-1 min-[530px]:hidden">
+                      <span className="flex items-center gap-1 min-[300px]:hidden">
                         {tabIcon} {nameShort}
                       </span>
                     </TabsTrigger>
@@ -304,10 +304,10 @@ const App = () => {
                       prefetchData({ leaderboard: id as LeaderboardId })
                     }
                   >
-                    <span className="hidden items-center gap-1 min-[530px]:flex">
+                    <span className="hidden items-center gap-1 min-[600px]:flex">
                       {tabIcon} {name}
                     </span>
-                    <span className="block min-[530px]:hidden">
+                    <span className="block min-[600px]:hidden">
                       {nameShort}
                     </span>
                   </TabsTrigger>
@@ -375,7 +375,7 @@ const App = () => {
                     )
                   }
                 >
-                  <span className="mr-2 hidden min-[530px]:block">Refresh</span>
+                  <span className="mr-2 hidden min-[600px]:block">Refresh</span>
 
                   <RefreshCw
                     className={cn(

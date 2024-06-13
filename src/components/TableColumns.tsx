@@ -142,6 +142,7 @@ export const columns = (
   columnHelper.accessor(
     user => ({
       fame: user.fame,
+      rankScore: user.rankScore,
       leagueNumber: user.leagueNumber,
       league: user.league,
     }),
@@ -150,10 +151,10 @@ export const columns = (
       filterFn: (value, _, filterValue: string[]) =>
         !filterValue.length || filterValue.includes(value.original.league),
       header: ({ column }) => {
-        return <DataTableColumnHeader column={column} title="Fame" />;
+        return <DataTableColumnHeader column={column} title="League" />;
       },
       cell: ({ getValue }) => {
-        const { fame, leagueNumber, league } = getValue();
+        const { fame, rankScore, leagueNumber, league } = getValue();
         return (
           <Popover>
             <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
@@ -165,13 +166,20 @@ export const columns = (
 
               <div className="flex flex-col">
                 <span>{league}</span>
-                {fame && <span>{fame.toLocaleString("en")}</span>}
+                {(fame || rankScore) && (
+                  <span>{(fame ?? rankScore ?? 0).toLocaleString("en")}</span>
+                )}
               </div>
             </PopoverTrigger>
 
             <PopoverContent className="flex flex-col items-center justify-center font-saira">
               <span className="text-xl font-medium">{league}</span>
-              {fame && <span>{fame.toLocaleString("en")} fame points</span>}
+              {(fame || rankScore) && (
+                <span>
+                  {(fame ?? rankScore ?? 0).toLocaleString("en")}{" "}
+                  {rankScore ? "Rank Score" : "fame point"}
+                </span>
+              )}
               {leagueNumber
                 ? leagueNumberToIcon(leagueNumber, 160)
                 : fameToRankIcon(leaderboardId, fame ?? 0, 160)}

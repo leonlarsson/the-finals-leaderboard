@@ -61,28 +61,30 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               </span>
             )}
 
-            <span>
-              Average Cashouts:{" "}
-              <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                {(
-                  users
-                    .map(user => user.cashouts ?? 0)
-                    .reduce((a, b) => a + b, 0) / users.length
-                ).toLocaleString("en", {
-                  style: "currency",
-                  currency: "USD",
-                  maximumFractionDigits: 0,
-                })}
-              </span>
-            </span>
-
-            {leaderboardVersion !== "season2" && (
+            {"cashouts" in users[0] && (
               <span>
-                Average Fame:{" "}
+                Average Cashouts:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {(
                     users
-                      .map(user => user.fame ?? 0)
+                      .map(user => user.cashouts ?? 0)
+                      .reduce((a, b) => a + b, 0) / users.length
+                  ).toLocaleString("en", {
+                    style: "currency",
+                    currency: "USD",
+                    maximumFractionDigits: 0,
+                  })}
+                </span>
+              </span>
+            )}
+
+            {leaderboardVersion !== "season2" && (
+              <span>
+                Average {"rankScore" in users[0] ? "Rank Score" : "Fame"}:{" "}
+                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
+                  {(
+                    users
+                      .map(user => user.fame ?? user.rankScore ?? 0)
                       .reduce((a, b) => a + b, 0) / users.length
                   ).toLocaleString("en", { maximumFractionDigits: 0 })}
                 </span>
