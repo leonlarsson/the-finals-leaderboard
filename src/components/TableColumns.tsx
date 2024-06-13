@@ -12,11 +12,11 @@ import { cn } from "@/lib/utils";
 import fameToRankIcon from "@/utils/fameToRankIcon";
 import leagueNumberToIcon from "@/utils/leagueNumberToIcon";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
-import { Platforms, User } from "@/types";
+import { BaseUser, Platforms, BaseUserWithExtras } from "@/types";
 import leagueIsLive from "@/utils/leagueIsLive";
 import { LeaderboardId } from "@/utils/leaderboards";
 
-const columnHelper = createColumnHelper<User>();
+const columnHelper = createColumnHelper<BaseUserWithExtras>();
 
 export const columns = (
   leaderboardId: LeaderboardId,
@@ -250,7 +250,7 @@ export const columns = (
   }),
 ];
 
-const platformNamesInline = (user: User) => {
+const platformNamesInline = (user: BaseUser) => {
   return (
     <div className="flex flex-col gap-1">
       <span>{user.name}</span>
@@ -277,7 +277,7 @@ const platformNamesInline = (user: User) => {
   );
 };
 
-const namePopoverContent = (user: User) => {
+const namePopoverContent = (user: BaseUser) => {
   if (!user.steamName && !user.xboxName && !user.psnName) return;
   return (
     <div className="flex flex-col gap-2">

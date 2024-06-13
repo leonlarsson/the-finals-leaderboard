@@ -243,50 +243,58 @@ const App = () => {
             }}
           >
             {/* Mode leaderboards */}
-            <TabsList>
-              {Object.values(leaderboards)
-                .filter(x => x.type === "mode")
-                .filter(x => x.enabled)
-                .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
-                  <TabsTrigger
-                    key={id}
-                    value={id}
-                    onPointerEnter={() =>
-                      prefetchData({ leaderboard: id as LeaderboardId })
-                    }
-                  >
-                    <span className="hidden items-center gap-1 min-[530px]:flex">
-                      {tabIcon} {name}
-                    </span>
-                    <span className="flex items-center gap-1 min-[530px]:hidden">
-                      {tabIcon} {nameShort}
-                    </span>
-                  </TabsTrigger>
-                ))}
-            </TabsList>
+            {Object.values(leaderboards)
+              .filter(x => x.type === "mode")
+              .filter(x => x.enabled).length > 0 && (
+              <TabsList>
+                {Object.values(leaderboards)
+                  .filter(x => x.type === "mode")
+                  .filter(x => x.enabled)
+                  .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
+                    <TabsTrigger
+                      key={id}
+                      value={id}
+                      onPointerEnter={() =>
+                        prefetchData({ leaderboard: id as LeaderboardId })
+                      }
+                    >
+                      <span className="hidden items-center gap-1 min-[530px]:flex">
+                        {tabIcon} {name}
+                      </span>
+                      <span className="flex items-center gap-1 min-[530px]:hidden">
+                        {tabIcon} {nameShort}
+                      </span>
+                    </TabsTrigger>
+                  ))}
+              </TabsList>
+            )}
 
             {/* Event leaderboards */}
-            <TabsList>
-              {Object.values(leaderboards)
-                .filter((x: Leaderboard) => x.type === "event" && !x.archived)
-                .filter(x => x.enabled)
-                .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
-                  <TabsTrigger
-                    key={id}
-                    value={id}
-                    onPointerEnter={() =>
-                      prefetchData({ leaderboard: id as LeaderboardId })
-                    }
-                  >
-                    <span className="hidden items-center gap-1 min-[530px]:flex">
-                      {tabIcon} {name}
-                    </span>
-                    <span className="flex items-center gap-1 min-[530px]:hidden">
-                      {tabIcon} {nameShort}
-                    </span>
-                  </TabsTrigger>
-                ))}
-            </TabsList>
+            {Object.values(leaderboards)
+              .filter((x: Leaderboard) => x.type === "event")
+              .filter(x => x.enabled).length > 0 && (
+              <TabsList>
+                {Object.values(leaderboards)
+                  .filter((x: Leaderboard) => x.type === "event")
+                  .filter(x => x.enabled)
+                  .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
+                    <TabsTrigger
+                      key={id}
+                      value={id}
+                      onPointerEnter={() =>
+                        prefetchData({ leaderboard: id as LeaderboardId })
+                      }
+                    >
+                      <span className="hidden items-center gap-1 min-[530px]:flex">
+                        {tabIcon} {name}
+                      </span>
+                      <span className="flex items-center gap-1 min-[530px]:hidden">
+                        {tabIcon} {nameShort}
+                      </span>
+                    </TabsTrigger>
+                  ))}
+              </TabsList>
+            )}
 
             {/* Regular leaderboards */}
             <TabsList>

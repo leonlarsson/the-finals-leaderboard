@@ -1,24 +1,18 @@
 import { Platforms } from "@/types";
-import transformData from "./transformData";
 import { LeaderboardId, leaderboards } from "./leaderboards";
 
 export const fetchData = async (
   leaderboardVersion: LeaderboardId,
   platform: Platforms,
 ) => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const useOwnApi = searchParams.get("useownapi") === "true";
+  const leaderboard = leaderboards[leaderboardVersion as LeaderboardId];
+  const data = await leaderboard.fetchData(platform);
 
-  if (useOwnApi) {
-    const res = await fetch(
-      `https://api.the-finals-leaderboard.com/v1/leaderboard/${leaderboardVersion.toLowerCase()}/${platform}`,
-    );
-    const json = await res.json();
-    return json.data;
+  // If the leaderboard has a transformData function, use it and return the transformed data
+  if ("transformData" in leaderboard) {
+    const transformedData = leaderboard.transformData(data);
+    return transformedData;
   }
 
-  const leaderboard = leaderboards[leaderboardVersion as LeaderboardId];
-
-  const data = await leaderboard.fetchData(platform);
-  return transformData(leaderboardVersion, data);
+  return data;
 };

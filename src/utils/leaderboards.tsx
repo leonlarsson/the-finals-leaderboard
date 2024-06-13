@@ -1,5 +1,5 @@
 import { ShieldIcon, TerminalSquareIcon } from "lucide-react";
-import type { User } from "@/types";
+import type { BaseUser, BaseUserWithExtras } from "@/types";
 
 export const leaderboards = {
   closedBeta1: {
@@ -13,10 +13,10 @@ export const leaderboards = {
     disableStatsPanel: false,
     fetchData: async () => {
       const res = await fetch(
-        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb1?raw=true",
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb1",
       );
       const data = await res.json();
-      return data.data;
+      return data.data as BaseUser[];
     },
     tableColumns: ["rank", "change", "name", "xp", "level", "cashouts", "fame"],
   },
@@ -32,10 +32,10 @@ export const leaderboards = {
     disableStatsPanel: false,
     fetchData: async () => {
       const res = await fetch(
-        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb2?raw=true",
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb2",
       );
       const data = await res.json();
-      return data.data;
+      return data.data as BaseUser[];
     },
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
@@ -51,10 +51,10 @@ export const leaderboards = {
     disableStatsPanel: false,
     fetchData: async platform => {
       const res = await fetch(
-        `https://api.the-finals-leaderboard.com/v1/leaderboard/ob/${platform}?raw=true`,
+        `https://api.the-finals-leaderboard.com/v1/leaderboard/ob/${platform}`,
       );
       const data = await res.json();
-      return data.data;
+      return data.data as BaseUser[];
     },
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
@@ -70,10 +70,10 @@ export const leaderboards = {
     disableStatsPanel: false,
     fetchData: async platform => {
       const res = await fetch(
-        `https://api.the-finals-leaderboard.com/v1/leaderboard/s1/${platform}?raw=true`,
+        `https://api.the-finals-leaderboard.com/v1/leaderboard/s1/${platform}`,
       );
       const data = await res.json();
-      return data.data;
+      return data.data as BaseUser[];
     },
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
@@ -89,9 +89,10 @@ export const leaderboards = {
     disableStatsPanel: false,
     fetchData: async platform => {
       const res = await fetch(
-        `https://storage.googleapis.com/embark-discovery-leaderboard/s2-leaderboard-${platform}-discovery-live.json`,
+        `https://api.the-finals-leaderboard.com/v1/leaderboard/s2/${platform}`,
       );
-      return res.json();
+      const data = await res.json();
+      return data.data as BaseUser[];
     },
     tableColumns: ["rank", "change", "name", "fame"],
   },
@@ -118,8 +119,7 @@ export const leaderboards = {
   terminalAttackEliminations: {
     type: "event",
     id: "terminalAttackEliminations",
-    enabled: true,
-    archived: true,
+    enabled: false,
     name: "Event: TA Eliminations",
     nameShort: "E:TAE",
     tabIcon: <TerminalSquareIcon size={16} />,
@@ -138,7 +138,7 @@ export const leaderboards = {
   communityEvent210: {
     type: "event",
     id: "communityEvent210",
-    enabled: true,
+    enabled: false,
     name: "Event: 2.10",
     nameShort: "E:2.10",
     tabIcon: <ShieldIcon size={16} />,
@@ -151,6 +151,15 @@ export const leaderboards = {
       );
       return (await res.json()).entries;
     },
+    transformData: data =>
+      data.map(x => ({
+        rank: x.r,
+        name: x.name,
+        damageDone: x.c,
+        steamName: x.steam,
+        xboxName: x.xbox,
+        psnName: x.psn,
+      })),
     tableColumns: ["rank", "name", "damageDone"],
   },
 
@@ -170,6 +179,19 @@ export const leaderboards = {
       );
       return res.json();
     },
+    transformData: data =>
+      data.map(x => ({
+        rank: x.r,
+        name: x.name,
+        gamesWon: x.wg,
+        roundsWon: x.wr,
+        totalRounds: x.tr,
+        eliminations: x.k,
+        score: x.s,
+        steamName: x.steam,
+        xboxName: x.xbox,
+        psnName: x.psn,
+      })),
     tableColumns: [
       "rank",
       "name",
@@ -186,15 +208,15 @@ export type Leaderboard = {
   type: "regular" | "mode" | "event";
   id: string;
   enabled: boolean;
-  archived?: boolean;
   name: string;
   nameShort: string;
   tabIcon?: JSX.Element;
-  tableColumns: (keyof User)[];
+  tableColumns: (keyof BaseUserWithExtras)[];
   disablePlatformSelection: boolean;
   disableStatsPanel: boolean;
   disableLeagueFilter: boolean;
   fetchData: (platform: string) => Promise<any>;
+  transformData?: (data: any[]) => any[];
 };
 
 export type LeaderboardId = keyof typeof leaderboards;
