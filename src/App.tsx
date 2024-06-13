@@ -2,11 +2,11 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  AlertCircleIcon,
   BarChartIcon,
   Loader,
   RefreshCw,
   TableIcon,
-  TerminalSquareIcon,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CommunityProgress from "./components/CommunityProgress";
@@ -197,17 +197,11 @@ const App = () => {
 
       {/* Notice */}
       <Notice
-        icon={<TerminalSquareIcon />}
+        icon={<AlertCircleIcon />}
         message={
           <span>
-            <Link href="https://www.youtube.com/watch?v=8kWYWa3Jv2Q">
-              Season 3 has just been announced
-            </Link>{" "}
-            with{" "}
-            <Link href="https://store.steampowered.com/news/app/2073850/view/4164220603447083354">
-              some changes
-            </Link>
-            . Stay tuned to see what changes are coming to the leaderboards.
+            I am currently waiting and investigating to see if this website can
+            support Season 3.
           </span>
         }
       />
