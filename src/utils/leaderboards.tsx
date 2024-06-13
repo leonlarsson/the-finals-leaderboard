@@ -132,15 +132,6 @@ export const leaderboards = {
       const data = await res.json();
       return data.data as BaseUser[];
     },
-    transformData: data =>
-      data.map(x => ({
-        rank: x.r,
-        name: x.name,
-        cashouts: x.p,
-        steamName: x.steam,
-        xboxName: x.xbox,
-        psnName: x.psn,
-      })),
     tableColumns: ["rank", "name", "cashouts"],
   },
 
