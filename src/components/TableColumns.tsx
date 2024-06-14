@@ -13,8 +13,7 @@ import fameToRankIcon from "@/utils/fameToRankIcon";
 import leagueNumberToIcon from "@/utils/leagueNumberToIcon";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { BaseUser, Platforms, BaseUserWithExtras } from "@/types";
-import leagueIsLive from "@/utils/leagueIsLive";
-import { LeaderboardId } from "@/utils/leaderboards";
+import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
 
@@ -76,6 +75,8 @@ export const columns = (
       id: "name",
       header: "Name",
       cell: ({ row: { original: user } }) => {
+        // If user has a non-empty platform name, show it in a tooltip
+        // If no platform names are present, show just the Embark name
         return user.steamName || user.xboxName || user.psnName ? (
           <TooltipProvider>
             <Tooltip delayDuration={200}>
@@ -87,7 +88,8 @@ export const columns = (
           </TooltipProvider>
         ) : (
           <span className="inline-flex gap-1">
-            {leagueIsLive(leaderboardId) && (
+            {/* If platform selection is not disabled, add the selected platform icon before the name */}
+            {!leaderboards[leaderboardId].disablePlatformSelection && (
               <>
                 {selectedPlatform === "steam" && (
                   <Icons.steam className="inline size-5 opacity-60" />
