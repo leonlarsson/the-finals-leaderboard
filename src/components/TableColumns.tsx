@@ -175,7 +175,7 @@ export const columns = (
               {(fame || rankScore) && (
                 <span>
                   {(fame ?? rankScore ?? 0).toLocaleString("en")}{" "}
-                  {rankScore ? "Rank Score" : "fame point"}
+                  {rankScore ? "Rank Score" : "fame points"}
                 </span>
               )}
               {league && leagueToImage(league, 160)}
