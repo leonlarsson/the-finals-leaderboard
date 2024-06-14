@@ -106,6 +106,7 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: true,
     disableStatsPanel: false,
+    hidePlatformNameInStatsPanel: true,
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s3/crossplay",
@@ -234,6 +235,7 @@ export type Leaderboard = {
   disablePlatformSelection: boolean;
   disableStatsPanel: boolean;
   disableLeagueFilter: boolean;
+  hidePlatformNameInStatsPanel?: boolean;
   fetchData: (platform: string) => Promise<any>;
   transformData?: (data: any[]) => any[];
 };

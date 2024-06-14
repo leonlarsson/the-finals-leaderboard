@@ -3,7 +3,6 @@ import { Platforms, BaseUser } from "@/types";
 import { LoaderIcon } from "lucide-react";
 import leagues from "@/utils/leagues";
 import getPlatformName from "@/utils/getPlatformName";
-import leagueIsLiveFunc from "@/utils/leagueIsLive";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import leagueToImage from "@/utils/leagueToImage";
 
@@ -14,17 +13,19 @@ type Props = {
 };
 
 export default ({ leaderboardVersion, platform, users }: Props) => {
-  const leaderboardName = leaderboards[leaderboardVersion].name;
+  const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);
-  const leagueIsLive = leagueIsLiveFunc(leaderboardVersion);
 
   return (
     <div className="rounded-md bg-neutral-100 p-2 text-sm dark:bg-neutral-900/50">
       <h2 className="mb-1 text-xl font-medium">
         Stats and Rank Distribution{" "}
         <span>
-          ({leaderboardName}
-          {leagueIsLive && <span> - {platformName}</span>})
+          ({leaderboard.name}
+          {!("hidePlatformNameInStatsPanel" in leaderboard) && (
+            <span> - {platformName}</span>
+          )}
+          )
         </span>
       </h2>
       {users.length === 0 && (
@@ -95,8 +96,12 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
           <hr className="my-2 border-black/30 dark:border-white/30" />
 
           <span className="text-lg font-medium">
-            Out of the top {users.length.toLocaleString("en")} {leaderboardName}
-            {leagueIsLive && <span> {platformName}</span>} players...
+            Out of the top {users.length.toLocaleString("en")}{" "}
+            {leaderboard.name}
+            {!("hidePlatformNameInStatsPanel" in leaderboard) && (
+              <span> {platformName}</span>
+            )}{" "}
+            players...
           </span>
 
           {/* LEAGUES BAR CHART */}
@@ -116,8 +121,10 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               return (
                 <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
                   <span>
-                    {leaderboardName}{" "}
-                    {leagueIsLive && <span> - {platformName}</span>}
+                    {leaderboard.name}{" "}
+                    {!("hidePlatformNameInStatsPanel" in leaderboard) && (
+                      <span> - {platformName}</span>
+                    )}
                   </span>
                   <div className="flex items-center gap-1">
                     <span className="font-medium">{label}</span>
