@@ -1,5 +1,4 @@
 import { BarChart } from "@tremor/react";
-import fameToRankIcon from "@/utils/fameToRankIcon";
 import { Platforms, BaseUser } from "@/types";
 import { LoaderIcon } from "lucide-react";
 import leagueBrackets from "@/utils/leagueBrackets";
@@ -135,35 +134,6 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               );
             }}
           />
-
-          {/* LEAGUES TEXT*/}
-          <details>
-            <summary className="w-fit cursor-pointer font-medium">
-              The same, but in text form
-            </summary>
-            <div className="flex flex-col">
-              {[...leagueBrackets[leaderboardVersion]].reverse().map(league => {
-                const usersInLeague = users.filter(
-                  user => league.name === user.league,
-                ).length;
-
-                return (
-                  <span key={league.name}>
-                    <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                      {usersInLeague.toLocaleString("en")} (
-                      {(usersInLeague / users.length).toLocaleString("en", {
-                        style: "percent",
-                        maximumFractionDigits: 1,
-                      })}
-                      )
-                    </span>{" "}
-                    {usersInLeague === 1 ? "is" : "are"} in {league.name}{" "}
-                    {fameToRankIcon(leaderboardVersion, league.fame, 60)}
-                  </span>
-                );
-              })}
-            </div>
-          </details>
         </>
       )}
     </div>

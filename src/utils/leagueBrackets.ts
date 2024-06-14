@@ -91,7 +91,7 @@ const SEASON_2_LEAGUES = [
   { fame: 42_250, name: "Diamond 1" },
 ] satisfies FameLeague[];
 
-// TODO: Figure out Ruby. Values do not matter here
+// Values do not matter here
 const SEASON_3_LEAGUES = [
   { fame: 0, name: "Bronze 4" },
   { fame: 250, name: "Bronze 3" },
@@ -117,6 +117,8 @@ const SEASON_3_LEAGUES = [
   { fame: 32_750, name: "Diamond 3" },
   { fame: 37_250, name: "Diamond 2" },
   { fame: 42_250, name: "Diamond 1" },
+
+  { fame: 50_000, name: "Ruby" },
 ] satisfies FameLeague[];
 
 export default {

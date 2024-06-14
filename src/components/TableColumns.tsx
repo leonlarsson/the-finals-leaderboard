@@ -9,11 +9,10 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import Icons from "./icons";
 import { cn } from "@/lib/utils";
-import fameToRankIcon from "@/utils/fameToRankIcon";
-import leagueNumberToIcon from "@/utils/leagueNumberToIcon";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { BaseUser, Platforms, BaseUserWithExtras } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import leagueToImage from "@/utils/leagueToImage";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
 
@@ -145,7 +144,6 @@ export const columns = (
     user => ({
       fame: user.fame,
       rankScore: user.rankScore,
-      leagueNumber: user.leagueNumber,
       league: user.league,
     }),
     {
@@ -156,14 +154,12 @@ export const columns = (
         return <DataTableColumnHeader column={column} title="League" />;
       },
       cell: ({ getValue }) => {
-        const { fame, rankScore, leagueNumber, league } = getValue();
+        const { fame, rankScore, league } = getValue();
         return (
           <Popover>
             <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
               <div className="size-[50px]">
-                {leagueNumber
-                  ? leagueNumberToIcon(leagueNumber, 50)
-                  : fameToRankIcon(leaderboardId, fame ?? 0)}
+                {league && leagueToImage(league, 50)}
               </div>
 
               <div className="flex flex-col">
@@ -182,9 +178,7 @@ export const columns = (
                   {rankScore ? "Rank Score" : "fame point"}
                 </span>
               )}
-              {leagueNumber
-                ? leagueNumberToIcon(leagueNumber, 160)
-                : fameToRankIcon(leaderboardId, fame ?? 0, 160)}
+              {league && leagueToImage(league, 160)}
             </PopoverContent>
           </Popover>
         );
