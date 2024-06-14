@@ -150,6 +150,17 @@ const App = () => {
     );
   }, [selectedLeaderboardVersion, selectedPlatform, selectedPanel]);
 
+  const updateSelectedLeaderboard = (leaderboard: LeaderboardId) => {
+    // Switch to Table panel if the Stats panel is disabled
+    if (
+      leaderboards[leaderboard as LeaderboardId].disableStatsPanel &&
+      selectedPanel === Panels.Stats
+    ) {
+      setSelectedPanel(Panels.Table);
+    }
+    setSelectedLeaderboardVersion(leaderboard);
+  };
+
   const disabled = isLoading || isRefetching;
 
   return (
@@ -225,16 +236,7 @@ const App = () => {
           <Tabs
             className="flex select-none flex-wrap gap-2"
             value={selectedLeaderboardVersion}
-            onValueChange={e => {
-              // Switch to Table panel if the Stats panel is disabled
-              if (
-                leaderboards[e as LeaderboardId].disableStatsPanel &&
-                selectedPanel === Panels.Stats
-              ) {
-                setSelectedPanel(Panels.Table);
-              }
-              setSelectedLeaderboardVersion(e as LeaderboardId);
-            }}
+            onValueChange={e => updateSelectedLeaderboard(e as LeaderboardId)}
           >
             {/* Mode leaderboards */}
             {Object.values(leaderboards)
