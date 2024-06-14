@@ -211,8 +211,21 @@ const App = () => {
         icon={<AlertCircleIcon />}
         message={
           <span>
-            Season 3 support is here! Expect some issues while I iron things
-            out.
+            Season 3 support is here! Check out the{" "}
+            <button
+              className="font-medium hover:underline"
+              onClick={() => updateSelectedLeaderboard("season3WorldTour")}
+            >
+              World Tour
+            </button>{" "}
+            or{" "}
+            <button
+              className="font-medium hover:underline"
+              onClick={() => updateSelectedLeaderboard("season3")}
+            >
+              Ranked
+            </button>
+            .
           </span>
         }
       />
