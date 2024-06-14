@@ -5,6 +5,7 @@ import leagues from "@/utils/leagues";
 import getPlatformName from "@/utils/getPlatformName";
 import leagueIsLiveFunc from "@/utils/leagueIsLive";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import leagueToImage from "@/utils/leagueToImage";
 
 type Props = {
   leaderboardVersion: LeaderboardId;
@@ -118,7 +119,12 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                     {leaderboardName}{" "}
                     {leagueIsLive && <span> - {platformName}</span>}
                   </span>
-                  <span className="font-medium">{label}</span>
+                  <div className="flex items-center gap-1">
+                    <span className="font-medium">{label}</span>
+                    {leagues[leaderboardVersion].includes(label as string) &&
+                      leagueToImage(label as string, 30)}
+                  </div>
+
                   <hr />
                   {typeof amount === "number" && (
                     <span>
