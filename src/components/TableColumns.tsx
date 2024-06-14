@@ -72,7 +72,9 @@ export const columns = (
       }`.toLowerCase(),
     {
       id: "name",
-      header: "Name",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
       cell: ({ row: { original: user } }) => {
         // If user has a non-empty platform name, show it in a tooltip
         // If no platform names are present, show just the Embark name
@@ -257,24 +259,29 @@ export const columns = (
 const platformNamesInline = (user: BaseUser) => {
   return (
     <div className="flex flex-col gap-1">
-      <span>{user.name}</span>
+      <div>
+        <span className="font-medium">{user.name.split("#")[0]}</span>
+        <span className="text-neutral-500">#{user.name.split("#")[1]}</span>
+      </div>
 
       {user.steamName && (
-        <span className="inline-flex gap-1">
-          <Icons.steam className="inline size-5 opacity-60" /> {user.steamName}
+        <span className="inline-flex items-center gap-1">
+          <Icons.steam className="inline size-5 opacity-60" />
+          <span>{user.steamName}</span>
         </span>
       )}
 
       {user.xboxName && (
-        <span className="inline-flex gap-1">
-          <Icons.xbox className="inline size-5 opacity-60" /> {user.xboxName}
+        <span className="inline-flex items-center gap-1">
+          <Icons.xbox className="inline size-5 opacity-60" />
+          <span>{user.xboxName}</span>
         </span>
       )}
 
       {user.psnName && (
-        <span className="inline-flex gap-1">
-          <Icons.playstation className="inline size-5 opacity-60" />{" "}
-          {user.psnName}
+        <span className="inline-flex items-center gap-1">
+          <Icons.playstation className="inline size-5 opacity-60" />
+          <span>{user.psnName}</span>
         </span>
       )}
     </div>
@@ -291,27 +298,31 @@ const namePopoverContent = (user: BaseUser) => {
           src="/images/Embark-White.png"
           className="hidden size-5 dark:inline"
         />
-        <span className="font-semibold">Embark ID:</span> {user.name}
+        <span className="font-semibold">Embark ID:</span>
+        <span>{user.name}</span>
       </span>
 
       {user.steamName && (
         <span className="inline-flex gap-1">
-          <Icons.steam className="inline size-5" />{" "}
-          <span className="font-semibold">Steam:</span> {user.steamName}
+          <Icons.steam className="inline size-5" />
+          <span className="font-semibold">Steam:</span>
+          <span>{user.steamName}</span>
         </span>
       )}
 
       {user.xboxName && (
         <span className="inline-flex gap-1">
-          <Icons.xbox className="inline size-5" />{" "}
-          <span className="font-semibold">Xbox:</span> {user.xboxName}
+          <Icons.xbox className="inline size-5" />
+          <span className="font-semibold">Xbox:</span>
+          <span>{user.xboxName}</span>
         </span>
       )}
 
       {user.psnName && (
         <span className="inline-flex gap-1">
-          <Icons.playstation className="inline size-5" />{" "}
-          <span className="font-semibold">PlayStation:</span> {user.psnName}
+          <Icons.playstation className="inline size-5" />
+          <span className="font-semibold">PlayStation:</span>
+          <span>{user.psnName}</span>
         </span>
       )}
     </div>
