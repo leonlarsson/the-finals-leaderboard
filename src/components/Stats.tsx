@@ -1,10 +1,10 @@
 import { BarChart } from "@tremor/react";
 import { Platforms, BaseUser } from "@/types";
-import { LoaderIcon } from "lucide-react";
 import leagues from "@/utils/leagues";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import leagueToImage from "@/utils/leagueToImage";
+import Loading from "./Loading";
 
 type Props = {
   leaderboardVersion: LeaderboardId;
@@ -28,9 +28,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
           )
         </span>
       </h2>
-      {users.length === 0 && (
-        <LoaderIcon className="inline size-5 animate-spin" />
-      )}
+      {users.length === 0 && <Loading />}
 
       {users.length !== 0 && (
         <>

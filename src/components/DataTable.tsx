@@ -19,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Loading from "./Loading";
 import DataTableToolbar from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
 import { Platforms } from "@/types";
@@ -27,6 +28,10 @@ import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 interface DataTableProps<TData, TValue> {
   leaderboardVersion: LeaderboardId;
   platform: Platforms;
+  queryState: {
+    isLoading: boolean;
+    isRefetching: boolean;
+  };
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
@@ -34,6 +39,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   leaderboardVersion,
   platform,
+  queryState,
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -128,7 +134,11 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {queryState.isLoading ? (
+                    <Loading justifyCenter />
+                  ) : (
+                    "No results."
+                  )}
                 </TableCell>
               </TableRow>
             )}

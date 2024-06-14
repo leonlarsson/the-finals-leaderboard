@@ -4,8 +4,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircleIcon,
   BarChartIcon,
-  Loader,
-  RefreshCw,
+  Loader2Icon,
+  RefreshCwIcon,
   TableIcon,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -377,7 +377,7 @@ const App = () => {
                 >
                   <span className="mr-2 hidden min-[600px]:block">Refresh</span>
 
-                  <RefreshCw
+                  <RefreshCwIcon
                     className={cn(
                       "size-4",
                       (isLoading || isRefetching) && "animate-spin",
@@ -428,6 +428,7 @@ const App = () => {
                 key={selectedLeaderboardVersion}
                 leaderboardVersion={selectedLeaderboardVersion}
                 platform={selectedPlatform}
+                queryState={{ isLoading, isRefetching }}
                 // https://github.com/TanStack/table/issues/4382#issuecomment-2081153305
                 columns={(
                   columns(
@@ -459,7 +460,7 @@ const App = () => {
         <span>
           Current data updated at{" "}
           {isLoading || isRefetching ? (
-            <Loader className="inline size-5 animate-spin" />
+            <Loader2Icon className="inline size-5 animate-spin" />
           ) : (
             new Date(dataUpdatedAt).toLocaleString()
           )}
