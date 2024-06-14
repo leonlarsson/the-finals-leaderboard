@@ -1,4 +1,4 @@
-import { ShieldIcon, TerminalSquareIcon } from "lucide-react";
+import { TerminalSquareIcon } from "lucide-react";
 import type { BaseUser, BaseUserWithExtras } from "@/types";
 
 export const leaderboards = {
@@ -128,7 +128,7 @@ export const leaderboards = {
     disableStatsPanel: true,
     fetchData: async () => {
       const res = await fetch(
-        "https://api.the-finals-leaderboard.com/s3worldtour",
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s3worldtour/crossplay",
       );
       const data = await res.json();
       return data.data as BaseUser[];
@@ -153,34 +153,6 @@ export const leaderboards = {
       return (await res.json()).entries;
     },
     tableColumns: ["rank", "name", "eliminations"],
-  },
-
-  communityEvent210: {
-    type: "event",
-    id: "communityEvent210",
-    enabled: false,
-    name: "Event: 2.10",
-    nameShort: "E:2.10",
-    tabIcon: <ShieldIcon size={16} />,
-    disableStatsPanel: true,
-    disablePlatformSelection: true,
-    disableLeagueFilter: true,
-    fetchData: async () => {
-      const res = await fetch(
-        "https://api.the-finals-leaderboard.com/210event",
-      );
-      return (await res.json()).entries;
-    },
-    transformData: data =>
-      data.map(x => ({
-        rank: x.r,
-        name: x.name,
-        damageDone: x.c,
-        steamName: x.steam,
-        xboxName: x.xbox,
-        psnName: x.psn,
-      })),
-    tableColumns: ["rank", "name", "damageDone"],
   },
 
   terminalAttack: {
