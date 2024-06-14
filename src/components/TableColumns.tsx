@@ -164,7 +164,7 @@ export const columns = (
                 {league && leagueToImage(league, 50)}
               </div>
 
-              <div className="flex flex-col">
+              <div className="flex flex-col items-start">
                 <span>{league}</span>
                 {(fame || rankScore) && (
                   <span>{(fame ?? rankScore ?? 0).toLocaleString("en")}</span>
