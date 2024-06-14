@@ -36,8 +36,3 @@ export enum Panels {
   Table = "table",
   Stats = "stats",
 }
-
-export type FameLeague = {
-  fame: number;
-  name: string;
-};

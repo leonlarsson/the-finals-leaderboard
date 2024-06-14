@@ -1,7 +1,7 @@
 import { BarChart } from "@tremor/react";
 import { Platforms, BaseUser } from "@/types";
 import { LoaderIcon } from "lucide-react";
-import leagueBrackets from "@/utils/leagueBrackets";
+import leagues from "@/utils/leagues";
 import getPlatformName from "@/utils/getPlatformName";
 import leagueIsLiveFunc from "@/utils/leagueIsLive";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
@@ -101,9 +101,9 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
           {/* LEAGUES BAR CHART */}
           <BarChart
             className="my-2"
-            data={leagueBrackets[leaderboardVersion].map(league => ({
-              Players: users.filter(user => league.name === user.league).length,
-              name: league.name,
+            data={leagues[leaderboardVersion].map(league => ({
+              Players: users.filter(user => league === user.league).length,
+              name: league,
             }))}
             index="name"
             categories={["Players"]}
