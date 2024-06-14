@@ -442,7 +442,6 @@ const App = () => {
               <DataTable
                 key={selectedLeaderboardVersion}
                 leaderboardVersion={selectedLeaderboardVersion}
-                platform={selectedPlatform}
                 queryState={{ isLoading, isRefetching }}
                 // https://github.com/TanStack/table/issues/4382#issuecomment-2081153305
                 columns={(

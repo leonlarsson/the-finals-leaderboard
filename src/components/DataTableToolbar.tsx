@@ -16,21 +16,20 @@ import {
 import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
 import { cn } from "@/lib/utils";
-import { Platforms } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 
 type Props<TData> = {
   leaderboardVersion: LeaderboardId;
-  platform: Platforms;
   table: Table<TData>;
 };
 
-export default function <TData>({
-  leaderboardVersion,
-  platform,
-  table,
-}: Props<TData>) {
+export default function <TData>({ leaderboardVersion, table }: Props<TData>) {
   const [didMount, setDidMount] = useState(false);
+  // Just used for the useEffect to trigger on version change
+  // Workaround because DataTable has a key on it, which always remounts this component, causing didMount to always be false
+  const leaderboardParam = new URLSearchParams(window.location.search).get(
+    "leaderboard",
+  );
   const fameColumn = leaderboards[leaderboardVersion].disableLeagueFilter
     ? null
     : table.getColumn("fame");
@@ -49,12 +48,12 @@ export default function <TData>({
     setDidMount(true);
   }, []);
 
-  // Reset fame filter on version or platform. Only done after first render since we don't want to reset the filter on initial load
+  // Reset fame filter on version. Only done after first render since we don't want to reset the filter on initial load
   useEffect(() => {
     if (!didMount) return;
     selectedValues.clear();
     fameColumn?.setFilterValue(selectedValues);
-  }, [leaderboardVersion, platform]);
+  }, [leaderboardParam]);
 
   // Save fame filter in URL
   useEffect(() => {

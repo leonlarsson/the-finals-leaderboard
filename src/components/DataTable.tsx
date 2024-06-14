@@ -22,12 +22,10 @@ import {
 import Loading from "./Loading";
 import DataTableToolbar from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
-import { Platforms } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 
 interface DataTableProps<TData, TValue> {
   leaderboardVersion: LeaderboardId;
-  platform: Platforms;
   queryState: {
     isLoading: boolean;
     isRefetching: boolean;
@@ -38,7 +36,6 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   leaderboardVersion,
-  platform,
   queryState,
   columns,
   data,
@@ -75,21 +72,9 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  // NO LONGER NEEDED AS WE NO LONGER HAVE AN EXPANDED ROW
-  // Reset expanded rows when data changes
-  // useEffect(() => {
-  //   table.getRowModel().rows.forEach(row => {
-  //     row.toggleExpanded(false);
-  //   });
-  // }, [data]);
-
   return (
     <div className="space-y-3">
-      <DataTableToolbar
-        leaderboardVersion={leaderboardVersion}
-        platform={platform}
-        table={table}
-      />
+      <DataTableToolbar leaderboardVersion={leaderboardVersion} table={table} />
 
       <div className="rounded-md border">
         <Table className="min-w-[800px]">
