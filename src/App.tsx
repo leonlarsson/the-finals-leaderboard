@@ -215,6 +215,9 @@ const App = () => {
             <button
               className="font-medium hover:underline"
               onClick={() => updateSelectedLeaderboard("season3WorldTour")}
+              onPointerEnter={() =>
+                prefetchData({ leaderboard: "season3WorldTour" })
+              }
             >
               World Tour
             </button>{" "}
@@ -222,6 +225,7 @@ const App = () => {
             <button
               className="font-medium hover:underline"
               onClick={() => updateSelectedLeaderboard("season3")}
+              onPointerEnter={() => prefetchData({ leaderboard: "season3" })}
             >
               Ranked
             </button>
