@@ -31,6 +31,7 @@ import {
   Leaderboard,
   LeaderboardId,
   defaultLeaderboardId,
+  leaderboardIdsToPrefetch,
   leaderboards,
 } from "./utils/leaderboards";
 import { ColumnDef } from "@tanstack/react-table";
@@ -124,6 +125,13 @@ const App = () => {
       staleTime: Infinity,
     });
   };
+
+  // On initial render, prefetch data for select leaderboards
+  useEffect(() => {
+    leaderboardIdsToPrefetch.forEach(leaderboard =>
+      prefetchData({ leaderboard }),
+    );
+  }, []);
 
   // Store selected leaderboard version and platform in URL
   // Perhaps not the best way to do it, but it works
