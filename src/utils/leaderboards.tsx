@@ -3,7 +3,7 @@ import type { BaseUser, BaseUserWithExtras } from "@/types";
 
 export const leaderboards = {
   closedBeta1: {
-    type: "regular",
+    tabGroup: 2,
     enabled: true,
     id: "closedBeta1",
     name: "Closed Beta 1",
@@ -22,7 +22,7 @@ export const leaderboards = {
   },
 
   closedBeta2: {
-    type: "regular",
+    tabGroup: 2,
     enabled: true,
     id: "closedBeta2",
     name: "Closed Beta 2",
@@ -41,7 +41,7 @@ export const leaderboards = {
   },
 
   openBeta: {
-    type: "regular",
+    tabGroup: 2,
     id: "openBeta",
     enabled: true,
     name: "Open Beta",
@@ -60,7 +60,7 @@ export const leaderboards = {
   },
 
   season1: {
-    type: "regular",
+    tabGroup: 2,
     id: "season1",
     enabled: true,
     name: "Season 1",
@@ -79,7 +79,7 @@ export const leaderboards = {
   },
 
   season2: {
-    type: "regular",
+    tabGroup: 2,
     id: "season2",
     enabled: true,
     name: "Season 2",
@@ -98,7 +98,7 @@ export const leaderboards = {
   },
 
   season3: {
-    type: "regular",
+    tabGroup: 2,
     id: "season3",
     enabled: true,
     name: "Season 3",
@@ -118,7 +118,7 @@ export const leaderboards = {
   },
 
   season3WorldTour: {
-    type: "event",
+    tabGroup: 1,
     id: "season3WorldTour",
     enabled: true,
     name: "World Tour",
@@ -137,7 +137,7 @@ export const leaderboards = {
   },
 
   terminalAttackEliminations: {
-    type: "event",
+    tabGroup: 1,
     id: "terminalAttackEliminations",
     enabled: false,
     name: "Event: TA Eliminations",
@@ -156,7 +156,7 @@ export const leaderboards = {
   },
 
   terminalAttack: {
-    type: "mode",
+    tabGroup: 1,
     id: "terminalAttack",
     enabled: false,
     name: "Terminal Attack",
@@ -197,7 +197,7 @@ export const leaderboards = {
 } satisfies Record<string, Leaderboard>;
 
 export type Leaderboard = {
-  type: "regular" | "mode" | "event";
+  tabGroup: number;
   id: string;
   enabled: boolean;
   name: string;
@@ -219,3 +219,7 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season3",
   "season3WorldTour",
 ];
+
+export const leaderboardsGroupedByTabGroup = Object.values(
+  Object.groupBy(Object.values(leaderboards), x => x.tabGroup),
+) as Leaderboard[][];

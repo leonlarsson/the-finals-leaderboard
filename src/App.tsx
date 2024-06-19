@@ -33,6 +33,7 @@ import {
   defaultLeaderboardId,
   leaderboardIdsToPrefetch,
   leaderboards,
+  leaderboardsGroupedByTabGroup,
 } from "./utils/leaderboards";
 import { ColumnDef } from "@tanstack/react-table";
 import Notice from "./components/Notice";
@@ -263,83 +264,31 @@ const App = () => {
             value={selectedLeaderboardVersion}
             onValueChange={e => updateSelectedLeaderboard(e as LeaderboardId)}
           >
-            {/* Mode leaderboards */}
-            {Object.values(leaderboards)
-              .filter(x => x.type === "mode")
-              .filter(x => x.enabled).length > 0 && (
-              <TabsList>
-                {Object.values(leaderboards)
-                  .filter(x => x.type === "mode")
-                  .filter(x => x.enabled)
-                  .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
+            {leaderboardsGroupedByTabGroup.map((group, i) => (
+              <TabsList key={i}>
+                {group
+                  ?.filter(leaderboard => leaderboard.enabled)
+                  .toReversed()
+                  .map((leaderboard: Leaderboard) => (
                     <TabsTrigger
-                      key={id}
-                      value={id}
+                      key={leaderboard.id}
+                      value={leaderboard.id}
                       onPointerEnter={() =>
-                        prefetchData({ leaderboard: id as LeaderboardId })
+                        prefetchData({
+                          leaderboard: leaderboard.id as LeaderboardId,
+                        })
                       }
                     >
                       <span className="hidden items-center gap-1 min-[600px]:flex">
-                        {tabIcon} {name}
+                        {leaderboard.tabIcon} {leaderboard.name}
                       </span>
                       <span className="flex items-center gap-1 min-[600px]:hidden">
-                        {tabIcon} {nameShort}
+                        {leaderboard.tabIcon} {leaderboard.nameShort}
                       </span>
                     </TabsTrigger>
                   ))}
               </TabsList>
-            )}
-
-            {/* Event leaderboards */}
-            {Object.values(leaderboards)
-              .filter((x: Leaderboard) => x.type === "event")
-              .filter(x => x.enabled).length > 0 && (
-              <TabsList>
-                {Object.values(leaderboards)
-                  .filter((x: Leaderboard) => x.type === "event")
-                  .filter(x => x.enabled)
-                  .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
-                    <TabsTrigger
-                      key={id}
-                      value={id}
-                      onPointerEnter={() =>
-                        prefetchData({ leaderboard: id as LeaderboardId })
-                      }
-                    >
-                      <span className="hidden items-center gap-1 min-[300px]:flex">
-                        {tabIcon} {name}
-                      </span>
-                      <span className="flex items-center gap-1 min-[300px]:hidden">
-                        {tabIcon} {nameShort}
-                      </span>
-                    </TabsTrigger>
-                  ))}
-              </TabsList>
-            )}
-
-            {/* Regular leaderboards */}
-            <TabsList>
-              {Object.values(leaderboards)
-                .filter(x => x.type === "regular")
-                .filter(x => x.enabled)
-                .toReversed()
-                .map(({ id, name, nameShort, tabIcon }: Leaderboard) => (
-                  <TabsTrigger
-                    key={id}
-                    value={id}
-                    onPointerEnter={() =>
-                      prefetchData({ leaderboard: id as LeaderboardId })
-                    }
-                  >
-                    <span className="hidden items-center gap-1 min-[600px]:flex">
-                      {tabIcon} {name}
-                    </span>
-                    <span className="block min-[600px]:hidden">
-                      {nameShort}
-                    </span>
-                  </TabsTrigger>
-                ))}
-            </TabsList>
+            ))}
           </Tabs>
 
           {/* LEADERBOARD PLATFORM */}
