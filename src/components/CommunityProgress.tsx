@@ -26,7 +26,7 @@ const CommunityProgress = ({ eventData }: Props) => {
 
   return (
     <div className="flex flex-col flex-wrap gap-1 rounded-md border p-2 text-sm tabular-nums">
-      <span className="font-medium">Community Event | {eventData.name}</span>
+      <span className="font-medium">{eventData.name}</span>
 
       <span className="flex flex-wrap justify-between">
         {eventData.type === "cash" && (

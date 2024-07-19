@@ -75,6 +75,26 @@ export const communityEvents = {
       };
     },
   },
+
+  july2024CommunityEvent35: {
+    name: "Community Event 3.5",
+    active: true,
+    type: "eliminations",
+    initialGoal: 1_900_000,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://the-finals-api.ragnarok.workers.dev/35event",
+      );
+      const data = await res.json();
+      return {
+        entries: data.entries,
+        progress: {
+          goal: data.progress.goal,
+          current: data.progress.current,
+        },
+      };
+    },
+  },
 } satisfies Record<string, CommunityEvent>;
 
 export type CommunityEvent = {

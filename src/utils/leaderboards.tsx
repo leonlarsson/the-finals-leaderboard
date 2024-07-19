@@ -195,6 +195,33 @@ export const leaderboards = {
       "score",
     ],
   },
+
+  communityEvent35: {
+    tabGroup: 1,
+    id: "communityEvent35",
+    enabled: true,
+    name: "Community Event 3.5",
+    nameShort: "CE3.5",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/35event",
+      );
+      return (await res.json()).entries;
+    },
+    transformData: data =>
+      data.map(x => ({
+        rank: x.r,
+        name: x.name,
+        eliminations: x.c,
+        steamName: x.steam,
+        xboxName: x.xbox,
+        psnName: x.psn,
+      })),
+    tableColumns: ["rank", "name", "eliminations"],
+  },
 } satisfies Record<string, Leaderboard>;
 
 export type Leaderboard = {
