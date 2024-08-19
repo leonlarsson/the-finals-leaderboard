@@ -2,7 +2,6 @@ import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  AlertCircleIcon,
   BarChartIcon,
   Loader2Icon,
   RefreshCwIcon,
@@ -36,7 +35,6 @@ import {
   leaderboardsGroupedByTabGroup,
 } from "./utils/leaderboards";
 import { ColumnDef } from "@tanstack/react-table";
-import Notice from "./components/Notice";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -216,7 +214,7 @@ const App = () => {
       </h5>
 
       {/* Notice */}
-      <Notice
+      {/* <Notice
         icon={<AlertCircleIcon />}
         message={
           <span>
@@ -241,7 +239,7 @@ const App = () => {
             .
           </span>
         }
-      />
+      /> */}
 
       <div className="my-2">
         <CommunityProgress
