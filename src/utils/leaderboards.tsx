@@ -273,6 +273,7 @@ export const defaultLeaderboardId: LeaderboardId = "season3";
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season3",
   "season3WorldTour",
+  "thefinals",
 ];
 
 export const leaderboardsGroupedByTabGroup = Object.values(
