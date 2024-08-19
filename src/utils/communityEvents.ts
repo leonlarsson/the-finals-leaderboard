@@ -78,7 +78,7 @@ export const communityEvents = {
 
   july2024CommunityEvent35: {
     name: "Community Event 3.5",
-    active: true,
+    active: false,
     type: "eliminations",
     initialGoal: 1_900_000,
     fetchData: async () => {

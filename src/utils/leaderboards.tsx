@@ -137,6 +137,33 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "cashouts"],
   },
 
+  thefinals: {
+    tabGroup: 1,
+    id: "thefinals",
+    enabled: true,
+    name: "THE FINALS",
+    nameShort: "TF",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/the-finals",
+      );
+      return (await res.json()).entries;
+    },
+    transformData: data =>
+      data.map(x => ({
+        rank: x.r,
+        name: x.name,
+        tournamentWins: x.p,
+        steamName: x.steam,
+        xboxName: x.xbox,
+        psnName: x.psn,
+      })),
+    tableColumns: ["rank", "name", "tournamentWins"],
+  },
+
   terminalAttackEliminations: {
     tabGroup: 1,
     id: "terminalAttackEliminations",
@@ -199,7 +226,7 @@ export const leaderboards = {
   communityEvent35: {
     tabGroup: 1,
     id: "communityEvent35",
-    enabled: true,
+    enabled: false,
     name: "Community Event 3.5",
     nameShort: "CE3.5",
     disableLeagueFilter: true,

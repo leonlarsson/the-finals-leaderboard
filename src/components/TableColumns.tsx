@@ -254,6 +254,15 @@ export const columns = (
     ),
     cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
   }),
+
+  // Tournament Wins
+  columnHelper.accessor("tournamentWins", {
+    id: "tournamentWins",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Tournament Wins" />
+    ),
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
 ];
 
 const platformNamesInline = (user: BaseUser) => {

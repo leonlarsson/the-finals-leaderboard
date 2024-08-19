@@ -23,6 +23,7 @@ export type BaseUserWithExtras = BaseUser & {
   eliminations?: number;
   score?: number;
   damageDone?: number;
+  tournamentWins?: number;
 };
 
 export enum Platforms {
