@@ -1,4 +1,4 @@
-import { TerminalSquareIcon } from "lucide-react";
+import { PlayIcon } from "lucide-react";
 import type { BaseUser, BaseUserWithExtras } from "@/types";
 import noStoreFetch from "./noStoreFetch";
 
@@ -155,90 +155,23 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "tournamentWins"],
   },
 
-  terminalAttackEliminations: {
+  communityEvent311: {
     tabGroup: 1,
-    id: "terminalAttackEliminations",
-    enabled: false,
-    name: "Event: TA Eliminations",
-    nameShort: "E:TAE",
-    tabIcon: <TerminalSquareIcon size={16} />,
-    disableStatsPanel: true,
-    disablePlatformSelection: true,
-    disableLeagueFilter: true,
-    fetchData: async () => {
-      const res = await fetch(
-        "https://storage.googleapis.com/embark-discovery-leaderboard/community-event-2-8-leaderboard-discovery-live.json",
-      );
-      return (await res.json()).entries;
-    },
-    tableColumns: ["rank", "name", "eliminations"],
-  },
-
-  terminalAttack: {
-    tabGroup: 1,
-    id: "terminalAttack",
-    enabled: false,
-    name: "Terminal Attack",
-    nameShort: "TA",
-    tabIcon: <TerminalSquareIcon size={16} />,
-    disableStatsPanel: true,
-    disablePlatformSelection: true,
-    disableLeagueFilter: true,
-    fetchData: async () => {
-      const res = await fetch(
-        "https://storage.googleapis.com/embark-discovery-leaderboard/terminal-attack-leaderboard-discovery-live.json",
-      );
-      return res.json();
-    },
-    transformData: data =>
-      data.map(x => ({
-        rank: x.r,
-        name: x.name,
-        gamesWon: x.wg,
-        roundsWon: x.wr,
-        totalRounds: x.tr,
-        eliminations: x.k,
-        score: x.s,
-        steamName: x.steam,
-        xboxName: x.xbox,
-        psnName: x.psn,
-      })),
-    tableColumns: [
-      "rank",
-      "name",
-      "gamesWon",
-      "roundsWon",
-      "totalRounds",
-      "eliminations",
-      "score",
-    ],
-  },
-
-  communityEvent35: {
-    tabGroup: 1,
-    id: "communityEvent35",
-    enabled: false,
-    name: "Community Event 3.5",
-    nameShort: "CE3.5",
+    id: "communityEvent311",
+    tabIcon: <PlayIcon size={16} />,
+    enabled: true,
+    name: "Community Event 3.11",
+    nameShort: "CE3.11",
     disableLeagueFilter: true,
     disablePlatformSelection: true,
     disableStatsPanel: true,
     fetchData: async () => {
       const res = await noStoreFetch(
-        "https://api.the-finals-leaderboard.com/35event",
+        "https://api.the-finals-leaderboard.com/ce311",
       );
       return (await res.json()).entries;
     },
-    transformData: data =>
-      data.map(x => ({
-        rank: x.r,
-        name: x.name,
-        eliminations: x.c,
-        steamName: x.steam,
-        xboxName: x.xbox,
-        psnName: x.psn,
-      })),
-    tableColumns: ["rank", "name", "eliminations"],
+    tableColumns: ["rank", "name", "score"],
   },
 } satisfies Record<string, Leaderboard>;
 

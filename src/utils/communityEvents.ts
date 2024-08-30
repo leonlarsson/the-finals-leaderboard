@@ -63,7 +63,7 @@ export const communityEvents = {
     initialGoal: 18_000_000_000,
     fetchData: async () => {
       const res = await fetch(
-        "https://the-finals-api.ragnarok.workers.dev/210event",
+        "https://api.the-finals-leaderboard.com/210event",
       );
       const data = await res.json();
       return {
@@ -82,9 +82,7 @@ export const communityEvents = {
     type: "eliminations",
     initialGoal: 1_900_000,
     fetchData: async () => {
-      const res = await fetch(
-        "https://the-finals-api.ragnarok.workers.dev/35event",
-      );
+      const res = await fetch("https://api.the-finals-leaderboard.com/35event");
       const data = await res.json();
       return {
         entries: data.entries,
@@ -95,12 +93,30 @@ export const communityEvents = {
       };
     },
   },
+
+  august2024CommunityEvent311: {
+    name: "Community Event 3.11",
+    active: true,
+    type: "roundsPlayed",
+    initialGoal: 6_000_000,
+    fetchData: async () => {
+      const res = await fetch("https://api.the-finals-leaderboard.com/ce311");
+      const data = await res.json();
+      return {
+        entries: data.entries,
+        progress: {
+          goal: data.progress.goal,
+          current: data.progress.currentProgress,
+        },
+      };
+    },
+  },
 } satisfies Record<string, CommunityEvent>;
 
 export type CommunityEvent = {
   name: string;
   active: boolean;
-  type: "cash" | "distance" | "eliminations" | "damage";
+  type: "cash" | "distance" | "eliminations" | "damage" | "roundsPlayed";
   initialGoal: number;
   fetchData: () => Promise<{
     entries: any[];
