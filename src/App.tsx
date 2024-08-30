@@ -94,7 +94,7 @@ const App = () => {
   // Use TanStack Query to fetch data
   // This will cache all cpmbinations of leaderboard version and platform infinitely
   // Or until the page is refreshed or the cache is invalidated (refresh button is pressed)
-  const { isLoading, data, error, dataUpdatedAt, isRefetching } = useQuery({
+  const { isLoading, data, isError, dataUpdatedAt, isRefetching } = useQuery({
     queryKey: ["leaderboard", selectedLeaderboardVersion, selectedPlatform],
     queryFn: () => fetchData(selectedLeaderboardVersion, selectedPlatform),
     staleTime: Infinity, // Cache the data until the page is refreshed
@@ -364,10 +364,23 @@ const App = () => {
           </TooltipProvider>
         </div>
 
-        {error && <span className="text-red-700">Error fetching data.</span>}
+        {isError && (
+          <span className="text-lg">
+            Error gathering data. Please{" "}
+            <Link href="https://x.com/mozzyfx">
+              contact the developer on Twitter
+            </Link>{" "}
+            or{" "}
+            <Link href="https://github.com/leonlarsson/the-finals-leaderboard/issues/new?title=Error gathering data">
+              {" "}
+              file an issue on GitHub
+            </Link>{" "}
+            if this error persists.
+          </span>
+        )}
 
         {/* Panel selector and panels */}
-        {!error && (
+        {!isError && (
           <div className="space-y-3">
             <Tabs
               className="select-none"
