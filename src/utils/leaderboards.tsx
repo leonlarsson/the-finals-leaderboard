@@ -150,24 +150,8 @@ export const leaderboards = {
       const res = await noStoreFetch(
         "https://api.the-finals-leaderboard.com/the-finals",
       );
-      return (await res.json()).entries;
+      return await res.json();
     },
-    transformData: data =>
-      data.map(x => ({
-        // 2024-08-30: Embark updated the API structure
-        // rank: x.r,
-        // name: x.name,
-        // tournamentWins: x.p,
-        // steamName: x.steam,
-        // xboxName: x.xbox,
-        // psnName: x.psn,
-        rank: x[1],
-        name: x[3],
-        tournamentWins: x[5],
-        steamName: x[6] === 0 ? "" : x[6],
-        psnName: x[7] === 0 ? "" : x[7],
-        xboxName: x[8] === 0 ? "" : x[8],
-      })),
     tableColumns: ["rank", "name", "tournamentWins"],
   },
 
