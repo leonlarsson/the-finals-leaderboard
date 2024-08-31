@@ -22,7 +22,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
         Stats and Rank Distribution{" "}
         <span>
           ({leaderboard.name}
-          {!("hidePlatformNameInStatsPanel" in leaderboard) && (
+          {!leaderboard.disablePlatformSelection && (
             <span> - {platformName}</span>
           )}
           )
@@ -96,7 +96,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
           <span className="text-lg font-medium">
             Out of the top {users.length.toLocaleString("en")}{" "}
             {leaderboard.name}
-            {!("hidePlatformNameInStatsPanel" in leaderboard) && (
+            {!leaderboard.disablePlatformSelection && (
               <span> {platformName}</span>
             )}{" "}
             players...
@@ -120,7 +120,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                 <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
                   <span>
                     {leaderboard.name}{" "}
-                    {!("hidePlatformNameInStatsPanel" in leaderboard) && (
+                    {!leaderboard.disablePlatformSelection && (
                       <span> - {platformName}</span>
                     )}
                   </span>
