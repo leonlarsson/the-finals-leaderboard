@@ -46,7 +46,7 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "rank",
-      desc: false,
+      desc: true,
     },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([

@@ -1,21 +1,15 @@
 // Borrowed from https://ui.shadcn.com/docs/components/data-table#column-header
 
 import { Column } from "@tanstack/react-table";
-import {
-  ArrowDownIcon,
-  ArrowUpIcon,
-  ChevronsUpDown,
-  XCircle,
-} from "lucide-react";
+import { MenuIcon, SortAscIcon, SortDescIcon } from "lucide-react";
 import { Button } from "./ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -34,43 +28,40 @@ export function DataTableColumnHeader<TData, TValue>({
 
   return (
     <div className={cn("flex items-center space-x-2", className)}>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
-          >
-            <span>{title}</span>
-            {column.getIsSorted() === "desc" ? (
-              <ArrowDownIcon className="ml-2 size-4" />
-            ) : column.getIsSorted() === "asc" ? (
-              <ArrowUpIcon className="ml-2 size-4" />
-            ) : (
-              <ChevronsUpDown className="ml-2 size-4" />
-            )}
-          </Button>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent align="start">
-          <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <ArrowUpIcon className="mr-2 size-3.5 text-muted-foreground/70" />
-            Asc
-          </DropdownMenuItem>
-
-          <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <ArrowDownIcon className="mr-2 size-3.5 text-muted-foreground/70" />
-            Desc
-          </DropdownMenuItem>
-
-          <DropdownMenuSeparator />
-
-          <DropdownMenuItem onClick={() => column.clearSorting()}>
-            <XCircle className="mr-2 size-3.5 text-muted-foreground/70" />
-            Clear
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <TooltipProvider>
+        <Tooltip delayDuration={200} disableHoverableContent>
+          <TooltipTrigger asChild className="w-fit">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="-ml-3 h-8 data-[state=open]:bg-accent"
+              onClick={() => column.toggleSorting()}
+            >
+              <span>{title}</span>
+              {column.getIsSorted() === "asc" ? (
+                <SortAscIcon className="ml-2 size-4" />
+              ) : column.getIsSorted() === "desc" ? (
+                <SortDescIcon className="ml-2 size-4" />
+              ) : (
+                <MenuIcon className="ml-2 size-4" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            Click to{" "}
+            {(() => {
+              switch (column.getNextSortingOrder()) {
+                case "asc":
+                  return "sort ascending";
+                case "desc":
+                  return "sort descending";
+                default:
+                  return "clear sorting";
+              }
+            })()}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 }

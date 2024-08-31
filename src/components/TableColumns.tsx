@@ -23,6 +23,7 @@ export const columns = (
   // Rank
   columnHelper.accessor("rank", {
     id: "rank",
+    invertSorting: true,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Rank" />
     ),
