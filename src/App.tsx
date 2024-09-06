@@ -1,6 +1,7 @@
 import "./index.css";
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
 import {
   BarChartIcon,
   Loader2Icon,
@@ -8,6 +9,7 @@ import {
   TableIcon,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Notice from "./components/Notice";
 import CommunityProgress from "./components/CommunityProgress";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
@@ -34,7 +36,6 @@ import {
   leaderboards,
   leaderboardsGroupedByTabGroup,
 } from "./utils/leaderboards";
-import { ColumnDef } from "@tanstack/react-table";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -213,33 +214,7 @@ const App = () => {
         </button>
       </h5>
 
-      {/* Notice */}
-      {/* <Notice
-        icon={<AlertCircleIcon />}
-        message={
-          <span>
-            Season 3 support is here! Check out the{" "}
-            <button
-              className="font-medium hover:underline"
-              onClick={() => updateSelectedLeaderboard("season3WorldTour")}
-              onPointerEnter={() =>
-                prefetchData({ leaderboard: "season3WorldTour" })
-              }
-            >
-              World Tour
-            </button>{" "}
-            or{" "}
-            <button
-              className="font-medium hover:underline"
-              onClick={() => updateSelectedLeaderboard("season3")}
-              onPointerEnter={() => prefetchData({ leaderboard: "season3" })}
-            >
-              Ranked
-            </button>
-            .
-          </span>
-        }
-      /> */}
+      <Notice />
 
       <div className="my-2">
         <CommunityProgress
