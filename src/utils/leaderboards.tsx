@@ -147,9 +147,10 @@ export const leaderboards = {
     disableStatsPanel: true,
     fetchData: async () => {
       const res = await noStoreFetch(
-        "https://api.the-finals-leaderboard.com/the-finals",
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/the-finals/crossplay",
       );
-      return await res.json();
+      const data = await res.json();
+      return data.data;
     },
     tableColumns: ["rank", "name", "tournamentWins"],
   },
