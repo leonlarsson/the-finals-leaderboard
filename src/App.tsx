@@ -95,11 +95,12 @@ const App = () => {
   // Use TanStack Query to fetch data
   // This will cache all cpmbinations of leaderboard version and platform infinitely
   // Or until the page is refreshed or the cache is invalidated (refresh button is pressed)
-  const { isLoading, data, isError, dataUpdatedAt, isRefetching } = useQuery({
-    queryKey: ["leaderboard", selectedLeaderboardVersion, selectedPlatform],
-    queryFn: () => fetchData(selectedLeaderboardVersion, selectedPlatform),
-    staleTime: Infinity, // Cache the data until the page is refreshed
-  });
+  const { isLoading, data, isError, error, dataUpdatedAt, isRefetching } =
+    useQuery({
+      queryKey: ["leaderboard", selectedLeaderboardVersion, selectedPlatform],
+      queryFn: () => fetchData(selectedLeaderboardVersion, selectedPlatform),
+      staleTime: Infinity, // Cache the data until the page is refreshed
+    });
 
   // Prefetch data for the other leaderboard version and platform
   // User when hovering over the tabs
@@ -339,20 +340,47 @@ const App = () => {
           </TooltipProvider>
         </div>
 
-        {isError && (
-          <span className="text-lg">
-            Error gathering data. Please{" "}
-            <Link href="https://x.com/mozzyfx">
-              contact the developer on Twitter
-            </Link>{" "}
-            or{" "}
-            <Link href="https://github.com/leonlarsson/the-finals-leaderboard/issues/new?title=Error gathering data">
-              {" "}
-              file an issue on GitHub
-            </Link>{" "}
-            if this error persists.
-          </span>
-        )}
+        {isError &&
+          (() => {
+            const githubLink = new URL(
+              "https://github.com/leonlarsson/the-finals-leaderboard/issues/new",
+            );
+            githubLink.searchParams.set(
+              "title",
+              error.message || "Error encountered",
+            );
+            githubLink.searchParams.set(
+              "body",
+              error.stack
+                ? `I encountered the following error on ${location.href}\n\`\`\`\n${error.stack}\n\`\`\``
+                : "I encountered an error.",
+            );
+
+            return (
+              <div>
+                <div className="text-lg">
+                  An error happened. Please{" "}
+                  <Link href="https://x.com/mozzyfx">
+                    contact the developer on Twitter
+                  </Link>{" "}
+                  or{" "}
+                  <Link href={githubLink.href}> file an issue on GitHub</Link>{" "}
+                  if this error persists.
+                </div>
+
+                {error && (
+                  <div className="mt-3">
+                    <div className="font-medium">
+                      Useful information to include:
+                    </div>
+                    <pre className="overflow-x-auto rounded bg-neutral-100 p-2 dark:bg-neutral-900">
+                      {error.stack}
+                    </pre>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
         {/* Panel selector and panels */}
         {!isError && (

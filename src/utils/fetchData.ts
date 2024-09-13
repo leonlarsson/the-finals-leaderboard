@@ -15,5 +15,10 @@ export const fetchData = async (
     return transformedData;
   }
 
+  // If the data is not an array, throw an error
+  if (!Array.isArray(data)) {
+    throw new Error("Data from leaderboard.fetchData() is not an array");
+  }
+
   return data;
 };
