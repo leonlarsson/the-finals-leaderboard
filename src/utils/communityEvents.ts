@@ -1,3 +1,5 @@
+import noStoreFetch from "./noStoreFetch";
+
 export const communityEvents = {
   february2024Cachouts: {
     name: "Cashouts",
@@ -111,12 +113,49 @@ export const communityEvents = {
       };
     },
   },
+
+  september2024CommunityEvent314: {
+    name: "Community Event 3.14",
+    active: true,
+    type: "grenadeDetonations",
+    initialGoal: 30_000_000,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/proxy?url=https://id.embark.games/leaderboards/ce314",
+      );
+
+      const text = await res.text();
+      const stringData = text.match(
+        /<script id="__NEXT_DATA__" type="application\/json">(.*)<\/script>/,
+      )?.[1];
+
+      if (!stringData) {
+        throw new Error("Failed to fetch data");
+      }
+
+      const data = JSON.parse(stringData);
+
+      return {
+        entries: data.props.pageProps.entries,
+        progress: {
+          goal: data.props.pageProps.progress.goal,
+          current: data.props.pageProps.progress.currentProgress,
+        },
+      };
+    },
+  },
 } satisfies Record<string, CommunityEvent>;
 
 export type CommunityEvent = {
   name: string;
   active: boolean;
-  type: "cash" | "distance" | "eliminations" | "damage" | "roundsPlayed";
+  type:
+    | "cash"
+    | "distance"
+    | "eliminations"
+    | "damage"
+    | "roundsPlayed"
+    | "grenadeDetonations";
   initialGoal: number;
   fetchData: () => Promise<{
     entries: any[];

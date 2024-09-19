@@ -155,22 +155,43 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "tournamentWins"],
   },
 
-  communityEvent311: {
+  communityEvent314: {
     tabGroup: 1,
-    id: "communityEvent311",
+    id: "communityEvent314",
     tabIcon: <PlayIcon size={16} />,
-    enabled: false,
-    name: "Community Event 3.11",
-    nameShort: "CE3.11",
+    enabled: true,
+    name: "Community Event 3.14",
+    nameShort: "CE3.14",
     disableLeagueFilter: true,
     disablePlatformSelection: true,
     disableStatsPanel: true,
     fetchData: async () => {
       const res = await noStoreFetch(
-        "https://api.the-finals-leaderboard.com/ce311",
+        "https://api.the-finals-leaderboard.com/proxy?url=https://id.embark.games/leaderboards/ce314",
       );
-      return (await res.json()).entries;
+
+      const text = await res.text();
+      const stringData = text.match(
+        /<script id="__NEXT_DATA__" type="application\/json">(.*)<\/script>/,
+      )?.[1];
+
+      if (!stringData) {
+        throw new Error("Failed to fetch data");
+      }
+
+      const data = JSON.parse(stringData);
+
+      return data.props.pageProps.entries;
     },
+    transformData: data =>
+      data.map(user => ({
+        rank: user[1],
+        name: user[3],
+        score: user[5],
+        steamName: user[6] === 0 ? "" : user[6],
+        psnName: user[7] === 0 ? "" : user[7],
+        xboxName: user[8] === 0 ? "" : user[8],
+      })),
     tableColumns: ["rank", "name", "score"],
   },
 } satisfies Record<string, Leaderboard>;

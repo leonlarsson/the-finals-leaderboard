@@ -119,6 +119,20 @@ const CommunityProgress = ({ eventData }: Props) => {
             <span>{data.goal.toLocaleString("en")} rounds played</span>
           </>
         )}
+
+        {eventData.type === "grenadeDetonations" && (
+          <>
+            <span>
+              {data.current.toLocaleString("en")} grenades detonated •{" "}
+              {new Intl.NumberFormat("en", {
+                style: "percent",
+                maximumFractionDigits: 1,
+              }).format(data.current / data.goal)}
+            </span>
+
+            <span>{data.goal.toLocaleString("en")} grenades detonated</span>
+          </>
+        )}
       </span>
 
       <ProgressBar
