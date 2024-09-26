@@ -159,7 +159,7 @@ export const leaderboards = {
     tabGroup: 1,
     id: "communityEvent314",
     tabIcon: <PlayIcon size={16} />,
-    enabled: true,
+    enabled: false,
     name: "Community Event 3.14",
     nameShort: "CE3.14",
     disableLeagueFilter: true,
