@@ -11,7 +11,7 @@ export default (sponsor: string, height?: number) => {
       title={`${sponsor} sponsor`}
       width={height ?? 60}
       alt={`${sponsor} sponsor`}
-      src={`/images/sponsor-${sponsor.toLowerCase()}.png`}
+      src={`/images/sponsors/sponsor-${sponsor.toLowerCase()}.png`}
     />
   );
 };

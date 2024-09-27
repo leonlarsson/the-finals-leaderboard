@@ -326,9 +326,12 @@ const namePopoverContent = (user: BaseUser) => {
   return (
     <div className="flex flex-col gap-2">
       <span className="inline-flex gap-1">
-        <img src="/images/Embark.png" className="inline size-5 dark:hidden" />
         <img
-          src="/images/Embark-White.png"
+          src="/images/misc/Embark.png"
+          className="inline size-5 dark:hidden"
+        />
+        <img
+          src="/images/misc/Embark-White.png"
           className="hidden size-5 dark:inline"
         />
         <span className="font-semibold">Embark ID:</span>
