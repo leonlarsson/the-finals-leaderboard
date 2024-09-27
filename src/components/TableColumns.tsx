@@ -13,6 +13,7 @@ import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { BaseUser, Platforms, BaseUserWithExtras } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import leagueToImage from "@/utils/leagueToImage";
+import sponsorToImage from "@/utils/sponsorToImage";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
 
@@ -195,7 +196,11 @@ export const columns = (
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Sponsor" />
     ),
-    cell: ({ getValue }) => getValue(),
+    cell: ({ getValue }) => (
+      <div className="flex flex-col gap-2">
+        {sponsorToImage(getValue() ?? "", 80)}
+      </div>
+    ),
   }),
 
   // Fans
