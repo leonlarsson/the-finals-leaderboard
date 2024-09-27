@@ -34,8 +34,15 @@ import {
   defaultLeaderboardId,
   leaderboardIdsToPrefetch,
   leaderboards,
-  leaderboardsGroupedByTabGroup,
 } from "./utils/leaderboards";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./components/ui/select";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -93,7 +100,7 @@ const App = () => {
   const queryClient = useQueryClient();
 
   // Use TanStack Query to fetch data
-  // This will cache all cpmbinations of leaderboard version and platform infinitely
+  // This will cache all combinations of leaderboard version and platform infinitely
   // Or until the page is refreshed or the cache is invalidated (refresh button is pressed)
   const { isLoading, data, isError, error, dataUpdatedAt, isRefetching } =
     useQuery({
@@ -170,7 +177,7 @@ const App = () => {
     setSelectedLeaderboardVersion(leaderboard);
   };
 
-  const disabled = isLoading || isRefetching;
+  const loadingOrRefetching = isLoading || isRefetching;
 
   return (
     <div className="container mb-12 mt-2 font-saira max-sm:px-2">
@@ -238,76 +245,107 @@ const App = () => {
             value={selectedLeaderboardVersion}
             onValueChange={e => updateSelectedLeaderboard(e as LeaderboardId)}
           >
-            {leaderboardsGroupedByTabGroup.map((group, i) => (
-              <TabsList key={i}>
-                {group
-                  ?.filter(leaderboard => leaderboard.enabled)
-                  .map((leaderboard: Leaderboard) => (
-                    <TabsTrigger
+            <TabsList>
+              {Object.values(leaderboards)
+                .filter(x => x.group === 1)
+                .filter(x => x.enabled)
+                .map((leaderboard: Leaderboard) => (
+                  <TabsTrigger
+                    key={leaderboard.id}
+                    value={leaderboard.id}
+                    onPointerEnter={() =>
+                      prefetchData({
+                        leaderboard: leaderboard.id as LeaderboardId,
+                      })
+                    }
+                  >
+                    <span className="hidden items-center gap-1 min-[350px]:flex">
+                      {leaderboard.tabIcon} {leaderboard.name}
+                    </span>
+                    <span className="flex items-center gap-1 min-[350px]:hidden">
+                      {leaderboard.tabIcon} {leaderboard.nameShort}
+                    </span>
+                  </TabsTrigger>
+                ))}
+            </TabsList>
+          </Tabs>
+
+          <Select
+            value={selectedLeaderboardVersion}
+            onValueChange={e => updateSelectedLeaderboard(e as LeaderboardId)}
+          >
+            <SelectTrigger className="w-max">
+              {leaderboards[selectedLeaderboardVersion].group === 1 ? (
+                "Older leaderboards"
+              ) : (
+                <SelectValue />
+              )}
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {Object.values(leaderboards)
+                  .filter(x => x.group === 2)
+                  .filter(x => x.enabled)
+                  .map(leaderboard => (
+                    <SelectItem
                       key={leaderboard.id}
                       value={leaderboard.id}
+                      disabled={!leaderboard.enabled}
                       onPointerEnter={() =>
                         prefetchData({
                           leaderboard: leaderboard.id as LeaderboardId,
                         })
                       }
                     >
-                      <span className="hidden items-center gap-1 min-[600px]:flex">
-                        {leaderboard.tabIcon} {leaderboard.name}
-                      </span>
-                      <span className="flex items-center gap-1 min-[600px]:hidden">
-                        {leaderboard.tabIcon} {leaderboard.nameShort}
-                      </span>
-                    </TabsTrigger>
+                      {leaderboard.name}
+                    </SelectItem>
                   ))}
-              </TabsList>
-            ))}
-          </Tabs>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
 
           {/* LEADERBOARD PLATFORM */}
-          <Tabs
-            className="select-none"
-            defaultValue={selectedPlatform}
-            onValueChange={e => setSelectedPlatform(e as Platforms)}
-          >
-            <TabsList>
-              {[
-                {
-                  leaderboardPlatform: Platforms.Crossplay,
-                  title: "Crossplay",
-                  icon: <Icons.crossplay className="inline size-5" />,
-                },
-                {
-                  leaderboardPlatform: Platforms.Steam,
-                  title: "Steam",
-                  icon: <Icons.steam className="inline size-5" />,
-                },
-                {
-                  leaderboardPlatform: Platforms.Xbox,
-                  title: "Xbox",
-                  icon: <Icons.xbox className="inline size-5" />,
-                },
-                {
-                  leaderboardPlatform: Platforms.PSN,
-                  title: "PlayStation",
-                  icon: <Icons.playstation className="inline size-5" />,
-                },
-              ].map(({ leaderboardPlatform: value, icon }) => (
-                <TabsTrigger
-                  key={value}
-                  value={value}
-                  disabled={
-                    disabled ||
-                    leaderboards[selectedLeaderboardVersion]
-                      .disablePlatformSelection
-                  }
-                  onPointerEnter={() => prefetchData({ platform: value })}
-                >
-                  {icon}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+          {!leaderboards[selectedLeaderboardVersion]
+            .disablePlatformSelection && (
+            <Tabs
+              className="select-none"
+              defaultValue={selectedPlatform}
+              onValueChange={e => setSelectedPlatform(e as Platforms)}
+            >
+              <TabsList>
+                {[
+                  {
+                    leaderboardPlatform: Platforms.Crossplay,
+                    title: "Crossplay",
+                    icon: <Icons.crossplay className="inline size-5" />,
+                  },
+                  {
+                    leaderboardPlatform: Platforms.Steam,
+                    title: "Steam",
+                    icon: <Icons.steam className="inline size-5" />,
+                  },
+                  {
+                    leaderboardPlatform: Platforms.Xbox,
+                    title: "Xbox",
+                    icon: <Icons.xbox className="inline size-5" />,
+                  },
+                  {
+                    leaderboardPlatform: Platforms.PSN,
+                    title: "PlayStation",
+                    icon: <Icons.playstation className="inline size-5" />,
+                  },
+                ].map(({ leaderboardPlatform: value, icon }) => (
+                  <TabsTrigger
+                    key={value}
+                    value={value}
+                    onPointerEnter={() => prefetchData({ platform: value })}
+                  >
+                    {icon}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          )}
 
           <TooltipProvider disableHoverableContent>
             <Tooltip>
@@ -316,20 +354,14 @@ const App = () => {
                   variant="outline"
                   className="select-none"
                   onClick={() => queryClient.invalidateQueries()}
-                  disabled={
-                    disabled ||
-                    Object.hasOwn(
-                      leaderboards[selectedLeaderboardVersion],
-                      "localData",
-                    )
-                  }
+                  disabled={loadingOrRefetching}
                 >
                   <span className="mr-2 hidden min-[600px]:block">Refresh</span>
 
                   <RefreshCwIcon
                     className={cn(
                       "size-4",
-                      (isLoading || isRefetching) && "animate-spin",
+                      loadingOrRefetching && "animate-spin",
                     )}
                   />
                 </Button>
@@ -392,7 +424,7 @@ const App = () => {
               <TabsList>
                 <TabsTrigger
                   value={Panels.Table}
-                  disabled={isLoading || isRefetching}
+                  disabled={loadingOrRefetching}
                 >
                   <TableIcon className="mr-2 inline size-5" />
                   Table
@@ -401,8 +433,7 @@ const App = () => {
                 <TabsTrigger
                   value={Panels.Stats}
                   disabled={
-                    isLoading ||
-                    isRefetching ||
+                    loadingOrRefetching ||
                     leaderboards[selectedLeaderboardVersion].disableStatsPanel
                   }
                 >
@@ -447,7 +478,7 @@ const App = () => {
       <div className="mt-10 flex flex-col gap-2">
         <span>
           Current data updated at{" "}
-          {isLoading || isRefetching ? (
+          {loadingOrRefetching ? (
             <Loader2Icon className="inline size-5 animate-spin" />
           ) : (
             new Date(dataUpdatedAt).toLocaleString()

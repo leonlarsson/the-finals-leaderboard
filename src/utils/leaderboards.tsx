@@ -3,7 +3,7 @@ import noStoreFetch from "./noStoreFetch";
 
 export const leaderboards = {
   season4: {
-    tabGroup: 1,
+    group: 1,
     id: "season4",
     enabled: true,
     name: "Season 4",
@@ -22,7 +22,7 @@ export const leaderboards = {
   },
 
   season4WorldTour: {
-    tabGroup: 1,
+    group: 1,
     id: "season4WorldTour",
     enabled: true,
     name: "S4 World Tour",
@@ -41,7 +41,7 @@ export const leaderboards = {
   },
 
   season4Sponsor: {
-    tabGroup: 1,
+    group: 1,
     id: "season4Sponsor",
     enabled: true,
     name: "S4 Sponsor",
@@ -59,46 +59,8 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "sponsor", "fans"],
   },
 
-  season3TheFinals: {
-    tabGroup: 2,
-    id: "season3TheFinals",
-    enabled: true,
-    name: "S3 THE FINALS",
-    nameShort: "S3TF",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
-    fetchData: async () => {
-      const res = await noStoreFetch(
-        "https://api.the-finals-leaderboard.com/v1/leaderboard/the-finals/crossplay",
-      );
-      const data = await res.json();
-      return data.data;
-    },
-    tableColumns: ["rank", "name", "tournamentWins"],
-  },
-
-  season3WorldTour: {
-    tabGroup: 2,
-    id: "season3WorldTour",
-    enabled: true,
-    name: "S3 World Tour",
-    nameShort: "S3WT",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
-    fetchData: async () => {
-      const res = await noStoreFetch(
-        "https://api.the-finals-leaderboard.com/v1/leaderboard/s3worldtour/crossplay",
-      );
-      const data = await res.json();
-      return data.data as BaseUser[];
-    },
-    tableColumns: ["rank", "name", "cashouts"],
-  },
-
   season3: {
-    tabGroup: 2,
+    group: 2,
     id: "season3",
     enabled: true,
     name: "Season 3",
@@ -116,8 +78,46 @@ export const leaderboards = {
     tableColumns: ["rank", "change", "name", "fame"],
   },
 
+  season3WorldTour: {
+    group: 2,
+    id: "season3WorldTour",
+    enabled: true,
+    name: "Season 3 World Tour",
+    nameShort: "S3WT",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s3worldtour/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "cashouts"],
+  },
+
+  season3TheFinals: {
+    group: 2,
+    id: "season3TheFinals",
+    enabled: true,
+    name: "Season 3 The Finals",
+    nameShort: "S3TF",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/the-finals/crossplay",
+      );
+      const data = await res.json();
+      return data.data;
+    },
+    tableColumns: ["rank", "name", "tournamentWins"],
+  },
+
   season2: {
-    tabGroup: 2,
+    group: 2,
     id: "season2",
     enabled: true,
     name: "Season 2",
@@ -136,7 +136,7 @@ export const leaderboards = {
   },
 
   season1: {
-    tabGroup: 2,
+    group: 2,
     id: "season1",
     enabled: true,
     name: "Season 1",
@@ -155,7 +155,7 @@ export const leaderboards = {
   },
 
   openBeta: {
-    tabGroup: 2,
+    group: 2,
     id: "openBeta",
     enabled: true,
     name: "Open Beta",
@@ -174,7 +174,7 @@ export const leaderboards = {
   },
 
   closedBeta2: {
-    tabGroup: 2,
+    group: 2,
     enabled: true,
     id: "closedBeta2",
     name: "Closed Beta 2",
@@ -193,7 +193,7 @@ export const leaderboards = {
   },
 
   closedBeta1: {
-    tabGroup: 2,
+    group: 2,
     enabled: true,
     id: "closedBeta1",
     name: "Closed Beta 1",
@@ -213,7 +213,7 @@ export const leaderboards = {
 } satisfies Record<string, Leaderboard>;
 
 export type Leaderboard = {
-  tabGroup: number;
+  group: number;
   id: string;
   enabled: boolean;
   name: string;
@@ -235,7 +235,3 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season4WorldTour",
   "season4Sponsor",
 ];
-
-export const leaderboardsGroupedByTabGroup = Object.values(
-  Object.groupBy(Object.values(leaderboards), x => x.tabGroup),
-) as Leaderboard[][];
