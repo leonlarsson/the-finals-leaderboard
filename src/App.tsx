@@ -242,7 +242,6 @@ const App = () => {
               <TabsList key={i}>
                 {group
                   ?.filter(leaderboard => leaderboard.enabled)
-                  .toReversed()
                   .map((leaderboard: Leaderboard) => (
                     <TabsTrigger
                       key={leaderboard.id}

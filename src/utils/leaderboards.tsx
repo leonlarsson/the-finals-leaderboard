@@ -1,39 +1,152 @@
-import { PlayIcon } from "lucide-react";
 import type { BaseUser, BaseUserWithExtras } from "@/types";
 import noStoreFetch from "./noStoreFetch";
 
 export const leaderboards = {
-  closedBeta1: {
-    tabGroup: 2,
+  season4: {
+    tabGroup: 1,
+    id: "season4",
     enabled: true,
-    id: "closedBeta1",
-    name: "Closed Beta 1",
-    nameShort: "CB1",
+    name: "Season 4",
+    nameShort: "S4",
     disableLeagueFilter: false,
     disablePlatformSelection: true,
     disableStatsPanel: false,
     fetchData: async () => {
-      const res = await fetch(
-        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb1",
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s4/crossplay",
       );
       const data = await res.json();
       return data.data as BaseUser[];
     },
-    tableColumns: ["rank", "change", "name", "xp", "level", "cashouts", "fame"],
+    tableColumns: ["rank", "change", "name", "fame"],
   },
 
-  closedBeta2: {
-    tabGroup: 2,
+  season4WorldTour: {
+    tabGroup: 1,
+    id: "season4WorldTour",
     enabled: true,
-    id: "closedBeta2",
-    name: "Closed Beta 2",
-    nameShort: "CB2",
+    name: "S4 World Tour",
+    nameShort: "S4WT",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s4worldtour/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "cashouts"],
+  },
+
+  season4Sponsor: {
+    tabGroup: 1,
+    id: "season4Sponsor",
+    enabled: true,
+    name: "S4 Sponsor",
+    nameShort: "S4S",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s4sponsor/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "sponsor", "fans"],
+  },
+
+  season3TheFinals: {
+    tabGroup: 2,
+    id: "season3TheFinals",
+    enabled: true,
+    name: "S3 THE FINALS",
+    nameShort: "S3TF",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/the-finals/crossplay",
+      );
+      const data = await res.json();
+      return data.data;
+    },
+    tableColumns: ["rank", "name", "tournamentWins"],
+  },
+
+  season3WorldTour: {
+    tabGroup: 2,
+    id: "season3WorldTour",
+    enabled: true,
+    name: "S3 World Tour",
+    nameShort: "S3WT",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s3worldtour/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "cashouts"],
+  },
+
+  season3: {
+    tabGroup: 2,
+    id: "season3",
+    enabled: true,
+    name: "Season 3",
+    nameShort: "S3",
     disableLeagueFilter: false,
     disablePlatformSelection: true,
     disableStatsPanel: false,
     fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s3/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "change", "name", "fame"],
+  },
+
+  season2: {
+    tabGroup: 2,
+    id: "season2",
+    enabled: true,
+    name: "Season 2",
+    nameShort: "S2",
+    disableLeagueFilter: false,
+    disablePlatformSelection: false,
+    disableStatsPanel: false,
+    fetchData: async platform => {
       const res = await fetch(
-        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb2",
+        `https://api.the-finals-leaderboard.com/v1/leaderboard/s2/${platform}`,
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "change", "name", "fame"],
+  },
+
+  season1: {
+    tabGroup: 2,
+    id: "season1",
+    enabled: true,
+    name: "Season 1",
+    nameShort: "S1",
+    disableLeagueFilter: false,
+    disablePlatformSelection: false,
+    disableStatsPanel: false,
+    fetchData: async platform => {
+      const res = await fetch(
+        `https://api.the-finals-leaderboard.com/v1/leaderboard/s1/${platform}`,
       );
       const data = await res.json();
       return data.data as BaseUser[];
@@ -60,18 +173,18 @@ export const leaderboards = {
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
 
-  season1: {
+  closedBeta2: {
     tabGroup: 2,
-    id: "season1",
     enabled: true,
-    name: "Season 1",
-    nameShort: "S1",
+    id: "closedBeta2",
+    name: "Closed Beta 2",
+    nameShort: "CB2",
     disableLeagueFilter: false,
-    disablePlatformSelection: false,
+    disablePlatformSelection: true,
     disableStatsPanel: false,
-    fetchData: async platform => {
+    fetchData: async () => {
       const res = await fetch(
-        `https://api.the-finals-leaderboard.com/v1/leaderboard/s1/${platform}`,
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb2",
       );
       const data = await res.json();
       return data.data as BaseUser[];
@@ -79,120 +192,23 @@ export const leaderboards = {
     tableColumns: ["rank", "change", "name", "cashouts", "fame"],
   },
 
-  season2: {
+  closedBeta1: {
     tabGroup: 2,
-    id: "season2",
     enabled: true,
-    name: "Season 2",
-    nameShort: "S2",
+    id: "closedBeta1",
+    name: "Closed Beta 1",
+    nameShort: "CB1",
     disableLeagueFilter: false,
-    disablePlatformSelection: false,
+    disablePlatformSelection: true,
     disableStatsPanel: false,
-    fetchData: async platform => {
+    fetchData: async () => {
       const res = await fetch(
-        `https://api.the-finals-leaderboard.com/v1/leaderboard/s2/${platform}`,
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/cb1",
       );
       const data = await res.json();
       return data.data as BaseUser[];
     },
-    tableColumns: ["rank", "change", "name", "fame"],
-  },
-
-  season3: {
-    tabGroup: 2,
-    id: "season3",
-    enabled: true,
-    name: "Season 3",
-    nameShort: "S3",
-    disableLeagueFilter: false,
-    disablePlatformSelection: true,
-    disableStatsPanel: false,
-    fetchData: async () => {
-      const res = await noStoreFetch(
-        "https://api.the-finals-leaderboard.com/v1/leaderboard/s3/crossplay",
-      );
-      const data = await res.json();
-      return data.data as BaseUser[];
-    },
-    tableColumns: ["rank", "change", "name", "fame"],
-  },
-
-  season3WorldTour: {
-    tabGroup: 1,
-    id: "season3WorldTour",
-    enabled: true,
-    name: "World Tour",
-    nameShort: "WT",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
-    fetchData: async () => {
-      const res = await noStoreFetch(
-        "https://api.the-finals-leaderboard.com/v1/leaderboard/s3worldtour/crossplay",
-      );
-      const data = await res.json();
-      return data.data as BaseUser[];
-    },
-    tableColumns: ["rank", "name", "cashouts"],
-  },
-
-  thefinals: {
-    tabGroup: 1,
-    id: "thefinals",
-    enabled: true,
-    name: "THE FINALS",
-    nameShort: "TF",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
-    fetchData: async () => {
-      const res = await noStoreFetch(
-        "https://api.the-finals-leaderboard.com/v1/leaderboard/the-finals/crossplay",
-      );
-      const data = await res.json();
-      return data.data;
-    },
-    tableColumns: ["rank", "name", "tournamentWins"],
-  },
-
-  communityEvent314: {
-    tabGroup: 1,
-    id: "communityEvent314",
-    tabIcon: <PlayIcon size={16} />,
-    enabled: false,
-    name: "Community Event 3.14",
-    nameShort: "CE3.14",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
-    fetchData: async () => {
-      const res = await noStoreFetch(
-        "https://api.the-finals-leaderboard.com/proxy?url=https://id.embark.games/leaderboards/ce314",
-      );
-
-      const text = await res.text();
-      const stringData = text.match(
-        /<script id="__NEXT_DATA__" type="application\/json">(.*)<\/script>/,
-      )?.[1];
-
-      if (!stringData) {
-        throw new Error("Failed to fetch data");
-      }
-
-      const data = JSON.parse(stringData);
-
-      return data.props.pageProps.entries;
-    },
-    transformData: data =>
-      data.map(user => ({
-        rank: user[1],
-        name: user[3],
-        score: user[5],
-        steamName: user[6] === 0 ? "" : user[6],
-        psnName: user[7] === 0 ? "" : user[7],
-        xboxName: user[8] === 0 ? "" : user[8],
-      })),
-    tableColumns: ["rank", "name", "score"],
+    tableColumns: ["rank", "change", "name", "xp", "level", "cashouts", "fame"],
   },
 } satisfies Record<string, Leaderboard>;
 
@@ -213,11 +229,11 @@ export type Leaderboard = {
 
 export type LeaderboardId = keyof typeof leaderboards;
 
-export const defaultLeaderboardId: LeaderboardId = "season3";
+export const defaultLeaderboardId: LeaderboardId = "season4";
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
-  "season3",
-  "season3WorldTour",
-  "thefinals",
+  "season4",
+  "season4WorldTour",
+  "season4Sponsor",
 ];
 
 export const leaderboardsGroupedByTabGroup = Object.values(

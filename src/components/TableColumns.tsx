@@ -189,6 +189,24 @@ export const columns = (
     },
   ),
 
+  // Sponsor
+  columnHelper.accessor("sponsor", {
+    id: "sponsor",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Sponsor" />
+    ),
+    cell: ({ getValue }) => getValue(),
+  }),
+
+  // Fans
+  columnHelper.accessor("fans", {
+    id: "fans",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Fans" />
+    ),
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
+
   // Distance
   columnHelper.accessor("distance", {
     id: "distance",
