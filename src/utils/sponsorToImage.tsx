@@ -1,17 +1,18 @@
-export default (sponsor: string, height?: number) => {
+export default (sponsor: string, useIcon?: boolean, height?: number) => {
   if (!["holtow", "iseul-t", "engimo"].includes(sponsor.toLowerCase())) {
     return null;
   }
 
   return (
     <img
-      className="inline data-[sponsor='ENGIMO']:bg-brand-red data-[sponsor='ENGIMO']:p-1 dark:!bg-inherit"
+      className="inline data-[sponsor='ENGIMO']:bg-brand-red data-[use-icon=true]:bg-inherit data-[sponsor='ENGIMO']:p-1 data-[use-icon=true]:p-0 dark:!bg-inherit dark:!p-0"
       data-sponsor={sponsor}
+      data-use-icon={useIcon}
       draggable={false}
       title={`${sponsor} sponsor`}
-      width={height ?? 60}
+      width={height ?? (useIcon ? 20 : 60)}
       alt={`${sponsor} sponsor`}
-      src={`/images/sponsors/sponsor-${sponsor.toLowerCase()}.png`}
+      src={`/images/sponsors/sponsor-${sponsor.toLowerCase()}${useIcon ? "-icon" : ""}.png`}
     />
   );
 };

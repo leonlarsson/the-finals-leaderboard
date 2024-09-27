@@ -198,7 +198,7 @@ export const columns = (
     ),
     cell: ({ getValue }) => (
       <div className="flex flex-col gap-2">
-        {sponsorToImage(getValue() ?? "", 80)}
+        {sponsorToImage(getValue() ?? "", false, 80)}
       </div>
     ),
   }),
