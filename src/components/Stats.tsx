@@ -3,9 +3,9 @@ import { Platforms, BaseUser } from "@/types";
 import leagues from "@/utils/leagues";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import leagueToImage from "@/utils/leagueToImage";
 import Loading from "./Loading";
-import sponsorToImage from "@/utils/sponsorToImage";
+import SponsorImage from "./SponsorImage";
+import LeagueImage from "./LeagueImage";
 
 type Props = {
   leaderboardVersion: LeaderboardId;
@@ -105,7 +105,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                         players have signed with{" "}
                         <span className="inline-flex items-center gap-1">
                           <span className="font-medium">{sponsor}</span>
-                          {sponsorToImage(sponsor, true, 25)}
+                          <SponsorImage sponsor={sponsor} useIcon size={25} />
                         </span>
                       </div>
                     ))}
@@ -127,7 +127,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                         fans of players signed with{" "}
                         <span className="inline-flex items-center gap-1">
                           <span className="font-medium">{sponsor}</span>
-                          {sponsorToImage(sponsor, true, 25)}
+                          <SponsorImage sponsor={sponsor} useIcon size={25} />
                         </span>
                       </div>
                     ))}
@@ -252,8 +252,9 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                   </span>
                   <div className="flex items-center gap-1">
                     <span className="font-medium">{label}</span>
-                    {leagues[leaderboardVersion].includes(label as string) &&
-                      leagueToImage(label as string, 30)}
+                    {leagues[leaderboardVersion].includes(label as string) && (
+                      <LeagueImage league={label as string} size={30} />
+                    )}
                   </div>
 
                   <hr />

@@ -1,4 +1,14 @@
-export default (sponsor: string, useIcon?: boolean, height?: number) => {
+type SponsorImageProps = {
+  sponsor: string;
+  useIcon?: boolean;
+  size?: number;
+};
+
+export default ({
+  sponsor,
+  useIcon,
+  size = useIcon ? 20 : 60,
+}: SponsorImageProps) => {
   if (!["holtow", "iseul-t", "engimo"].includes(sponsor.toLowerCase())) {
     return null;
   }
@@ -10,7 +20,7 @@ export default (sponsor: string, useIcon?: boolean, height?: number) => {
       data-use-icon={useIcon}
       draggable={false}
       title={`${sponsor} sponsor`}
-      width={height ?? (useIcon ? 20 : 60)}
+      width={size}
       alt={`${sponsor} sponsor`}
       src={`/images/sponsors/sponsor-${sponsor.toLowerCase()}${useIcon ? "-icon" : ""}.png`}
     />

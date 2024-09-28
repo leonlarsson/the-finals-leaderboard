@@ -12,8 +12,8 @@ import { cn } from "@/lib/utils";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { BaseUser, Platforms, BaseUserWithExtras } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import leagueToImage from "@/utils/leagueToImage";
-import sponsorToImage from "@/utils/sponsorToImage";
+import SponsorImage from "./SponsorImage";
+import LeagueImage from "./LeagueImage";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
 
@@ -163,7 +163,7 @@ export const columns = (
           <Popover>
             <PopoverTrigger className="flex items-center gap-2 rounded px-1 transition-colors hover:bg-neutral-200 dark:hover:bg-neutral-800">
               <div className="size-[50px]">
-                {league && leagueToImage(league, 50)}
+                {league && <LeagueImage league={league} size={50} />}
               </div>
 
               <div className="flex flex-col items-start">
@@ -182,7 +182,7 @@ export const columns = (
                   {rankScore ? "Rank Score" : "fame points"}
                 </span>
               )}
-              {league && leagueToImage(league, 160)}
+              {league && <LeagueImage league={league} size={160} />}
             </PopoverContent>
           </Popover>
         );
@@ -198,7 +198,7 @@ export const columns = (
     ),
     cell: ({ getValue }) => (
       <div className="flex flex-col gap-2">
-        {sponsorToImage(getValue() ?? "", false, 80)}
+        <SponsorImage sponsor={getValue() ?? ""} size={80} />
       </div>
     ),
   }),

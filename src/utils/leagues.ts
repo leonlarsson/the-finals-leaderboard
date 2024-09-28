@@ -83,7 +83,6 @@ const SEASON_2_LEAGUES = [
   "Diamond 1",
 ];
 
-// Values do not matter here
 const SEASON_3_LEAGUES = [
   "Bronze 4",
   "Bronze 3",
@@ -113,7 +112,6 @@ const SEASON_3_LEAGUES = [
   "Ruby",
 ];
 
-// Values do not matter here. This really needs a refactor
 const SEASON_4_LEAGUES = [
   "Bronze 4",
   "Bronze 3",
