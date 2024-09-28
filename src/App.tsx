@@ -353,7 +353,11 @@ const App = () => {
                 <Button
                   variant="outline"
                   className="select-none"
-                  onClick={() => queryClient.invalidateQueries()}
+                  onClick={() =>
+                    queryClient.invalidateQueries({
+                      predicate: query => query.queryKey[0] !== "notice",
+                    })
+                  }
                   disabled={loadingOrRefetching}
                 >
                   <span className="mr-2 hidden min-[600px]:block">Refresh</span>
