@@ -48,7 +48,7 @@ export const leaderboards = {
     nameShort: "S4S",
     disableLeagueFilter: true,
     disablePlatformSelection: true,
-    disableStatsPanel: true,
+    disableStatsPanel: false,
     fetchData: async () => {
       const res = await noStoreFetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s4sponsor/crossplay",
