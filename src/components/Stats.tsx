@@ -61,7 +61,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               players...
             </span>
 
-            <div className="grid grid-cols-2 gap-4 max-[780px]:grid-cols-1">
+            <div className="grid grid-cols-2 gap-4 max-[850px]:grid-cols-1">
               <div className="flex flex-col items-center">
                 <DonutChart
                   className="my-2"
