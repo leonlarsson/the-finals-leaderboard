@@ -5,6 +5,7 @@ import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import leagueToImage from "@/utils/leagueToImage";
 import Loading from "./Loading";
+import sponsorToImage from "@/utils/sponsorToImage";
 
 type Props = {
   leaderboardVersion: LeaderboardId;
@@ -84,43 +85,53 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
               <div>
                 <div className="mt-4">
                   <div className="mb-1 font-medium">Players by sponsor</div>
-                  {sponsors.map(sponsor => (
-                    <div key={sponsor}>
-                      <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                        {users
-                          .filter(user => user.sponsor === sponsor)
-                          .length.toLocaleString("en")}{" "}
-                        (
-                        {(
-                          users.filter(user => user.sponsor === sponsor)
-                            .length / users.length
-                        ).toLocaleString("en", {
-                          style: "percent",
-                          maximumFractionDigits: 1,
-                        })}
-                        )
-                      </span>{" "}
-                      players have signed with{" "}
-                      <span className="font-medium">{sponsor}</span>
-                    </div>
-                  ))}
+                  <div className="space-y-1">
+                    {sponsors.map(sponsor => (
+                      <div key={sponsor}>
+                        <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
+                          {users
+                            .filter(user => user.sponsor === sponsor)
+                            .length.toLocaleString("en")}{" "}
+                          (
+                          {(
+                            users.filter(user => user.sponsor === sponsor)
+                              .length / users.length
+                          ).toLocaleString("en", {
+                            style: "percent",
+                            maximumFractionDigits: 1,
+                          })}
+                          )
+                        </span>{" "}
+                        players have signed with{" "}
+                        <span className="inline-flex items-center gap-1">
+                          <span className="font-medium">{sponsor}</span>
+                          {sponsorToImage(sponsor, true, 25)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="mt-4">
                   <div className="mb-1 font-medium">Fans by sponsor</div>
-                  {sponsors.map(sponsor => (
-                    <div key={sponsor}>
-                      <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                        {users
-                          .filter(user => user.sponsor === sponsor)
-                          .map(user => user.fans!)
-                          .reduce((a, b) => a + b, 0)
-                          .toLocaleString("en")}
-                      </span>{" "}
-                      fans of players signed with{" "}
-                      <span className="font-medium">{sponsor}</span>
-                    </div>
-                  ))}
+                  <div className="space-y-1">
+                    {sponsors.map(sponsor => (
+                      <div key={sponsor}>
+                        <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
+                          {users
+                            .filter(user => user.sponsor === sponsor)
+                            .map(user => user.fans!)
+                            .reduce((a, b) => a + b, 0)
+                            .toLocaleString("en")}
+                        </span>{" "}
+                        fans of players signed with{" "}
+                        <span className="inline-flex items-center gap-1">
+                          <span className="font-medium">{sponsor}</span>
+                          {sponsorToImage(sponsor, true, 25)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
