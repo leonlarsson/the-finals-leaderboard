@@ -78,6 +78,25 @@ export const leaderboards = {
     tableColumns: ["rank", "change", "name", "fame"],
   },
 
+  season3Original: {
+    group: 2,
+    id: "season3Original",
+    enabled: true,
+    name: "Season 3 - Original",
+    nameShort: "S3OR",
+    disableLeagueFilter: false,
+    disablePlatformSelection: true,
+    disableStatsPanel: false,
+    fetchData: async () => {
+      const res = await noStoreFetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s3original/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "change", "name", "fame"],
+  },
+
   season3WorldTour: {
     group: 2,
     id: "season3WorldTour",

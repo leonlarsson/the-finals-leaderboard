@@ -148,6 +148,7 @@ export default {
   [leaderboards.season1.id]: SEASON_1_LEAGUES,
   [leaderboards.season2.id]: SEASON_2_LEAGUES,
   [leaderboards.season3.id]: SEASON_3_LEAGUES,
+  [leaderboards.season3Original.id]: SEASON_3_LEAGUES,
   [leaderboards.season4.id]: SEASON_4_LEAGUES,
   // @ts-ignore Some leaderboards do not have leagues
 } satisfies Record<LeaderboardId, string[]>;
