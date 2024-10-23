@@ -1,8 +1,10 @@
 import { AlertCircleIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import noStoreFetch from "@/utils/noStoreFetch";
+import { Linkify } from "./Linkify";
+import { SECOND } from "@/utils/time";
 
-const Notice = () => {
+export const Notice = () => {
   // Get initial data from localStorage to prevent flickering
   const initialData = () => {
     const data = localStorage.getItem("notice");
@@ -32,7 +34,7 @@ const Notice = () => {
       localStorage.setItem("notice", JSON.stringify(data));
       return data;
     },
-    refetchInterval: 1000 * 60, // 1 minute
+    refetchInterval: SECOND * 30,
   });
 
   if (!data || !data.message) return null;
@@ -42,9 +44,7 @@ const Notice = () => {
       <span className="*:size-5 *:flex-shrink-0">
         <AlertCircleIcon />
       </span>
-      {data.message}
+      <Linkify text={data.message} />
     </div>
   );
 };
-
-export default Notice;

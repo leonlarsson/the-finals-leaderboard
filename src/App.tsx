@@ -9,7 +9,7 @@ import {
   TableIcon,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Notice from "./components/Notice";
+import { Notice } from "./components/Notice";
 import CommunityProgress from "./components/CommunityProgress";
 import { DataTable } from "./components/DataTable";
 import { columns } from "./components/TableColumns";
