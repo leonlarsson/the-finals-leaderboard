@@ -1,4 +1,4 @@
-import { AlertCircleIcon } from "lucide-react";
+import { MegaphoneIcon, MessageSquareWarningIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import noStoreFetch from "@/utils/noStoreFetch";
 import { Linkify } from "./Linkify";
@@ -41,10 +41,14 @@ export const Notice = () => {
 
   return (
     <div className="my-1 flex items-center gap-2 rounded-md bg-brand-red p-1 text-white">
-      <span className="*:size-5 *:flex-shrink-0">
-        <AlertCircleIcon />
-      </span>
+      <span className="*:size-5 *:flex-shrink-0">{getIcon(data.type)}</span>
       <Linkify text={data.message} />
     </div>
   );
 };
+
+const getIcon = (type: string) =>
+  ({
+    psa: <MegaphoneIcon />,
+    warning: <MessageSquareWarningIcon />,
+  })[type] ?? null;
