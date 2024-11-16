@@ -1,5 +1,4 @@
 import type { BaseUser, BaseUserWithExtras } from "@/types";
-import noStoreFetch from "./noStoreFetch";
 
 export const leaderboards = {
   season4: {
@@ -12,7 +11,7 @@ export const leaderboards = {
     disablePlatformSelection: true,
     disableStatsPanel: false,
     fetchData: async () => {
-      const res = await noStoreFetch(
+      const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s4/crossplay",
       );
       const data = await res.json();
@@ -31,7 +30,7 @@ export const leaderboards = {
     disablePlatformSelection: true,
     disableStatsPanel: true,
     fetchData: async () => {
-      const res = await noStoreFetch(
+      const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s4worldtour/crossplay",
       );
       const data = await res.json();
@@ -50,7 +49,7 @@ export const leaderboards = {
     disablePlatformSelection: true,
     disableStatsPanel: false,
     fetchData: async () => {
-      const res = await noStoreFetch(
+      const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s4sponsor/crossplay",
       );
       const data = await res.json();
@@ -69,7 +68,7 @@ export const leaderboards = {
     disablePlatformSelection: true,
     disableStatsPanel: false,
     fetchData: async () => {
-      const res = await noStoreFetch(
+      const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s3/crossplay",
       );
       const data = await res.json();
@@ -88,7 +87,7 @@ export const leaderboards = {
     disablePlatformSelection: true,
     disableStatsPanel: false,
     fetchData: async () => {
-      const res = await noStoreFetch(
+      const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s3original/crossplay",
       );
       const data = await res.json();
@@ -107,7 +106,7 @@ export const leaderboards = {
     disablePlatformSelection: true,
     disableStatsPanel: true,
     fetchData: async () => {
-      const res = await noStoreFetch(
+      const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s3worldtour/crossplay",
       );
       const data = await res.json();
@@ -126,7 +125,7 @@ export const leaderboards = {
     disablePlatformSelection: true,
     disableStatsPanel: true,
     fetchData: async () => {
-      const res = await noStoreFetch(
+      const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/the-finals/crossplay",
       );
       const data = await res.json();

@@ -1,6 +1,5 @@
 import { MegaphoneIcon, MessageSquareWarningIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import noStoreFetch from "@/utils/noStoreFetch";
 import { Linkify } from "./Linkify";
 import { SECOND } from "@/utils/time";
 
@@ -20,7 +19,7 @@ export const Notice = () => {
     queryKey: ["notice"],
     initialData: initialData(),
     queryFn: async () => {
-      const res = await noStoreFetch(
+      const res = await fetch(
         "https://api.the-finals-leaderboard.com/tfl-notice",
       );
       if (!res.ok) return null;

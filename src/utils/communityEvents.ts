@@ -1,5 +1,3 @@
-import noStoreFetch from "./noStoreFetch";
-
 export const communityEvents = {
   february2024Cachouts: {
     name: "Cashouts",
@@ -120,7 +118,7 @@ export const communityEvents = {
     type: "grenadeDetonations",
     initialGoal: 30_000_000,
     fetchData: async () => {
-      const res = await noStoreFetch(
+      const res = await fetch(
         "https://api.the-finals-leaderboard.com/proxy?url=https://id.embark.games/leaderboards/ce314",
       );
 
