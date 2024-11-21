@@ -10,7 +10,7 @@ const CommunityProgress = ({ eventData }: Props) => {
   if (!eventData) return null;
 
   const { data, isError } = useQuery({
-    queryKey: ["communityEvent", eventData.name],
+    queryKey: ["community-event", eventData.name],
     queryFn: async () => {
       const data = await eventData.fetchData();
       return {
@@ -131,6 +131,20 @@ const CommunityProgress = ({ eventData }: Props) => {
             </span>
 
             <span>{data.goal.toLocaleString("en")} grenades detonated</span>
+          </>
+        )}
+
+        {eventData.type === "cashoutsStolen" && (
+          <>
+            <span>
+              {data.current.toLocaleString("en")} cashouts stolen •{" "}
+              {new Intl.NumberFormat("en", {
+                style: "percent",
+                maximumFractionDigits: 1,
+              }).format(data.current / data.goal)}
+            </span>
+
+            <span>{data.goal.toLocaleString("en")} cashouts stolen</span>
           </>
         )}
       </span>

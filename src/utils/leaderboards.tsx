@@ -1,6 +1,25 @@
 import type { BaseUser, BaseUserWithExtras } from "@/types";
 
 export const leaderboards = {
+  ce48: {
+    group: 0,
+    id: "ce48",
+    enabled: true,
+    name: "Community Event 4.8",
+    nameShort: "CE48",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/community-event/ce48",
+      );
+      const json = await res.json();
+      return json.data.entries as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "score"],
+  },
+
   season4: {
     group: 1,
     id: "season4",
@@ -228,6 +247,25 @@ export const leaderboards = {
     },
     tableColumns: ["rank", "change", "name", "xp", "level", "cashouts", "fame"],
   },
+
+  ce44: {
+    group: 2,
+    id: "ce44",
+    enabled: true,
+    name: "Community Event 4.4",
+    nameShort: "CE44",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/community-event/ce44",
+      );
+      const json = await res.json();
+      return json.data.entries as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "score"],
+  },
 } satisfies Record<string, Leaderboard>;
 
 export type Leaderboard = {
@@ -249,6 +287,7 @@ export type LeaderboardId = keyof typeof leaderboards;
 
 export const defaultLeaderboardId: LeaderboardId = "season4";
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
+  "ce48",
   "season4",
   "season4WorldTour",
   "season4Sponsor",

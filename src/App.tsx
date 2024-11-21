@@ -57,10 +57,10 @@ const App = () => {
   // Otherwise, use the default leaderboard version
   const initialLeaderboardVersion =
     leaderboardSearchParam &&
-    Object.keys(leaderboards).includes(
-      leaderboardSearchParam as LeaderboardId,
-    ) &&
-    leaderboards[leaderboardSearchParam as LeaderboardId].enabled
+      Object.keys(leaderboards).includes(
+        leaderboardSearchParam as LeaderboardId,
+      ) &&
+      leaderboards[leaderboardSearchParam as LeaderboardId].enabled
       ? leaderboardSearchParam
       : defaultLeaderboardId;
 
@@ -70,7 +70,7 @@ const App = () => {
   // Otherwise, use the default platform (Crossplay)
   const initialPlatform =
     platformSearchParam &&
-    Object.values(Platforms).includes(platformSearchParam as Platforms)
+      Object.values(Platforms).includes(platformSearchParam as Platforms)
       ? platformSearchParam
       : Platforms.Crossplay;
 
@@ -84,8 +84,8 @@ const App = () => {
   // Otherwise, use the default panel (Table)
   const initialPanel =
     panelSearchParam &&
-    Object.values(Panels).includes(panelSearchParam as Panels) &&
-    !leaderboards[selectedLeaderboardVersion].disableStatsPanel
+      Object.values(Panels).includes(panelSearchParam as Panels) &&
+      !leaderboards[selectedLeaderboardVersion].disableStatsPanel
       ? panelSearchParam
       : Panels.Table;
 
@@ -177,6 +177,28 @@ const App = () => {
     setSelectedLeaderboardVersion(leaderboard);
   };
 
+  const renderTabsByGroup = (group: number) =>
+    Object.values(leaderboards)
+      .filter(x => x.group === group && x.enabled)
+      .map((leaderboard: Leaderboard) => (
+        <TabsTrigger
+          key={leaderboard.id}
+          value={leaderboard.id}
+          onPointerEnter={() =>
+            prefetchData({
+              leaderboard: leaderboard.id as LeaderboardId,
+            })
+          }
+        >
+          <span className="hidden items-center gap-1 min-[400px]:flex">
+            {leaderboard.tabIcon} {leaderboard.name}
+          </span>
+          <span className="flex items-center gap-1 min-[400px]:hidden">
+            {leaderboard.tabIcon} {leaderboard.nameShort}
+          </span>
+        </TabsTrigger>
+      ));
+
   const loadingOrRefetching = isLoading || isRefetching;
 
   return (
@@ -232,7 +254,7 @@ const App = () => {
 
       <div className="my-4 flex flex-col gap-5">
         <div className="flex flex-wrap gap-2">
-          <div className="block w-full min-[600px]:hidden">
+          <div className="block w-full min-[400px]:hidden">
             Leaderboard:{" "}
             <span className="font-medium">
               {leaderboards[selectedLeaderboardVersion].name}
@@ -245,29 +267,8 @@ const App = () => {
             value={selectedLeaderboardVersion}
             onValueChange={e => updateSelectedLeaderboard(e as LeaderboardId)}
           >
-            <TabsList>
-              {Object.values(leaderboards)
-                .filter(x => x.group === 1)
-                .filter(x => x.enabled)
-                .map((leaderboard: Leaderboard) => (
-                  <TabsTrigger
-                    key={leaderboard.id}
-                    value={leaderboard.id}
-                    onPointerEnter={() =>
-                      prefetchData({
-                        leaderboard: leaderboard.id as LeaderboardId,
-                      })
-                    }
-                  >
-                    <span className="hidden items-center gap-1 min-[350px]:flex">
-                      {leaderboard.tabIcon} {leaderboard.name}
-                    </span>
-                    <span className="flex items-center gap-1 min-[350px]:hidden">
-                      {leaderboard.tabIcon} {leaderboard.nameShort}
-                    </span>
-                  </TabsTrigger>
-                ))}
-            </TabsList>
+            <TabsList>{renderTabsByGroup(0)}</TabsList>
+            <TabsList>{renderTabsByGroup(1)}</TabsList>
           </Tabs>
 
           <Select
@@ -275,7 +276,9 @@ const App = () => {
             onValueChange={e => updateSelectedLeaderboard(e as LeaderboardId)}
           >
             <SelectTrigger className="w-max">
-              {leaderboards[selectedLeaderboardVersion].group === 1 ? (
+              {[0, 1].includes(
+                leaderboards[selectedLeaderboardVersion].group,
+              ) ? (
                 "Older leaderboards"
               ) : (
                 <SelectValue />
@@ -307,45 +310,45 @@ const App = () => {
           {/* LEADERBOARD PLATFORM */}
           {!leaderboards[selectedLeaderboardVersion]
             .disablePlatformSelection && (
-            <Tabs
-              className="select-none"
-              defaultValue={selectedPlatform}
-              onValueChange={e => setSelectedPlatform(e as Platforms)}
-            >
-              <TabsList>
-                {[
-                  {
-                    leaderboardPlatform: Platforms.Crossplay,
-                    title: "Crossplay",
-                    icon: <Icons.crossplay className="inline size-5" />,
-                  },
-                  {
-                    leaderboardPlatform: Platforms.Steam,
-                    title: "Steam",
-                    icon: <Icons.steam className="inline size-5" />,
-                  },
-                  {
-                    leaderboardPlatform: Platforms.Xbox,
-                    title: "Xbox",
-                    icon: <Icons.xbox className="inline size-5" />,
-                  },
-                  {
-                    leaderboardPlatform: Platforms.PSN,
-                    title: "PlayStation",
-                    icon: <Icons.playstation className="inline size-5" />,
-                  },
-                ].map(({ leaderboardPlatform: value, icon }) => (
-                  <TabsTrigger
-                    key={value}
-                    value={value}
-                    onPointerEnter={() => prefetchData({ platform: value })}
-                  >
-                    {icon}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-          )}
+              <Tabs
+                className="select-none"
+                defaultValue={selectedPlatform}
+                onValueChange={e => setSelectedPlatform(e as Platforms)}
+              >
+                <TabsList>
+                  {[
+                    {
+                      leaderboardPlatform: Platforms.Crossplay,
+                      title: "Crossplay",
+                      icon: <Icons.crossplay className="inline size-5" />,
+                    },
+                    {
+                      leaderboardPlatform: Platforms.Steam,
+                      title: "Steam",
+                      icon: <Icons.steam className="inline size-5" />,
+                    },
+                    {
+                      leaderboardPlatform: Platforms.Xbox,
+                      title: "Xbox",
+                      icon: <Icons.xbox className="inline size-5" />,
+                    },
+                    {
+                      leaderboardPlatform: Platforms.PSN,
+                      title: "PlayStation",
+                      icon: <Icons.playstation className="inline size-5" />,
+                    },
+                  ].map(({ leaderboardPlatform: value, icon }) => (
+                    <TabsTrigger
+                      key={value}
+                      value={value}
+                      onPointerEnter={() => prefetchData({ platform: value })}
+                    >
+                      {icon}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
+            )}
 
           <TooltipProvider disableHoverableContent>
             <Tooltip>
@@ -360,7 +363,7 @@ const App = () => {
                   }
                   disabled={loadingOrRefetching}
                 >
-                  <span className="mr-2 hidden min-[600px]:block">Refresh</span>
+                  <span className="mr-2 hidden min-[400px]:block">Refresh</span>
 
                   <RefreshCwIcon
                     className={cn(
