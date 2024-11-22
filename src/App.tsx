@@ -57,10 +57,10 @@ const App = () => {
   // Otherwise, use the default leaderboard version
   const initialLeaderboardVersion =
     leaderboardSearchParam &&
-      Object.keys(leaderboards).includes(
-        leaderboardSearchParam as LeaderboardId,
-      ) &&
-      leaderboards[leaderboardSearchParam as LeaderboardId].enabled
+    Object.keys(leaderboards).includes(
+      leaderboardSearchParam as LeaderboardId,
+    ) &&
+    leaderboards[leaderboardSearchParam as LeaderboardId].enabled
       ? leaderboardSearchParam
       : defaultLeaderboardId;
 
@@ -70,7 +70,7 @@ const App = () => {
   // Otherwise, use the default platform (Crossplay)
   const initialPlatform =
     platformSearchParam &&
-      Object.values(Platforms).includes(platformSearchParam as Platforms)
+    Object.values(Platforms).includes(platformSearchParam as Platforms)
       ? platformSearchParam
       : Platforms.Crossplay;
 
@@ -84,8 +84,8 @@ const App = () => {
   // Otherwise, use the default panel (Table)
   const initialPanel =
     panelSearchParam &&
-      Object.values(Panels).includes(panelSearchParam as Panels) &&
-      !leaderboards[selectedLeaderboardVersion].disableStatsPanel
+    Object.values(Panels).includes(panelSearchParam as Panels) &&
+    !leaderboards[selectedLeaderboardVersion].disableStatsPanel
       ? panelSearchParam
       : Panels.Table;
 
@@ -310,45 +310,45 @@ const App = () => {
           {/* LEADERBOARD PLATFORM */}
           {!leaderboards[selectedLeaderboardVersion]
             .disablePlatformSelection && (
-              <Tabs
-                className="select-none"
-                defaultValue={selectedPlatform}
-                onValueChange={e => setSelectedPlatform(e as Platforms)}
-              >
-                <TabsList>
-                  {[
-                    {
-                      leaderboardPlatform: Platforms.Crossplay,
-                      title: "Crossplay",
-                      icon: <Icons.crossplay className="inline size-5" />,
-                    },
-                    {
-                      leaderboardPlatform: Platforms.Steam,
-                      title: "Steam",
-                      icon: <Icons.steam className="inline size-5" />,
-                    },
-                    {
-                      leaderboardPlatform: Platforms.Xbox,
-                      title: "Xbox",
-                      icon: <Icons.xbox className="inline size-5" />,
-                    },
-                    {
-                      leaderboardPlatform: Platforms.PSN,
-                      title: "PlayStation",
-                      icon: <Icons.playstation className="inline size-5" />,
-                    },
-                  ].map(({ leaderboardPlatform: value, icon }) => (
-                    <TabsTrigger
-                      key={value}
-                      value={value}
-                      onPointerEnter={() => prefetchData({ platform: value })}
-                    >
-                      {icon}
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-              </Tabs>
-            )}
+            <Tabs
+              className="select-none"
+              defaultValue={selectedPlatform}
+              onValueChange={e => setSelectedPlatform(e as Platforms)}
+            >
+              <TabsList>
+                {[
+                  {
+                    leaderboardPlatform: Platforms.Crossplay,
+                    title: "Crossplay",
+                    icon: <Icons.crossplay className="inline size-5" />,
+                  },
+                  {
+                    leaderboardPlatform: Platforms.Steam,
+                    title: "Steam",
+                    icon: <Icons.steam className="inline size-5" />,
+                  },
+                  {
+                    leaderboardPlatform: Platforms.Xbox,
+                    title: "Xbox",
+                    icon: <Icons.xbox className="inline size-5" />,
+                  },
+                  {
+                    leaderboardPlatform: Platforms.PSN,
+                    title: "PlayStation",
+                    icon: <Icons.playstation className="inline size-5" />,
+                  },
+                ].map(({ leaderboardPlatform: value, icon }) => (
+                  <TabsTrigger
+                    key={value}
+                    value={value}
+                    onPointerEnter={() => prefetchData({ platform: value })}
+                  >
+                    {icon}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          )}
 
           <TooltipProvider disableHoverableContent>
             <Tooltip>
@@ -397,13 +397,11 @@ const App = () => {
             return (
               <div>
                 <div className="text-lg">
-                  An error happened. Please{" "}
-                  <Link href="https://x.com/mozzyfx">
-                    contact the developer on Twitter
-                  </Link>{" "}
-                  or{" "}
-                  <Link href={githubLink.href}> file an issue on GitHub</Link>{" "}
-                  if this error persists.
+                  An error happened. Please contact the developer on{" "}
+                  <Link href="https://bsky.app/profile/leon.ms">Bluesky</Link>,{" "}
+                  <Link href="https://x.com/mozzyfx">Twitter</Link> or{" "}
+                  <Link href={githubLink.href}>file an issue on GitHub</Link> if
+                  this error persists.
                 </div>
 
                 {error && (
@@ -497,13 +495,19 @@ const App = () => {
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
           All imagery and data is owned by{" "}
           <Link href="https://www.embark-studios.com/">Embark Studios</Link>.
-          Created by <Link href="https://twitter.com/mozzyfx">Mozzy</Link>.
+          Created by <Link href="https://bsky.app/profile/leon.ms">Mozzy</Link>.
           Check out the{" "}
           <Link href="https://github.com/leonlarsson/the-finals-api">API</Link>.
         </span>
 
         <div className="flex gap-2">
           <ThemeToggle />
+          <Link href="https://bsky.app/profile/leon.ms">
+            <Button variant="outline" size="icon">
+              <Icons.bluesky className="size-5" />
+            </Button>
+          </Link>
+
           <Link href="https://x.com/mozzyfx">
             <Button variant="outline" size="icon">
               <Icons.xTwitter className="size-5" />
