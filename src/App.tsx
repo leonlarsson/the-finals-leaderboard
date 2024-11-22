@@ -136,7 +136,7 @@ const App = () => {
 
   // On initial render, prefetch data for select leaderboards
   useEffect(() => {
-    leaderboardIdsToPrefetch.forEach(leaderboard =>
+    leaderboardIdsToPrefetch.forEach((leaderboard) =>
       prefetchData({ leaderboard }),
     );
   }, []);
@@ -179,7 +179,7 @@ const App = () => {
 
   const renderTabsByGroup = (group: number) =>
     Object.values(leaderboards)
-      .filter(x => x.group === group && x.enabled)
+      .filter((x) => x.group === group && x.enabled)
       .map((leaderboard: Leaderboard) => (
         <TabsTrigger
           key={leaderboard.id}
@@ -248,7 +248,7 @@ const App = () => {
 
       <div className="my-2">
         <CommunityProgress
-          eventData={Object.values(communityEvents).find(x => x.active)}
+          eventData={Object.values(communityEvents).find((x) => x.active)}
         />
       </div>
 
@@ -265,7 +265,7 @@ const App = () => {
           <Tabs
             className="flex select-none flex-wrap gap-2"
             value={selectedLeaderboardVersion}
-            onValueChange={e => updateSelectedLeaderboard(e as LeaderboardId)}
+            onValueChange={(e) => updateSelectedLeaderboard(e as LeaderboardId)}
           >
             <TabsList>{renderTabsByGroup(0)}</TabsList>
             <TabsList>{renderTabsByGroup(1)}</TabsList>
@@ -273,7 +273,7 @@ const App = () => {
 
           <Select
             value={selectedLeaderboardVersion}
-            onValueChange={e => updateSelectedLeaderboard(e as LeaderboardId)}
+            onValueChange={(e) => updateSelectedLeaderboard(e as LeaderboardId)}
           >
             <SelectTrigger className="w-max">
               {[0, 1].includes(
@@ -287,9 +287,9 @@ const App = () => {
             <SelectContent>
               <SelectGroup>
                 {Object.values(leaderboards)
-                  .filter(x => x.group === 2)
-                  .filter(x => x.enabled)
-                  .map(leaderboard => (
+                  .filter((x) => x.group === 2)
+                  .filter((x) => x.enabled)
+                  .map((leaderboard) => (
                     <SelectItem
                       key={leaderboard.id}
                       value={leaderboard.id}
@@ -313,7 +313,7 @@ const App = () => {
             <Tabs
               className="select-none"
               defaultValue={selectedPlatform}
-              onValueChange={e => setSelectedPlatform(e as Platforms)}
+              onValueChange={(e) => setSelectedPlatform(e as Platforms)}
             >
               <TabsList>
                 {[
@@ -358,7 +358,7 @@ const App = () => {
                   className="select-none"
                   onClick={() =>
                     queryClient.invalidateQueries({
-                      predicate: query => query.queryKey[0] !== "notice",
+                      predicate: (query) => query.queryKey[0] !== "notice",
                     })
                   }
                   disabled={loadingOrRefetching}
@@ -424,7 +424,7 @@ const App = () => {
             <Tabs
               className="select-none"
               value={selectedPanel}
-              onValueChange={v => setSelectedPanel(v as Panels)}
+              onValueChange={(v) => setSelectedPanel(v as Panels)}
             >
               <TabsList>
                 <TabsTrigger
@@ -459,7 +459,7 @@ const App = () => {
                     selectedLeaderboardVersion,
                     selectedPlatform,
                   ) as ColumnDef<unknown>[]
-                ).filter(col =>
+                ).filter((col) =>
                   leaderboards[
                     selectedLeaderboardVersion
                     // @ts-ignore This does exist because I create it

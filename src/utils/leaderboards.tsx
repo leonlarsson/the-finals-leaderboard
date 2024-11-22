@@ -162,7 +162,7 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: false,
     disableStatsPanel: false,
-    fetchData: async platform => {
+    fetchData: async (platform) => {
       const res = await fetch(
         `https://api.the-finals-leaderboard.com/v1/leaderboard/s2/${platform}`,
       );
@@ -181,7 +181,7 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: false,
     disableStatsPanel: false,
-    fetchData: async platform => {
+    fetchData: async (platform) => {
       const res = await fetch(
         `https://api.the-finals-leaderboard.com/v1/leaderboard/s1/${platform}`,
       );
@@ -200,7 +200,7 @@ export const leaderboards = {
     disableLeagueFilter: false,
     disablePlatformSelection: false,
     disableStatsPanel: false,
-    fetchData: async platform => {
+    fetchData: async (platform) => {
       const res = await fetch(
         `https://api.the-finals-leaderboard.com/v1/leaderboard/ob/${platform}`,
       );

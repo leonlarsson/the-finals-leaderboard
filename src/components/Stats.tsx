@@ -43,23 +43,23 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                 Average fans:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {(
-                    users.map(user => user.fans!).reduce((a, b) => a + b, 0) /
+                    users.map((user) => user.fans!).reduce((a, b) => a + b, 0) /
                     users.length
                   ).toLocaleString("en", { maximumFractionDigits: 0 })}
                 </span>
               </span>
 
               <>
-                {sponsors.map(sponsor => (
+                {sponsors.map((sponsor) => (
                   <span key={sponsor}>
                     Average {sponsor} fans:{" "}
                     <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                       {(
                         users
-                          .filter(user => user.sponsor === sponsor)
-                          .map(user => user.fans!)
+                          .filter((user) => user.sponsor === sponsor)
+                          .map((user) => user.fans!)
                           .reduce((a, b) => a + b, 0) /
-                        users.filter(user => user.sponsor === sponsor).length
+                        users.filter((user) => user.sponsor === sponsor).length
                       ).toLocaleString("en", { maximumFractionDigits: 0 })}
                     </span>
                   </span>
@@ -90,13 +90,15 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                       className="my-2"
                       variant="pie"
                       showLabel
-                      data={sponsors.map(sponsor => ({
+                      data={sponsors.map((sponsor) => ({
                         name: sponsor,
-                        value: users.filter(user => user.sponsor === sponsor)
+                        value: users.filter((user) => user.sponsor === sponsor)
                           .length,
                       }))}
                       colors={["#0094df", "#f36b00", "#d31f3c"]}
-                      valueFormatter={v => `${v.toLocaleString("en")} players`}
+                      valueFormatter={(v) =>
+                        `${v.toLocaleString("en")} players`
+                      }
                       showAnimation
                       animationDuration={500}
                     />
@@ -107,15 +109,15 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                   </div>
 
                   <div className="space-y-1">
-                    {sponsors.map(sponsor => (
+                    {sponsors.map((sponsor) => (
                       <div key={sponsor}>
                         <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                           {users
-                            .filter(user => user.sponsor === sponsor)
+                            .filter((user) => user.sponsor === sponsor)
                             .length.toLocaleString("en")}{" "}
                           (
                           {(
-                            users.filter(user => user.sponsor === sponsor)
+                            users.filter((user) => user.sponsor === sponsor)
                               .length / users.length
                           ).toLocaleString("en", {
                             style: "percent",
@@ -142,15 +144,15 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                       className="my-2"
                       variant="pie"
                       showLabel
-                      data={sponsors.map(sponsor => ({
+                      data={sponsors.map((sponsor) => ({
                         name: sponsor,
                         value: users
-                          .filter(user => user.sponsor === sponsor)
-                          .map(user => user.fans!)
+                          .filter((user) => user.sponsor === sponsor)
+                          .map((user) => user.fans!)
                           .reduce((a, b) => a + b, 0),
                       }))}
                       colors={["#0094df", "#f36b00", "#d31f3c"]}
-                      valueFormatter={v =>
+                      valueFormatter={(v) =>
                         `${v.toLocaleString("en")} total fans`
                       }
                       showAnimation
@@ -163,12 +165,12 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                   </div>
 
                   <div className="space-y-1">
-                    {sponsors.map(sponsor => (
+                    {sponsors.map((sponsor) => (
                       <div key={sponsor}>
                         <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                           {users
-                            .filter(user => user.sponsor === sponsor)
-                            .map(user => user.fans!)
+                            .filter((user) => user.sponsor === sponsor)
+                            .map((user) => user.fans!)
                             .reduce((a, b) => a + b, 0)
                             .toLocaleString("en")}
                         </span>{" "}
@@ -214,7 +216,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                 Average XP:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {(
-                    users.map(user => user.xp!).reduce((a, b) => a + b, 0) /
+                    users.map((user) => user.xp!).reduce((a, b) => a + b, 0) /
                     users.length
                   ).toLocaleString("en", { maximumFractionDigits: 0 })}
                 </span>
@@ -226,8 +228,9 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                 Average Level:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {(
-                    users.map(user => user.level!).reduce((a, b) => a + b, 0) /
-                    users.length
+                    users
+                      .map((user) => user.level!)
+                      .reduce((a, b) => a + b, 0) / users.length
                   ).toLocaleString("en", { maximumFractionDigits: 0 })}
                 </span>
               </span>
@@ -239,7 +242,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {(
                     users
-                      .map(user => user.cashouts ?? 0)
+                      .map((user) => user.cashouts ?? 0)
                       .reduce((a, b) => a + b, 0) / users.length
                   ).toLocaleString("en", {
                     style: "currency",
@@ -256,7 +259,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {(
                     users
-                      .map(user => user.fame ?? user.rankScore ?? 0)
+                      .map((user) => user.fame ?? user.rankScore ?? 0)
                       .reduce((a, b) => a + b, 0) / users.length
                   ).toLocaleString("en", { maximumFractionDigits: 0 })}
                 </span>
@@ -278,14 +281,14 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
           {/* LEAGUES BAR CHART */}
           <BarChart
             className="my-2"
-            data={leagues[leaderboardVersion].map(league => ({
-              Players: users.filter(user => league === user.league).length,
+            data={leagues[leaderboardVersion].map((league) => ({
+              Players: users.filter((user) => league === user.league).length,
               name: league,
             }))}
             index="name"
             categories={["Players"]}
             colors={["#d31f3c"]}
-            valueFormatter={v => v.toLocaleString("en")}
+            valueFormatter={(v) => v.toLocaleString("en")}
             showAnimation
             animationDuration={400}
             customTooltip={({ label, payload }) => {

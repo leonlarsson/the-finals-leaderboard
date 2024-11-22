@@ -1,4 +1,5 @@
 {
-  "arrowParens": "avoid",
+  "arrowParens": "always",
+  "trailingComma": "all",
   "plugins": ["prettier-plugin-tailwindcss"]
 }

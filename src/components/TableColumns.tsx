@@ -68,7 +68,7 @@ export const columns = (
 
   // Name
   columnHelper.accessor(
-    user =>
+    (user) =>
       `${user.name} ${user.steamName ?? ""} ${user.xboxName ?? ""} ${
         user.psnName ?? ""
       }`.toLowerCase(),
@@ -145,7 +145,7 @@ export const columns = (
 
   // Fame
   columnHelper.accessor(
-    user => ({
+    (user) => ({
       fame: user.fame,
       rankScore: user.rankScore,
       league: user.league,

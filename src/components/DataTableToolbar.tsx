@@ -78,7 +78,7 @@ export default function <TData>({ leaderboardVersion, table }: Props<TData>) {
         placeholder="Filter usernames..."
         maxLength={20}
         value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-        onChange={event => {
+        onChange={(event) => {
           table.getColumn("name")?.setFilterValue(event.target.value);
           const searchParams = new URLSearchParams(window.location.search);
 
@@ -123,7 +123,7 @@ export default function <TData>({ leaderboardVersion, table }: Props<TData>) {
                         {selectedValues.size} selected
                       </Badge>
                     ) : (
-                      Array.from(selectedValues).map(value => (
+                      Array.from(selectedValues).map((value) => (
                         <Badge
                           key={value}
                           variant="secondary"
@@ -146,7 +146,7 @@ export default function <TData>({ leaderboardVersion, table }: Props<TData>) {
                 <CommandEmpty>No league found.</CommandEmpty>
 
                 <CommandGroup>
-                  {uniqueLeagues.map(league => {
+                  {uniqueLeagues.map((league) => {
                     const isSelected = selectedValues.has(league);
 
                     // TODO: Take current filters into account?

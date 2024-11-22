@@ -202,7 +202,7 @@ const config: Config = {
     },
     // For the Tremor bar chart bar color
     ...["[#d31f3c]", "[#39015c]", "[#0094df]", "[#f36b00]"].flatMap(
-      customColor => [
+      (customColor) => [
         `bg-${customColor}`,
         `border-${customColor}`,
         `hover:bg-${customColor}`,
