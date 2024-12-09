@@ -267,9 +267,13 @@ const App = () => {
             value={selectedLeaderboardVersion}
             onValueChange={(e) => updateSelectedLeaderboard(e as LeaderboardId)}
           >
+          {Object.values(leaderboards).filter((x) => x.group === 0).length > 0 && (
             <TabsList>{renderTabsByGroup(0)}</TabsList>
+          )}
+          {Object.values(leaderboards).filter((x) => x.group === 1).length > 0 && (
             <TabsList>{renderTabsByGroup(1)}</TabsList>
-          </Tabs>
+          )}
+            </Tabs>
 
           <Select
             value={selectedLeaderboardVersion}

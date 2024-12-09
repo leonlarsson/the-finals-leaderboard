@@ -1,7 +1,7 @@
 export const communityEvents = {
   november2024Ce44: {
     name: "Community Event 4.8",
-    active: true,
+    active: false,
     type: "cashoutsStolen",
     initialGoal: 600_000,
     fetchData: async () => {
