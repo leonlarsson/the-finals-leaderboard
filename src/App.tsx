@@ -177,27 +177,36 @@ const App = () => {
     setSelectedLeaderboardVersion(leaderboard);
   };
 
-  const renderTabsByGroup = (group: number) =>
-    Object.values(leaderboards)
-      .filter((x) => x.group === group && x.enabled)
-      .map((leaderboard: Leaderboard) => (
-        <TabsTrigger
-          key={leaderboard.id}
-          value={leaderboard.id}
-          onPointerEnter={() =>
-            prefetchData({
-              leaderboard: leaderboard.id as LeaderboardId,
-            })
-          }
-        >
-          <span className="hidden items-center gap-1 min-[400px]:flex">
-            {leaderboard.tabIcon} {leaderboard.name}
-          </span>
-          <span className="flex items-center gap-1 min-[400px]:hidden">
-            {leaderboard.tabIcon} {leaderboard.nameShort}
-          </span>
-        </TabsTrigger>
-      ));
+  const renderTabsListByGroup = (group: number) => {
+    const leaderboardsByGroup = Object.values(leaderboards).filter(
+      (x) => x.group === group && x.enabled,
+    );
+
+    if (!leaderboardsByGroup.length) return null;
+
+    return (
+      <TabsList>
+        {leaderboardsByGroup.map((leaderboard: Leaderboard) => (
+          <TabsTrigger
+            key={leaderboard.id}
+            value={leaderboard.id}
+            onPointerEnter={() =>
+              prefetchData({
+                leaderboard: leaderboard.id as LeaderboardId,
+              })
+            }
+          >
+            <span className="hidden items-center gap-1 min-[400px]:flex">
+              {leaderboard.tabIcon} {leaderboard.name}
+            </span>
+            <span className="flex items-center gap-1 min-[400px]:hidden">
+              {leaderboard.tabIcon} {leaderboard.nameShort}
+            </span>
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    );
+  };
 
   const loadingOrRefetching = isLoading || isRefetching;
 
@@ -267,13 +276,9 @@ const App = () => {
             value={selectedLeaderboardVersion}
             onValueChange={(e) => updateSelectedLeaderboard(e as LeaderboardId)}
           >
-          {Object.values(leaderboards).filter((x) => x.group === 0).length > 0 && (
-            <TabsList>{renderTabsByGroup(0)}</TabsList>
-          )}
-          {Object.values(leaderboards).filter((x) => x.group === 1).length > 0 && (
-            <TabsList>{renderTabsByGroup(1)}</TabsList>
-          )}
-            </Tabs>
+            {renderTabsListByGroup(0)}
+            {renderTabsListByGroup(1)}
+          </Tabs>
 
           <Select
             value={selectedLeaderboardVersion}
