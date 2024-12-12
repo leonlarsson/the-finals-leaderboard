@@ -151,7 +151,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                           .map((user) => user.fans!)
                           .reduce((a, b) => a + b, 0),
                       }))}
-                      colors={["#d21f3c", "#f81142", "#0094df"]}
+                      colors={["#d21f3c", "#cf2046", "#0094df"]}
                       valueFormatter={(v) =>
                         `${v.toLocaleString("en")} total fans`
                       }
@@ -160,7 +160,7 @@ export default ({ leaderboardVersion, platform, users }: Props) => {
                     />
                     <Legend
                       categories={sponsors}
-                      colors={["#d21f3c", "#f81142", "#0094df"]}
+                      colors={["#d21f3c", "#cf2046", "#0094df"]}
                     />
                   </div>
 
