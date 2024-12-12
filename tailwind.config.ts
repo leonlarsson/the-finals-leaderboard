@@ -201,22 +201,27 @@ const config: Config = {
         /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
     // For the Tremor bar chart bar color
-    ...["[#d31f3c]", "[#39015c]", "[#0094df]", "[#f36b00]"].flatMap(
-      (customColor) => [
-        `bg-${customColor}`,
-        `border-${customColor}`,
-        `hover:bg-${customColor}`,
-        `hover:border-${customColor}`,
-        `hover:text-${customColor}`,
-        `fill-${customColor}`,
-        `ring-${customColor}`,
-        `stroke-${customColor}`,
-        `text-${customColor}`,
-        `ui-selected:bg-${customColor}]`,
-        `ui-selected:border-${customColor}]`,
-        `ui-selected:text-${customColor}`,
-      ],
-    ),
+    ...[
+      "[#d31f3c]", // Brand red
+      "[#39015c]", // Brand purple
+      "[#0094df]", // ISEUL-T blue
+      "[#f36b00]", // HOLTOW orange
+      "[#d21f3c]", // Dissun red
+      "[#cf2046]", // Vaiiya red but darker
+    ].flatMap((customColor) => [
+      `bg-${customColor}`,
+      `border-${customColor}`,
+      `hover:bg-${customColor}`,
+      `hover:border-${customColor}`,
+      `hover:text-${customColor}`,
+      `fill-${customColor}`,
+      `ring-${customColor}`,
+      `stroke-${customColor}`,
+      `text-${customColor}`,
+      `ui-selected:bg-${customColor}]`,
+      `ui-selected:border-${customColor}]`,
+      `ui-selected:text-${customColor}`,
+    ]),
   ],
   // Tremor end
   plugins: [require("tailwindcss-animate")],

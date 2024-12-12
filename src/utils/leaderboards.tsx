@@ -1,8 +1,46 @@
 import type { BaseUser, BaseUserWithExtras } from "@/types";
 
 export const leaderboards = {
-  season4: {
+  season5: {
     group: 1,
+    id: "season5",
+    enabled: true,
+    name: "Season 5",
+    nameShort: "S5",
+    disableLeagueFilter: false,
+    disablePlatformSelection: true,
+    disableStatsPanel: false,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s5/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "change", "name", "fame"],
+  },
+
+  season5Sponsor: {
+    group: 1,
+    id: "season5Sponsor",
+    enabled: true,
+    name: "Season 5 Sponsor",
+    nameShort: "S5S",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: false,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s5sponsor/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "sponsor", "fans"],
+  },
+
+  season4: {
+    group: 2,
     id: "season4",
     enabled: true,
     name: "Season 4",
@@ -21,10 +59,10 @@ export const leaderboards = {
   },
 
   season4WorldTour: {
-    group: 1,
+    group: 2,
     id: "season4WorldTour",
     enabled: true,
-    name: "S4 World Tour",
+    name: "Season 4 World Tour",
     nameShort: "S4WT",
     disableLeagueFilter: true,
     disablePlatformSelection: true,
@@ -40,10 +78,10 @@ export const leaderboards = {
   },
 
   season4Sponsor: {
-    group: 1,
+    group: 2,
     id: "season4Sponsor",
     enabled: true,
-    name: "S4 Sponsor",
+    name: "Season 4 Sponsor",
     nameShort: "S4S",
     disableLeagueFilter: true,
     disablePlatformSelection: true,
@@ -285,9 +323,8 @@ export type Leaderboard = {
 
 export type LeaderboardId = keyof typeof leaderboards;
 
-export const defaultLeaderboardId: LeaderboardId = "season4";
+export const defaultLeaderboardId: LeaderboardId = "season5";
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
-  "season4",
-  "season4WorldTour",
-  "season4Sponsor",
+  "season5",
+  "season5Sponsor",
 ];
