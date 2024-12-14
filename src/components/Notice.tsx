@@ -20,7 +20,7 @@ export const Notice = () => {
     initialData: initialData(),
     queryFn: async () => {
       const res = await fetch(
-        "https://api.the-finals-leaderboard.com/tfl-notice",
+        "https://api.the-finals-leaderboard.com/tfl/notice",
       );
       if (!res.ok) return null;
 
