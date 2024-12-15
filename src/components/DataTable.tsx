@@ -23,6 +23,7 @@ import Loading from "./Loading";
 import DataTableToolbar from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import { useHotkeys } from "react-hotkeys-hook";
 
 interface DataTableProps<TData, TValue> {
   leaderboardVersion: LeaderboardId;
@@ -72,12 +73,22 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const ref = useHotkeys<HTMLTableElement>(["ArrowLeft", "ArrowRight"], (e) => {
+    if (e.key === "ArrowLeft" && table.getCanPreviousPage()) {
+      table.previousPage();
+    }
+
+    if (e.key === "ArrowRight" && table.getCanNextPage()) {
+      table.nextPage();
+    }
+  });
+
   return (
     <div className="space-y-3">
       <DataTableToolbar leaderboardVersion={leaderboardVersion} table={table} />
 
       <div className="rounded-md border">
-        <Table className="min-w-[800px]">
+        <Table className="min-w-[800px] outline-none" tabIndex={-1} ref={ref}>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-inherit">
