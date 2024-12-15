@@ -8,7 +8,6 @@ import {
 } from "./ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import Icons from "./icons";
-import { cn } from "@/lib/utils";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { BaseUser, Platforms, BaseUserWithExtras } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
@@ -39,28 +38,20 @@ export const columns = (
     ),
     cell: ({ getValue }) => {
       const value = getValue();
-      return (
-        <span
-          className={cn(
-            value > 0 ? "text-green-700" : value === 0 ? "" : "text-red-600",
-          )}
-        >
-          {value > 0 ? (
-            <span className="inline-flex items-center">
-              {<ChevronUp className="inline h-6" />}
-              {value.toLocaleString("en")}
-            </span>
-          ) : value < 0 ? (
-            <span className="inline-flex items-center">
-              {<ChevronDown className="inline h-6" />}
-              {Math.abs(value).toLocaleString("en")}
-            </span>
-          ) : (
-            <span className="inline-flex items-center">
-              {<Minus className="inline h-5" />}
-              {value.toLocaleString("en")}
-            </span>
-          )}
+      return value > 0 ? (
+        <span className="inline-flex items-center text-indigo-400 dark:text-indigo-300">
+          {<ChevronUp className="inline h-6" />}
+          {value.toLocaleString("en")}
+        </span>
+      ) : value < 0 ? (
+        <span className="inline-flex items-center text-red-500 dark:text-red-500">
+          {<ChevronDown className="inline h-6" />}
+          {Math.abs(value).toLocaleString("en")}
+        </span>
+      ) : (
+        <span className="inline-flex items-center text-neutral-500 dark:text-neutral-400">
+          {<Minus className="inline h-5" />}
+          {value.toLocaleString("en")}
         </span>
       );
     },
