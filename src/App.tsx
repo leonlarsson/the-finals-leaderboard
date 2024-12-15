@@ -177,7 +177,7 @@ const App = () => {
     setSelectedLeaderboardVersion(leaderboard);
   };
 
-  const renderTabsListByGroup = (group: number) => {
+  const renderTabsListByGroup = (group: Leaderboard["group"]) => {
     const leaderboardsByGroup = Object.values(leaderboards).filter(
       (x) => x.group === group && x.enabled,
     );
@@ -270,51 +270,79 @@ const App = () => {
             </span>
           </div>
 
-          {/* LEADERBOARD VERSION */}
-          <Tabs
-            className="flex select-none flex-wrap gap-2"
-            value={selectedLeaderboardVersion}
-            onValueChange={(e) => updateSelectedLeaderboard(e as LeaderboardId)}
-          >
-            {renderTabsListByGroup(0)}
-            {renderTabsListByGroup(1)}
-          </Tabs>
+          {/* Leaderboards in groups tabGroup1, tabGroup2 */}
+          {Object.values(leaderboards).filter(
+            (x) =>
+              // @ts-ignore This may not exist at the moment, but it can
+              x.enabled && (x.group === "tabGroup1" || x.group === "tabGroup2"),
+          ).length > 0 && (
+            <Tabs
+              className="flex select-none flex-wrap gap-2"
+              value={selectedLeaderboardVersion}
+              onValueChange={(e) =>
+                updateSelectedLeaderboard(e as LeaderboardId)
+              }
+            >
+              {renderTabsListByGroup("tabGroup1")}
+              {renderTabsListByGroup("tabGroup2")}
+            </Tabs>
+          )}
 
-          <Select
-            value={selectedLeaderboardVersion}
-            onValueChange={(e) => updateSelectedLeaderboard(e as LeaderboardId)}
-          >
-            <SelectTrigger className="w-max">
-              {[0, 1].includes(
-                leaderboards[selectedLeaderboardVersion].group,
-              ) ? (
-                "Older leaderboards"
-              ) : (
-                <SelectValue />
-              )}
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {Object.values(leaderboards)
-                  .filter((x) => x.group === 2)
-                  .filter((x) => x.enabled)
-                  .map((leaderboard) => (
-                    <SelectItem
-                      key={leaderboard.id}
-                      value={leaderboard.id}
-                      disabled={!leaderboard.enabled}
-                      onPointerEnter={() =>
-                        prefetchData({
-                          leaderboard: leaderboard.id as LeaderboardId,
-                        })
-                      }
-                    >
-                      {leaderboard.name}
-                    </SelectItem>
-                  ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          {/* Leaderboards in groups select1, select2 */}
+          {(["select1", "select2"] as const).map((group) => {
+            if (
+              Object.values(leaderboards).filter(
+                (x) => x.group === group && x.enabled,
+              ).length === 0
+            ) {
+              return null;
+            }
+
+            return (
+              <Select
+                key={group}
+                value={selectedLeaderboardVersion}
+                onValueChange={(e) =>
+                  updateSelectedLeaderboard(e as LeaderboardId)
+                }
+              >
+                <SelectTrigger className="w-max select-none">
+                  {leaderboards[selectedLeaderboardVersion].group !== group ? (
+                    group === "select1" ? (
+                      "Season 5 Leaderboards"
+                    ) : (
+                      "Older Leaderboards"
+                    )
+                  ) : (
+                    <span className="font-medium">
+                      <SelectValue />
+                    </span>
+                  )}
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {Object.values(leaderboards)
+                      .filter((x) => x.group === group)
+                      .filter((x) => x.enabled)
+                      .map((leaderboard) => (
+                        <SelectItem
+                          key={leaderboard.id}
+                          value={leaderboard.id}
+                          disabled={!leaderboard.enabled}
+                          onPointerEnter={() =>
+                            prefetchData({
+                              leaderboard: leaderboard.id as LeaderboardId,
+                            })
+                          }
+                        >
+                          {leaderboard.name}
+                        </SelectItem>
+                      ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            );
+          })}
 
           {/* LEADERBOARD PLATFORM */}
           {!leaderboards[selectedLeaderboardVersion]

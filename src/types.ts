@@ -14,6 +14,7 @@ export type BaseUser = {
   rankScore?: number;
   sponsor?: string;
   fans?: number;
+  points?: number;
 };
 
 /** A type with the base values plus any additional extras (special events, modes) */

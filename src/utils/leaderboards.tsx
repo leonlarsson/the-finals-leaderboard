@@ -2,7 +2,7 @@ import type { BaseUser, BaseUserWithExtras } from "@/types";
 
 export const leaderboards = {
   season5: {
-    group: 1,
+    group: "select1",
     id: "season5",
     enabled: true,
     name: "Season 5",
@@ -21,7 +21,7 @@ export const leaderboards = {
   },
 
   season5Sponsor: {
-    group: 1,
+    group: "select1",
     id: "season5Sponsor",
     enabled: true,
     name: "Season 5 Sponsor",
@@ -39,8 +39,103 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "sponsor", "fans"],
   },
 
+  season5WorldTour: {
+    group: "select1",
+    id: "season5WorldTour",
+    enabled: true,
+    name: "Season 5 World Tour",
+    nameShort: "S5WT",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s5worldtour/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "cashouts"],
+  },
+
+  season5TerminalAttack: {
+    group: "select1",
+    id: "season5TerminalAttack",
+    enabled: true,
+    name: "Season 5 Terminal Attack",
+    nameShort: "S5TA",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s5terminalattack/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season5PowerShift: {
+    group: "select1",
+    id: "season5PowerShift",
+    enabled: true,
+    name: "Season 5 PowerShift",
+    nameShort: "S5PS",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s5powershift/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season5QuickCash: {
+    group: "select1",
+    id: "season5QuickCash",
+    enabled: true,
+    name: "Season 5 Quick Cash",
+    nameShort: "S5QC",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s5quickcash/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season5BankIt: {
+    group: "select1",
+    id: "season5BankIt",
+    enabled: true,
+    name: "Season 5 Bank it",
+    nameShort: "S5BI",
+    disableLeagueFilter: true,
+    disablePlatformSelection: true,
+    disableStatsPanel: true,
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s5bankit/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   season4: {
-    group: 2,
+    group: "select2",
     id: "season4",
     enabled: true,
     name: "Season 4",
@@ -59,7 +154,7 @@ export const leaderboards = {
   },
 
   season4WorldTour: {
-    group: 2,
+    group: "select2",
     id: "season4WorldTour",
     enabled: true,
     name: "Season 4 World Tour",
@@ -78,7 +173,7 @@ export const leaderboards = {
   },
 
   season4Sponsor: {
-    group: 2,
+    group: "select2",
     id: "season4Sponsor",
     enabled: true,
     name: "Season 4 Sponsor",
@@ -97,7 +192,7 @@ export const leaderboards = {
   },
 
   season3: {
-    group: 2,
+    group: "select2",
     id: "season3",
     enabled: true,
     name: "Season 3",
@@ -116,7 +211,7 @@ export const leaderboards = {
   },
 
   season3Original: {
-    group: 2,
+    group: "select2",
     id: "season3Original",
     enabled: true,
     name: "Season 3 - Original",
@@ -135,7 +230,7 @@ export const leaderboards = {
   },
 
   season3WorldTour: {
-    group: 2,
+    group: "select2",
     id: "season3WorldTour",
     enabled: true,
     name: "Season 3 World Tour",
@@ -154,7 +249,7 @@ export const leaderboards = {
   },
 
   season3TheFinals: {
-    group: 2,
+    group: "select2",
     id: "season3TheFinals",
     enabled: true,
     name: "Season 3 The Finals",
@@ -173,7 +268,7 @@ export const leaderboards = {
   },
 
   season2: {
-    group: 2,
+    group: "select2",
     id: "season2",
     enabled: true,
     name: "Season 2",
@@ -192,7 +287,7 @@ export const leaderboards = {
   },
 
   season1: {
-    group: 2,
+    group: "select2",
     id: "season1",
     enabled: true,
     name: "Season 1",
@@ -211,7 +306,7 @@ export const leaderboards = {
   },
 
   openBeta: {
-    group: 2,
+    group: "select2",
     id: "openBeta",
     enabled: true,
     name: "Open Beta",
@@ -230,7 +325,7 @@ export const leaderboards = {
   },
 
   closedBeta2: {
-    group: 2,
+    group: "select2",
     enabled: true,
     id: "closedBeta2",
     name: "Closed Beta 2",
@@ -249,7 +344,7 @@ export const leaderboards = {
   },
 
   closedBeta1: {
-    group: 2,
+    group: "select2",
     enabled: true,
     id: "closedBeta1",
     name: "Closed Beta 1",
@@ -268,7 +363,7 @@ export const leaderboards = {
   },
 
   ce48: {
-    group: 2,
+    group: "select2",
     id: "ce48",
     enabled: true,
     name: "Community Event 4.8",
@@ -287,7 +382,7 @@ export const leaderboards = {
   },
 
   ce44: {
-    group: 2,
+    group: "select2",
     id: "ce44",
     enabled: true,
     name: "Community Event 4.4",
@@ -307,7 +402,7 @@ export const leaderboards = {
 } satisfies Record<string, Leaderboard>;
 
 export type Leaderboard = {
-  group: number;
+  group: "tabGroup1" | "tabGroup2" | "select1" | "select2";
   id: string;
   enabled: boolean;
   name: string;
@@ -327,4 +422,9 @@ export const defaultLeaderboardId: LeaderboardId = "season5";
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season5",
   "season5Sponsor",
+  "season5WorldTour",
+  "season5TerminalAttack",
+  "season5PowerShift",
+  "season5QuickCash",
+  "season5BankIt",
 ];

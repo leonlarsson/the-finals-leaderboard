@@ -261,7 +261,16 @@ export const columns = (
     cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
   }),
 
-  // Score
+  // Points
+  columnHelper.accessor("points", {
+    id: "points" as const,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Points" />
+    ),
+    cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  }),
+
+  // Damage Done
   columnHelper.accessor("damageDone", {
     id: "damageDone" as const,
     header: ({ column }) => (
