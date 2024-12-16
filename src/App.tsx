@@ -6,7 +6,7 @@ import {
   BarChartIcon,
   Loader2Icon,
   RefreshCwIcon,
-  TableIcon,
+  TrophyIcon,
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Notice } from "./components/Notice";
@@ -81,13 +81,13 @@ const App = () => {
   // - The query param is set
   // - The query param is a valid panel
   // - The Stats panel is not disabled
-  // Otherwise, use the default panel (Table)
+  // Otherwise, use the default panel (Leaderboard)
   const initialPanel =
     panelSearchParam &&
     Object.values(Panels).includes(panelSearchParam as Panels) &&
     !leaderboards[selectedLeaderboardVersion].disableStatsPanel
       ? panelSearchParam
-      : Panels.Table;
+      : Panels.Leaderboard;
 
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(
     initialPlatform as Platforms,
@@ -155,7 +155,7 @@ const App = () => {
       ? searchParams.delete("platform")
       : searchParams.set("platform", selectedPlatform);
 
-    selectedPanel === Panels.Table
+    selectedPanel === Panels.Leaderboard
       ? searchParams.delete("panel")
       : searchParams.set("panel", selectedPanel);
 
@@ -167,12 +167,12 @@ const App = () => {
   }, [selectedLeaderboardVersion, selectedPlatform, selectedPanel]);
 
   const updateSelectedLeaderboard = (leaderboard: LeaderboardId) => {
-    // Switch to Table panel if the Stats panel is disabled
+    // Switch to Leaderboard panel if the Stats panel is disabled for selected leaderboard
     if (
       leaderboards[leaderboard as LeaderboardId].disableStatsPanel &&
       selectedPanel === Panels.Stats
     ) {
-      setSelectedPanel(Panels.Table);
+      setSelectedPanel(Panels.Leaderboard);
     }
     setSelectedLeaderboardVersion(leaderboard);
   };
@@ -465,11 +465,11 @@ const App = () => {
             >
               <TabsList>
                 <TabsTrigger
-                  value={Panels.Table}
+                  value={Panels.Leaderboard}
                   disabled={loadingOrRefetching}
                 >
-                  <TableIcon className="mr-2 inline size-5" />
-                  Table
+                  <TrophyIcon className="mr-2 inline size-5" />
+                  Leaderboard
                 </TabsTrigger>
 
                 <TabsTrigger
@@ -485,7 +485,7 @@ const App = () => {
               </TabsList>
             </Tabs>
 
-            {selectedPanel === Panels.Table && (
+            {selectedPanel === Panels.Leaderboard && (
               <DataTable
                 key={selectedLeaderboardVersion}
                 leaderboardVersion={selectedLeaderboardVersion}

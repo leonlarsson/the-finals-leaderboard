@@ -37,6 +37,6 @@ export enum Platforms {
 }
 
 export enum Panels {
-  Table = "table",
+  Leaderboard = "leaderboard",
   Stats = "stats",
 }
