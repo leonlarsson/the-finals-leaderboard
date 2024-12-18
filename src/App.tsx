@@ -84,7 +84,10 @@ const App = () => {
     clubs: "clubsPanel",
   };
 
-  function isValidPanel(panel: string, leaderboardVersion: string): boolean {
+  function isValidPanel(
+    panel: string,
+    leaderboardVersion: LeaderboardId,
+  ): boolean {
     const feature = panelToFeatureMap[panel];
     return (
       feature !== undefined &&
