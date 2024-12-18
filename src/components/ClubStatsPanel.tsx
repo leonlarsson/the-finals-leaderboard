@@ -3,6 +3,8 @@ import { Platforms, BaseUser } from "@/types";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import Loading from "./Loading";
+import { useMemo, useState } from "react";
+import { Checkbox } from "./ui/checkbox";
 
 type Props = {
   leaderboardVersion: LeaderboardId;
@@ -15,6 +17,7 @@ export const ClubStatsPanel = ({
   platform,
   users,
 }: Props) => {
+  const [topXToDisplay, setTopXToDisplay] = useState(30);
   const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);
 
@@ -25,18 +28,20 @@ export const ClubStatsPanel = ({
     (user) => !user.clubTag,
   ).length;
 
-  const topClubsByRankScoreOrPointsOrFansOrCashouts = Object.entries(
-    users.reduce(
-      (acc, user) => {
-        if (!user.clubTag) return acc;
-        if (!acc[user.clubTag]) acc[user.clubTag] = 0;
-        acc[user.clubTag] +=
-          user.rankScore ?? user.points ?? user.fans ?? user.cashouts ?? 0;
-        return acc;
-      },
-      {} as { [clubTag: string]: number },
-    ),
-  ).sort((a, b) => b[1] - a[1]);
+  const topClubsByRankScoreOrPointsOrFansOrCashouts = useMemo(() => {
+    return Object.entries(
+      users.reduce(
+        (acc, user) => {
+          if (!user.clubTag) return acc;
+          if (!acc[user.clubTag]) acc[user.clubTag] = 0;
+          acc[user.clubTag] +=
+            user.rankScore ?? user.points ?? user.fans ?? user.cashouts ?? 0;
+          return acc;
+        },
+        {} as { [clubTag: string]: number },
+      ),
+    ).sort((a, b) => b[1] - a[1]);
+  }, [users]);
 
   const averageClubRankScoreOrPointsOrFansOrCashouts =
     topClubsByRankScoreOrPointsOrFansOrCashouts.reduce(
@@ -111,7 +116,7 @@ export const ClubStatsPanel = ({
           <div>
             <div>
               <span className="text-lg font-medium">
-                Top 30 clubs by {barChartBasedOn}
+                Top {topXToDisplay} clubs by {barChartBasedOn}
               </span>
               <br />
               <span>
@@ -119,10 +124,19 @@ export const ClubStatsPanel = ({
               </span>
             </div>
 
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="topXToDisplay"
+                checked={topXToDisplay === 300}
+                onCheckedChange={(e) => setTopXToDisplay(e ? 300 : 30)}
+              />
+              <label htmlFor="topXToDisplay">Show top 300 (can be slow)</label>
+            </div>
+
             <BarChart
               className="my-2"
               data={topClubsByRankScoreOrPointsOrFansOrCashouts
-                .slice(0, 30)
+                .slice(0, topXToDisplay)
                 .toReversed()
                 .map(([clubTag, int]) => ({
                   name: clubTag,
