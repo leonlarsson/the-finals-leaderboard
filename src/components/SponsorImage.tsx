@@ -22,8 +22,8 @@ const styles = {
         padding: "p-0",
       },
       dark: {
-        backgroundColor: "dark:bg-inherit",
-        padding: "dark:p-0",
+        backgroundColor: "bg-inherit",
+        padding: "p-0",
       },
     },
     icon: {
@@ -32,8 +32,8 @@ const styles = {
         padding: "p-0",
       },
       dark: {
-        backgroundColor: "dark:bg-inherit",
-        padding: "dark:p-0",
+        backgroundColor: "bg-inherit",
+        padding: "p-0",
       },
     },
   },
@@ -44,8 +44,8 @@ const styles = {
         padding: "p-0",
       },
       dark: {
-        backgroundColor: "dark:bg-inherit",
-        padding: "dark:p-0",
+        backgroundColor: "bg-inherit",
+        padding: "p-0",
       },
     },
     icon: {
@@ -54,8 +54,8 @@ const styles = {
         padding: "p-0",
       },
       dark: {
-        backgroundColor: "dark:bg-inherit",
-        padding: "dark:p-0",
+        backgroundColor: "bg-inherit",
+        padding: "p-0",
       },
     },
   },
@@ -66,8 +66,8 @@ const styles = {
         padding: "p-1",
       },
       dark: {
-        backgroundColor: "dark:bg-inherit",
-        padding: "dark:p-0",
+        backgroundColor: "bg-inherit",
+        padding: "p-0",
       },
     },
     icon: {
@@ -76,8 +76,8 @@ const styles = {
         padding: "p-0",
       },
       dark: {
-        backgroundColor: "dark:bg-inherit",
-        padding: "dark:p-0",
+        backgroundColor: "bg-inherit",
+        padding: "p-0",
       },
     },
   },
@@ -88,8 +88,8 @@ const styles = {
         padding: "p-1",
       },
       dark: {
-        backgroundColor: "dark:bg-inherit",
-        padding: "dark:p-0",
+        backgroundColor: "bg-inherit",
+        padding: "p-0",
       },
     },
     icon: {
@@ -98,8 +98,8 @@ const styles = {
         padding: "p-0",
       },
       dark: {
-        backgroundColor: "dark:bg-inherit",
-        padding: "dark:p-0",
+        backgroundColor: "bg-inherit",
+        padding: "p-0",
       },
     },
   },
@@ -110,8 +110,8 @@ const styles = {
         padding: "p-1",
       },
       dark: {
-        backgroundColor: "dark:bg-inherit",
-        padding: "dark:p-0",
+        backgroundColor: "bg-inherit",
+        padding: "p-0",
       },
     },
     icon: {
@@ -120,8 +120,8 @@ const styles = {
         padding: "p-0",
       },
       dark: {
-        backgroundColor: "dark:bg-white",
-        padding: "dark:p-0",
+        backgroundColor: "bg-white",
+        padding: "p-0",
       },
     },
   },
@@ -144,9 +144,9 @@ export default ({
       className={cn(
         "inline",
         style.light.backgroundColor,
-        style.dark.backgroundColor,
+        `dark:${style.dark.backgroundColor}`,
         style.light.padding,
-        style.dark.padding,
+        `dark:${style.dark.padding}`,
       )}
       draggable={false}
       title={`${sponsor} sponsor`}
