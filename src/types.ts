@@ -7,6 +7,7 @@ export type BaseUser = {
   steamName: string;
   xboxName: string;
   psnName: string;
+  clubTag?: string;
   xp?: number;
   level?: number;
   cashouts?: number;

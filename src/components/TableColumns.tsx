@@ -60,7 +60,7 @@ export const columns = (
   // Name
   columnHelper.accessor(
     (user) =>
-      `${user.name} ${user.steamName ?? ""} ${user.xboxName ?? ""} ${
+      `${user.clubTag ?? ""} ${user.name} ${user.steamName ?? ""} ${user.xboxName ?? ""} ${
         user.psnName ?? ""
       }`.toLowerCase(),
     {
@@ -293,6 +293,11 @@ const platformNamesInline = (user: BaseUser) => {
   return (
     <div className="flex flex-col gap-1">
       <div>
+        {user.clubTag && (
+          <span className="mr-1 rounded bg-neutral-200 px-1 dark:bg-neutral-800">
+            {user.clubTag}
+          </span>
+        )}
         <span className="font-medium">{user.name.split("#")[0]}</span>
         <span className="text-neutral-500">#{user.name.split("#")[1]}</span>
       </div>
@@ -325,6 +330,15 @@ const namePopoverContent = (user: BaseUser) => {
   if (!user.steamName && !user.xboxName && !user.psnName) return;
   return (
     <div className="flex flex-col gap-2">
+      {user.clubTag && (
+        <span>
+          Club tag:{" "}
+          <span className="mr-1 rounded bg-neutral-200 px-1 dark:bg-neutral-800">
+            {user.clubTag}
+          </span>
+        </span>
+      )}
+
       <span className="inline-flex gap-1">
         <img
           src="/images/misc/Embark.png"
