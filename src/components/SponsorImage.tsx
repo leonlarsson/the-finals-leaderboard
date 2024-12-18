@@ -62,12 +62,12 @@ const styles = {
   engimo: {
     regular: {
       light: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
+        backgroundColor: "bg-brand-red",
+        padding: "p-1",
       },
       dark: {
-        backgroundColor: "dark:bg-brand-red",
-        padding: "dark:p-1",
+        backgroundColor: "dark:bg-inherit",
+        padding: "dark:p-0",
       },
     },
     icon: {
