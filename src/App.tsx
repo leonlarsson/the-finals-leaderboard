@@ -80,12 +80,12 @@ const App = () => {
   // Set the initial panel to the query param if:
   // - The query param is set
   // - The query param is a valid panel
-  // - The Stats panel is not disabled
+  // - The Stats panel is enabled for the selected leaderboard
   // Otherwise, use the default panel (Leaderboard)
   const initialPanel =
     panelSearchParam &&
     Object.values(Panels).includes(panelSearchParam as Panels) &&
-    !leaderboards[selectedLeaderboardVersion].disableStatsPanel
+    leaderboards[selectedLeaderboardVersion].features.includes("statsPanel")
       ? panelSearchParam
       : Panels.Leaderboard;
 
@@ -167,9 +167,9 @@ const App = () => {
   }, [selectedLeaderboardVersion, selectedPlatform, selectedPanel]);
 
   const updateSelectedLeaderboard = (leaderboard: LeaderboardId) => {
-    // Switch to Leaderboard panel if the Stats panel is disabled for selected leaderboard
+    // Switch to Leaderboard panel if the Stats panel is not enabled for the selected leaderboard
     if (
-      leaderboards[leaderboard as LeaderboardId].disableStatsPanel &&
+      !leaderboards[leaderboard].features.includes("statsPanel") &&
       selectedPanel === Panels.Stats
     ) {
       setSelectedPanel(Panels.Leaderboard);
@@ -345,8 +345,9 @@ const App = () => {
           })}
 
           {/* LEADERBOARD PLATFORM */}
-          {!leaderboards[selectedLeaderboardVersion]
-            .disablePlatformSelection && (
+          {leaderboards[selectedLeaderboardVersion].features.includes(
+            "platformSelection",
+          ) && (
             <Tabs
               className="select-none"
               defaultValue={selectedPlatform}
@@ -476,7 +477,9 @@ const App = () => {
                   value={Panels.Stats}
                   disabled={
                     loadingOrRefetching ||
-                    leaderboards[selectedLeaderboardVersion].disableStatsPanel
+                    !leaderboards[selectedLeaderboardVersion].features.includes(
+                      "statsPanel",
+                    )
                   }
                 >
                   <BarChartIcon className="mr-2 inline size-5" />

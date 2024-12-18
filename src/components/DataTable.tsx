@@ -52,7 +52,7 @@ export function DataTable<TData, TValue>({
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: "name", value: search ?? "" },
-    ...(!leaderboards[leaderboardVersion].disableLeagueFilter
+    ...(leaderboards[leaderboardVersion].features.includes("leagueFilter")
       ? [{ id: "fame", value: leagues?.split(",") ?? [] }]
       : []),
   ]);

@@ -41,3 +41,8 @@ export enum Panels {
   Leaderboard = "leaderboard",
   Stats = "stats",
 }
+
+export type LeaderboardFeature =
+  | "platformSelection"
+  | "statsPanel"
+  | "leagueFilter";

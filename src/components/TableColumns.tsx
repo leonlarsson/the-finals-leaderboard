@@ -82,8 +82,10 @@ export const columns = (
           </TooltipProvider>
         ) : (
           <span className="inline-flex gap-1">
-            {/* If platform selection is not disabled, add the selected platform icon before the name */}
-            {!leaderboards[leaderboardId].disablePlatformSelection && (
+            {/* If platform selection is enabled, add the selected platform icon before the name */}
+            {leaderboards[leaderboardId].features.includes(
+              "platformSelection",
+            ) && (
               <>
                 {selectedPlatform === "steam" && (
                   <Icons.steam className="inline size-5 opacity-60" />

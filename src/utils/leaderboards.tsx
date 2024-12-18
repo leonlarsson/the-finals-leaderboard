@@ -1,4 +1,4 @@
-import type { BaseUser, BaseUserWithExtras } from "@/types";
+import type { BaseUser, BaseUserWithExtras, LeaderboardFeature } from "@/types";
 
 export const leaderboards = {
   season5: {
@@ -7,9 +7,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5",
     nameShort: "S5",
-    disableLeagueFilter: false,
-    disablePlatformSelection: true,
-    disableStatsPanel: false,
+    features: ["statsPanel", "leagueFilter"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5/crossplay",
@@ -26,9 +24,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 Sponsor",
     nameShort: "S5S",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: false,
+    features: ["statsPanel"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5sponsor/crossplay",
@@ -45,9 +41,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 World Tour",
     nameShort: "S5WT",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5worldtour/crossplay",
@@ -64,9 +58,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 Terminal Attack",
     nameShort: "S5TA",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5terminalattack/crossplay",
@@ -83,9 +75,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 PowerShift",
     nameShort: "S5PS",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5powershift/crossplay",
@@ -102,9 +92,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 Quick Cash",
     nameShort: "S5QC",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5quickcash/crossplay",
@@ -121,9 +109,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 Bank it",
     nameShort: "S5BI",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5bankit/crossplay",
@@ -140,9 +126,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 4",
     nameShort: "S4",
-    disableLeagueFilter: false,
-    disablePlatformSelection: true,
-    disableStatsPanel: false,
+    features: ["statsPanel", "leagueFilter"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s4/crossplay",
@@ -159,9 +143,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 4 World Tour",
     nameShort: "S4WT",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s4worldtour/crossplay",
@@ -178,9 +160,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 4 Sponsor",
     nameShort: "S4S",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: false,
+    features: ["statsPanel"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s4sponsor/crossplay",
@@ -197,9 +177,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 3",
     nameShort: "S3",
-    disableLeagueFilter: false,
-    disablePlatformSelection: true,
-    disableStatsPanel: false,
+    features: ["statsPanel", "leagueFilter"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s3/crossplay",
@@ -216,9 +194,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 3 - Original",
     nameShort: "S3OR",
-    disableLeagueFilter: false,
-    disablePlatformSelection: true,
-    disableStatsPanel: false,
+    features: ["statsPanel", "leagueFilter"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s3original/crossplay",
@@ -235,9 +211,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 3 World Tour",
     nameShort: "S3WT",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s3worldtour/crossplay",
@@ -254,9 +228,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 3 The Finals",
     nameShort: "S3TF",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/the-finals/crossplay",
@@ -273,9 +245,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 2",
     nameShort: "S2",
-    disableLeagueFilter: false,
-    disablePlatformSelection: false,
-    disableStatsPanel: false,
+    features: ["platformSelection", "statsPanel", "leagueFilter"],
     fetchData: async (platform) => {
       const res = await fetch(
         `https://api.the-finals-leaderboard.com/v1/leaderboard/s2/${platform}`,
@@ -292,9 +262,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 1",
     nameShort: "S1",
-    disableLeagueFilter: false,
-    disablePlatformSelection: false,
-    disableStatsPanel: false,
+    features: ["platformSelection", "statsPanel", "leagueFilter"],
     fetchData: async (platform) => {
       const res = await fetch(
         `https://api.the-finals-leaderboard.com/v1/leaderboard/s1/${platform}`,
@@ -311,9 +279,7 @@ export const leaderboards = {
     enabled: true,
     name: "Open Beta",
     nameShort: "OB",
-    disableLeagueFilter: false,
-    disablePlatformSelection: false,
-    disableStatsPanel: false,
+    features: ["platformSelection", "statsPanel", "leagueFilter"],
     fetchData: async (platform) => {
       const res = await fetch(
         `https://api.the-finals-leaderboard.com/v1/leaderboard/ob/${platform}`,
@@ -330,9 +296,7 @@ export const leaderboards = {
     id: "closedBeta2",
     name: "Closed Beta 2",
     nameShort: "CB2",
-    disableLeagueFilter: false,
-    disablePlatformSelection: true,
-    disableStatsPanel: false,
+    features: ["statsPanel", "leagueFilter"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/cb2",
@@ -349,9 +313,7 @@ export const leaderboards = {
     id: "closedBeta1",
     name: "Closed Beta 1",
     nameShort: "CB1",
-    disableLeagueFilter: false,
-    disablePlatformSelection: true,
-    disableStatsPanel: false,
+    features: ["statsPanel", "leagueFilter"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/cb1",
@@ -368,9 +330,7 @@ export const leaderboards = {
     enabled: true,
     name: "Community Event 4.8",
     nameShort: "CE48",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/community-event/ce48",
@@ -387,9 +347,7 @@ export const leaderboards = {
     enabled: true,
     name: "Community Event 4.4",
     nameShort: "CE44",
-    disableLeagueFilter: true,
-    disablePlatformSelection: true,
-    disableStatsPanel: true,
+    features: [],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/community-event/ce44",
@@ -399,7 +357,7 @@ export const leaderboards = {
     },
     tableColumns: ["rank", "name", "score"],
   },
-} satisfies Record<string, Leaderboard>;
+} satisfies Record<string, Leaderboard> as Record<string, Leaderboard>;
 
 export type Leaderboard = {
   group: "tabGroup1" | "tabGroup2" | "select1" | "select2";
@@ -409,9 +367,7 @@ export type Leaderboard = {
   nameShort: string;
   tabIcon?: JSX.Element;
   tableColumns: (keyof BaseUserWithExtras)[];
-  disablePlatformSelection: boolean;
-  disableStatsPanel: boolean;
-  disableLeagueFilter: boolean;
+  features: LeaderboardFeature[];
   fetchData: (platform: string) => Promise<any>;
   transformData?: (data: any[]) => any[];
 };

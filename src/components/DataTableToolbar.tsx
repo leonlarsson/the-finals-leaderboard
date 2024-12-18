@@ -30,9 +30,11 @@ export default function <TData>({ leaderboardVersion, table }: Props<TData>) {
   const leaderboardParam = new URLSearchParams(window.location.search).get(
     "leaderboard",
   );
-  const fameColumn = leaderboards[leaderboardVersion].disableLeagueFilter
-    ? null
-    : table.getColumn("fame");
+  const fameColumn = leaderboards[leaderboardVersion].features.includes(
+    "leagueFilter",
+  )
+    ? table.getColumn("fame")
+    : null;
   const uniqueLeagues = [
     ...new Set(
       Array.from(fameColumn?.getFacetedUniqueValues()?.keys() ?? []).map(
@@ -93,7 +95,7 @@ export default function <TData>({ leaderboardVersion, table }: Props<TData>) {
         }}
       />
 
-      {!leaderboards[leaderboardVersion].disableLeagueFilter && (
+      {leaderboards[leaderboardVersion].features.includes("leagueFilter") && (
         <Popover>
           <PopoverTrigger asChild>
             <Button
