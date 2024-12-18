@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   BarChartIcon,
+  HomeIcon,
   Loader2Icon,
   RefreshCwIcon,
   TrophyIcon,
@@ -25,7 +26,7 @@ import ThemeToggle from "./components/ThemeToggle";
 import Icons from "./components/icons";
 import Link from "./components/Link";
 import { cn } from "./lib/utils";
-import { Panels, Platforms } from "./types";
+import { LeaderboardFeature, Panels, Platforms } from "./types";
 import { fetchData } from "./utils/fetchData";
 import { communityEvents } from "./utils/communityEvents";
 import {
@@ -43,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./components/ui/select";
+import { ClubStatsPanel } from "./components/ClubStatsPanel";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -77,15 +79,27 @@ const App = () => {
   const [selectedLeaderboardVersion, setSelectedLeaderboardVersion] =
     useState<LeaderboardId>(initialLeaderboardVersion as LeaderboardId);
 
+  const panelToFeatureMap: Record<string, LeaderboardFeature> = {
+    stats: "statsPanel",
+    clubs: "clubsPanel",
+  };
+
+  function isValidPanel(panel: string, leaderboardVersion: string): boolean {
+    const feature = panelToFeatureMap[panel];
+    return (
+      feature !== undefined &&
+      leaderboards[leaderboardVersion].features.includes(feature)
+    );
+  }
+
   // Set the initial panel to the query param if:
   // - The query param is set
   // - The query param is a valid panel
-  // - The Stats panel is enabled for the selected leaderboard
+  // - The panel is available for the selected leaderboard version
   // Otherwise, use the default panel (Leaderboard)
   const initialPanel =
     panelSearchParam &&
-    Object.values(Panels).includes(panelSearchParam as Panels) &&
-    leaderboards[selectedLeaderboardVersion].features.includes("statsPanel")
+    isValidPanel(panelSearchParam, selectedLeaderboardVersion)
       ? panelSearchParam
       : Panels.Leaderboard;
 
@@ -167,10 +181,12 @@ const App = () => {
   }, [selectedLeaderboardVersion, selectedPlatform, selectedPanel]);
 
   const updateSelectedLeaderboard = (leaderboard: LeaderboardId) => {
-    // Switch to Leaderboard panel if the Stats panel is not enabled for the selected leaderboard
+    // Switch to Leaderboard panel if the currently selected panel is not available for the new leaderboard
     if (
-      !leaderboards[leaderboard].features.includes("statsPanel") &&
-      selectedPanel === Panels.Stats
+      (!leaderboards[leaderboard].features.includes("statsPanel") &&
+        selectedPanel === Panels.Stats) ||
+      (!leaderboards[leaderboard].features.includes("clubsPanel") &&
+        selectedPanel === Panels.Clubs)
     ) {
       setSelectedPanel(Panels.Leaderboard);
     }
@@ -485,6 +501,18 @@ const App = () => {
                   <BarChartIcon className="mr-2 inline size-5" />
                   Stats
                 </TabsTrigger>
+                <TabsTrigger
+                  value={Panels.Clubs}
+                  disabled={
+                    loadingOrRefetching ||
+                    !leaderboards[selectedLeaderboardVersion].features.includes(
+                      "clubsPanel",
+                    )
+                  }
+                >
+                  <HomeIcon className="mr-2 inline size-5" />
+                  Clubs
+                </TabsTrigger>
               </TabsList>
             </Tabs>
 
@@ -511,6 +539,14 @@ const App = () => {
 
             {selectedPanel === Panels.Stats && (
               <Stats
+                leaderboardVersion={selectedLeaderboardVersion}
+                platform={selectedPlatform}
+                users={data ?? []}
+              />
+            )}
+
+            {selectedPanel === Panels.Clubs && (
+              <ClubStatsPanel
                 leaderboardVersion={selectedLeaderboardVersion}
                 platform={selectedPlatform}
                 users={data ?? []}

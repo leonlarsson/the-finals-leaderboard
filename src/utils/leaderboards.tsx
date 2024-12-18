@@ -7,7 +7,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5",
     nameShort: "S5",
-    features: ["statsPanel", "leagueFilter"],
+    features: ["statsPanel", "clubsPanel", "leagueFilter"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5/crossplay",
@@ -24,7 +24,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 Sponsor",
     nameShort: "S5S",
-    features: ["statsPanel"],
+    features: ["statsPanel", "clubsPanel"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5sponsor/crossplay",
@@ -41,7 +41,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 World Tour",
     nameShort: "S5WT",
-    features: [],
+    features: ["clubsPanel"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5worldtour/crossplay",
@@ -58,7 +58,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 Terminal Attack",
     nameShort: "S5TA",
-    features: [],
+    features: ["clubsPanel"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5terminalattack/crossplay",
@@ -75,7 +75,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 PowerShift",
     nameShort: "S5PS",
-    features: [],
+    features: ["clubsPanel"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5powershift/crossplay",
@@ -92,7 +92,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 Quick Cash",
     nameShort: "S5QC",
-    features: [],
+    features: ["clubsPanel"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5quickcash/crossplay",
@@ -109,7 +109,7 @@ export const leaderboards = {
     enabled: true,
     name: "Season 5 Bank it",
     nameShort: "S5BI",
-    features: [],
+    features: ["clubsPanel"],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s5bankit/crossplay",
