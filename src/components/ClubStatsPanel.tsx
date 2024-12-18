@@ -130,7 +130,7 @@ export const ClubStatsPanel = ({
                 checked={topXToDisplay === 300}
                 onCheckedChange={(e) => setTopXToDisplay(e ? 300 : 30)}
               />
-              <label htmlFor="topXToDisplay">Show top 300 (can be slow)</label>
+              <label htmlFor="topXToDisplay">Show top 300</label>
             </div>
 
             <BarChart
