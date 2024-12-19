@@ -5,18 +5,18 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import Icons from "./icons";
+} from "../ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import Icons from "../icons";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { BaseUser, Platforms, BaseUserWithExtras } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import SponsorImage from "./SponsorImage";
-import LeagueImage from "./LeagueImage";
+import SponsorImage from "../SponsorImage";
+import LeagueImage from "../LeagueImage";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
 
-export const columns = (
+export const leaderboardDataTableColumns = (
   leaderboardId: LeaderboardId,
   selectedPlatform: Platforms,
 ) => [

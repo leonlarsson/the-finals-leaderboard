@@ -19,14 +19,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Loading from "./Loading";
-import DataTableToolbar from "./DataTableToolbar";
 import { DataTablePagination } from "./DataTablePagination";
-import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import { useHotkeys } from "react-hotkeys-hook";
+import Loading from "../Loading";
+import ClubsDataTableToolbar from "./ClubsDataTableToolbar";
 
 interface DataTableProps<TData, TValue> {
-  leaderboardVersion: LeaderboardId;
   queryState: {
     isLoading: boolean;
     isRefetching: boolean;
@@ -35,15 +33,13 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
-  leaderboardVersion,
+export function ClubsDataTable<TData, TValue>({
   queryState,
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
   const searchParams = new URLSearchParams(window.location.search);
-  const search = searchParams.get("name");
-  const leagues = searchParams.get("leagues");
+  const clubTag = searchParams.get("clubTag");
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "rank",
@@ -51,10 +47,7 @@ export function DataTable<TData, TValue>({
     },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
-    { id: "name", value: search ?? "" },
-    ...(leaderboards[leaderboardVersion].features.includes("leagueFilter")
-      ? [{ id: "fame", value: leagues?.split(",") ?? [] }]
-      : []),
+    { id: "clubTag", value: clubTag ?? "" },
   ]);
 
   const table = useReactTable({
@@ -85,7 +78,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-3">
-      <DataTableToolbar leaderboardVersion={leaderboardVersion} table={table} />
+      <ClubsDataTableToolbar table={table} />
 
       <div className="rounded-md border">
         <Table className="min-w-[800px] outline-none" tabIndex={-1} ref={ref}>

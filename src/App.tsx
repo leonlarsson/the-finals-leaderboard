@@ -12,8 +12,8 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Notice } from "./components/Notice";
 import CommunityProgress from "./components/CommunityProgress";
-import { DataTable } from "./components/DataTable";
-import { columns } from "./components/TableColumns";
+import { LeaderboardDataTable } from "./components/tables/LeaderboardDataTable";
+import { leaderboardDataTableColumns } from "./components/tables/LeaderboardDataTableColumns";
 import { Button } from "./components/ui/button";
 import {
   Tooltip,
@@ -520,13 +520,13 @@ const App = () => {
             </Tabs>
 
             {selectedPanel === Panels.Leaderboard && (
-              <DataTable
+              <LeaderboardDataTable
                 key={selectedLeaderboardVersion}
                 leaderboardVersion={selectedLeaderboardVersion}
                 queryState={{ isLoading, isRefetching }}
                 // https://github.com/TanStack/table/issues/4382#issuecomment-2081153305
                 columns={(
-                  columns(
+                  leaderboardDataTableColumns(
                     selectedLeaderboardVersion,
                     selectedPlatform,
                   ) as ColumnDef<unknown>[]
@@ -553,6 +553,8 @@ const App = () => {
                 leaderboardVersion={selectedLeaderboardVersion}
                 platform={selectedPlatform}
                 users={data ?? []}
+                isLoading={isLoading}
+                isRefetching={isRefetching}
               />
             )}
           </div>

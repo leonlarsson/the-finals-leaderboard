@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Table } from "@tanstack/react-table";
 import { CheckIcon, PlusCircle } from "lucide-react";
-import { Input } from "./ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Button } from "./ui/button";
+import { Input } from "../ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Button } from "../ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,18 +12,21 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "./ui/command";
-import { Separator } from "./ui/separator";
-import { Badge } from "./ui/badge";
+} from "../ui/command";
+import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 
-type Props<TData> = {
+type LeaderboardDataTableToolbarProps<TData> = {
   leaderboardVersion: LeaderboardId;
   table: Table<TData>;
 };
 
-export default function <TData>({ leaderboardVersion, table }: Props<TData>) {
+export function LeaderboardDataTableToolbar<TData>({
+  leaderboardVersion,
+  table,
+}: LeaderboardDataTableToolbarProps<TData>) {
   const [didMount, setDidMount] = useState(false);
   // Just used for the useEffect to trigger on version change
   // Workaround because DataTable has a key on it, which always remounts this component, causing didMount to always be false

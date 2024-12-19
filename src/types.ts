@@ -30,6 +30,16 @@ export type BaseUserWithExtras = BaseUser & {
   tournamentWins?: number;
 };
 
+export type Club = {
+  rank: number;
+  clubTag: string;
+  members: number;
+  totalRankScore?: number;
+  totalFans?: number;
+  totalCashouts?: number;
+  totalPoints?: number;
+};
+
 export enum Platforms {
   Crossplay = "crossplay",
   Steam = "steam",
