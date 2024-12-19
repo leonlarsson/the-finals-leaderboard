@@ -2,14 +2,14 @@ import { BarChart } from "@tremor/react";
 import { Platforms, BaseUser } from "@/types";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import Loading from "./Loading";
+import Loading from "../Loading";
 import { useMemo, useState } from "react";
-import { Checkbox } from "./ui/checkbox";
-import { ClubsDataTable } from "./tables/ClubsDataTable";
-import { clubsDataTableColumns } from "./tables/ClubsDataTableColumns";
+import { Checkbox } from "../ui/checkbox";
+import { ClubsDataTable } from "../tables/ClubsDataTable";
+import { clubsDataTableColumns } from "../tables/ClubsDataTableColumns";
 import { ColumnDef } from "@tanstack/react-table";
 
-type Props = {
+type ClubsStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
   platform: Platforms;
   users: BaseUser[];
@@ -17,13 +17,13 @@ type Props = {
   isRefetching: boolean;
 };
 
-export const ClubStatsPanel = ({
+export const ClubsStatsPanel = ({
   leaderboardVersion,
   platform,
   users,
   isLoading,
   isRefetching,
-}: Props) => {
+}: ClubsStatsPanelProps) => {
   const [topXToDisplay, setTopXToDisplay] = useState(30);
   const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);

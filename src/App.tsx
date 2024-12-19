@@ -21,7 +21,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./components/ui/tooltip";
-import Stats from "./components/Stats";
 import ThemeToggle from "./components/ThemeToggle";
 import Icons from "./components/icons";
 import Link from "./components/Link";
@@ -44,7 +43,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./components/ui/select";
-import { ClubStatsPanel } from "./components/ClubStatsPanel";
+import { LeaderboardStatsPanel } from "./components/panels/LeaderboardStatsPanel";
+import { ClubsStatsPanel } from "./components/panels/ClubsStatsPanel";
 
 const App = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -541,7 +541,7 @@ const App = () => {
             )}
 
             {selectedPanel === Panels.Stats && (
-              <Stats
+              <LeaderboardStatsPanel
                 leaderboardVersion={selectedLeaderboardVersion}
                 platform={selectedPlatform}
                 users={data ?? []}
@@ -549,7 +549,7 @@ const App = () => {
             )}
 
             {selectedPanel === Panels.Clubs && (
-              <ClubStatsPanel
+              <ClubsStatsPanel
                 leaderboardVersion={selectedLeaderboardVersion}
                 platform={selectedPlatform}
                 users={data ?? []}

@@ -3,17 +3,21 @@ import { Platforms, BaseUser } from "@/types";
 import leagues from "@/utils/leagues";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import Loading from "./Loading";
-import SponsorImage from "./SponsorImage";
-import LeagueImage from "./LeagueImage";
+import Loading from "../Loading";
+import LeagueImage from "../LeagueImage";
+import SponsorImage from "../SponsorImage";
 
-type Props = {
+type LeaderboardStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
   platform: Platforms;
   users: BaseUser[];
 };
 
-export default ({ leaderboardVersion, platform, users }: Props) => {
+export const LeaderboardStatsPanel = ({
+  leaderboardVersion,
+  platform,
+  users,
+}: LeaderboardStatsPanelProps) => {
   const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);
 
