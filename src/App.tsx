@@ -529,6 +529,7 @@ const App = () => {
                   leaderboardDataTableColumns(
                     selectedLeaderboardVersion,
                     selectedPlatform,
+                    setSelectedPanel,
                   ) as ColumnDef<unknown>[]
                 ).filter((col) =>
                   leaderboards[

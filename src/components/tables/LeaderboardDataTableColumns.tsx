@@ -9,7 +9,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import Icons from "../icons";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
-import { BaseUser, Platforms, BaseUserWithExtras } from "@/types";
+import { BaseUser, Platforms, BaseUserWithExtras, Panels } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import SponsorImage from "../SponsorImage";
 import LeagueImage from "../LeagueImage";
@@ -19,6 +19,7 @@ const columnHelper = createColumnHelper<BaseUserWithExtras>();
 export const leaderboardDataTableColumns = (
   leaderboardId: LeaderboardId,
   selectedPlatform: Platforms,
+  setSelectedPanel: (panel: Panels) => void,
 ) => [
   // Rank
   columnHelper.accessor("rank", {
@@ -75,7 +76,7 @@ export const leaderboardDataTableColumns = (
           <TooltipProvider>
             <Tooltip delayDuration={200}>
               <TooltipTrigger asChild className="w-fit">
-                {platformNamesInline(user)}
+                {platformNamesInline(user, setSelectedPanel)}
               </TooltipTrigger>
               <TooltipContent>{namePopoverContent(user)}</TooltipContent>
             </Tooltip>
@@ -290,15 +291,25 @@ export const leaderboardDataTableColumns = (
     cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
   }),
 ];
-
-const platformNamesInline = (user: BaseUser) => {
+const platformNamesInline = (
+  user: BaseUser,
+  setSelectedPanel: (panel: Panels) => void,
+) => {
   return (
     <div className="flex flex-col gap-1">
       <div>
         {user.clubTag && (
-          <span className="mr-1 rounded bg-neutral-200 px-1 dark:bg-neutral-800">
+          <button
+            className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 dark:bg-neutral-800"
+            onClick={() => {
+              setSelectedPanel(Panels.Clubs);
+              const url = new URL(window.location.href);
+              url.searchParams.set("clubTag", user.clubTag!);
+              window.history.pushState({}, "", url.toString());
+            }}
+          >
             {user.clubTag}
-          </span>
+          </button>
         )}
         <span className="font-medium">{user.name.split("#")[0]}</span>
         <span className="text-neutral-500">#{user.name.split("#")[1]}</span>
