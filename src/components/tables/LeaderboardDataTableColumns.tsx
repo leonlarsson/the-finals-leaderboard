@@ -300,7 +300,7 @@ const platformNamesInline = (
       <div>
         {user.clubTag && (
           <button
-            className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 dark:bg-neutral-800"
+            className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
             onClick={() => {
               setSelectedPanel(Panels.Clubs);
               const url = new URL(window.location.href);
