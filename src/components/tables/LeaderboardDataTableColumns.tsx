@@ -13,7 +13,7 @@ import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import SponsorImage from "../SponsorImage";
 import LeagueImage from "../LeagueImage";
 import { useNavigate } from "@tanstack/react-router";
-import { PlayStationIcon, SteamIcon, XboxIcon } from "../Icons";
+import { PlayStationIcon, SteamIcon, XboxIcon } from "../UPDATEPLSIcons";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
 

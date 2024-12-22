@@ -6,7 +6,7 @@ import {
   SteamIcon,
   XboxIcon,
   XTwitterIcon,
-} from "@/components/Icons";
+} from "@/components/UPDATEPLSIcons";
 import BasicLink from "@/components/Link";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
