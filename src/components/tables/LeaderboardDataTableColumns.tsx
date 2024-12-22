@@ -13,7 +13,7 @@ import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import SponsorImage from "../SponsorImage";
 import LeagueImage from "../LeagueImage";
 import { useNavigate } from "@tanstack/react-router";
-import Icons from "../Icons";
+import { PlayStationIcon, SteamIcon, XboxIcon } from "../Icons";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
 
@@ -90,13 +90,13 @@ export const leaderboardDataTableColumns = (
               ) && (
                 <>
                   {selectedPlatform === "steam" && (
-                    <Icons.steam className="inline size-5 opacity-60" />
+                    <SteamIcon className="inline size-5 opacity-60" />
                   )}
                   {selectedPlatform === "xbox" && (
-                    <Icons.xbox className="inline size-5 opacity-60" />
+                    <XboxIcon className="inline size-5 opacity-60" />
                   )}
                   {selectedPlatform === "psn" && (
-                    <Icons.playstation className="inline size-5 opacity-60" />
+                    <PlayStationIcon className="inline size-5 opacity-60" />
                   )}
                 </>
               )}
@@ -322,21 +322,21 @@ const platformNamesInline = (user: BaseUser) => {
 
       {user.steamName && (
         <span className="inline-flex items-center gap-1">
-          <Icons.steam className="inline size-5 opacity-60" />
+          <SteamIcon className="inline size-5 opacity-60" />
           <span>{user.steamName}</span>
         </span>
       )}
 
       {user.xboxName && (
         <span className="inline-flex items-center gap-1">
-          <Icons.xbox className="inline size-5 opacity-60" />
+          <XboxIcon className="inline size-5 opacity-60" />
           <span>{user.xboxName}</span>
         </span>
       )}
 
       {user.psnName && (
         <span className="inline-flex items-center gap-1">
-          <Icons.playstation className="inline size-5 opacity-60" />
+          <PlayStationIcon className="inline size-5 opacity-60" />
           <span>{user.psnName}</span>
         </span>
       )}
@@ -385,7 +385,7 @@ const namePopoverContent = (user: BaseUser) => {
 
       {user.steamName && (
         <span className="inline-flex gap-1">
-          <Icons.steam className="inline size-5" />
+          <SteamIcon className="inline size-5" />
           <span className="font-semibold">Steam:</span>
           <span>{user.steamName}</span>
         </span>
@@ -393,7 +393,7 @@ const namePopoverContent = (user: BaseUser) => {
 
       {user.xboxName && (
         <span className="inline-flex gap-1">
-          <Icons.xbox className="inline size-5" />
+          <XboxIcon className="inline size-5" />
           <span className="font-semibold">Xbox:</span>
           <span>{user.xboxName}</span>
         </span>
@@ -401,7 +401,7 @@ const namePopoverContent = (user: BaseUser) => {
 
       {user.psnName && (
         <span className="inline-flex gap-1">
-          <Icons.playstation className="inline size-5" />
+          <PlayStationIcon className="inline size-5" />
           <span className="font-semibold">PlayStation:</span>
           <span>{user.psnName}</span>
         </span>

@@ -1,4 +1,12 @@
-import Icons from "@/components/Icons";
+import {
+  BlueskyIcon,
+  CrossplayIcon,
+  GitHubIcon,
+  PlayStationIcon,
+  SteamIcon,
+  XboxIcon,
+  XTwitterIcon,
+} from "@/components/Icons";
 import BasicLink from "@/components/Link";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
@@ -283,22 +291,22 @@ function RouteComponent() {
                 {
                   leaderboardPlatform: platforms.CROSSPLAY,
                   title: "Crossplay",
-                  icon: <Icons.crossplay className="inline size-5" />,
+                  icon: <CrossplayIcon className="inline size-5" />,
                 },
                 {
                   leaderboardPlatform: platforms.STEAM,
                   title: "Steam",
-                  icon: <Icons.steam className="inline size-5" />,
+                  icon: <SteamIcon className="inline size-5" />,
                 },
                 {
                   leaderboardPlatform: platforms.XBOX,
                   title: "Xbox",
-                  icon: <Icons.xbox className="inline size-5" />,
+                  icon: <XboxIcon className="inline size-5" />,
                 },
                 {
                   leaderboardPlatform: platforms.PSN,
                   title: "PlayStation",
-                  icon: <Icons.playstation className="inline size-5" />,
+                  icon: <PlayStationIcon className="inline size-5" />,
                 },
               ].map(({ leaderboardPlatform: value, icon }) => (
                 <TabsTrigger
@@ -503,19 +511,19 @@ function RouteComponent() {
           <ThemeToggle />
           <BasicLink href="https://bsky.app/profile/leon.ms">
             <Button variant="outline" size="icon">
-              <Icons.bluesky className="size-5" />
+              <BlueskyIcon className="size-5" />
             </Button>
           </BasicLink>
 
           <BasicLink href="https://x.com/mozzyfx">
             <Button variant="outline" size="icon">
-              <Icons.xTwitter className="size-5" />
+              <XTwitterIcon className="size-5" />
             </Button>
           </BasicLink>
 
           <BasicLink href="https://github.com/leonlarsson/the-finals-leaderboard">
             <Button variant="outline" size="icon">
-              <Icons.github className="size-5" />
+              <GitHubIcon className="size-5" />
             </Button>
           </BasicLink>
         </div>
