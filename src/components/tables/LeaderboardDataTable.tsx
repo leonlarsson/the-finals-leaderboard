@@ -24,9 +24,10 @@ import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import { useHotkeys } from "react-hotkeys-hook";
 import Loading from "../Loading";
 import { LeaderboardDataTableToolbar } from "./LeaderboardDataTableToolbar";
+import { useSearch } from "@tanstack/react-router";
 
 interface LeaderboatdDataTableProps<TData, TValue> {
-  leaderboardVersion: LeaderboardId;
+  leaderboardId: LeaderboardId;
   queryState: {
     isLoading: boolean;
     isRefetching: boolean;
@@ -36,14 +37,15 @@ interface LeaderboatdDataTableProps<TData, TValue> {
 }
 
 export function LeaderboardDataTable<TData, TValue>({
-  leaderboardVersion,
+  leaderboardId,
   queryState,
   columns,
   data,
 }: LeaderboatdDataTableProps<TData, TValue>) {
-  const searchParams = new URLSearchParams(window.location.search);
-  const search = searchParams.get("name");
-  const leagues = searchParams.get("leagues");
+  const { name: nameSearch, leagues } = useSearch({
+    from: "/",
+    select: ({ name, leagues }) => ({ name, leagues }),
+  });
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "rank",
@@ -51,9 +53,9 @@ export function LeaderboardDataTable<TData, TValue>({
     },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
-    { id: "name", value: search ?? "" },
-    ...(leaderboards[leaderboardVersion].features.includes("leagueFilter")
-      ? [{ id: "fame", value: leagues?.split(",") ?? [] }]
+    { id: "name", value: nameSearch ?? "" },
+    ...(leaderboards[leaderboardId].features.includes("leagueFilter")
+      ? [{ id: "fame", value: leagues ?? [] }]
       : []),
   ]);
 
@@ -86,7 +88,7 @@ export function LeaderboardDataTable<TData, TValue>({
   return (
     <div className="space-y-3">
       <LeaderboardDataTableToolbar
-        leaderboardVersion={leaderboardVersion}
+        leaderboardId={leaderboardId}
         table={table}
       />
 

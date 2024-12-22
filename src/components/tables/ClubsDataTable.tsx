@@ -23,6 +23,7 @@ import { DataTablePagination } from "./DataTablePagination";
 import { useHotkeys } from "react-hotkeys-hook";
 import Loading from "../Loading";
 import ClubsDataTableToolbar from "./ClubsDataTableToolbar";
+import { useSearch } from "@tanstack/react-router";
 
 interface DataTableProps<TData, TValue> {
   queryState: {
@@ -38,8 +39,10 @@ export function ClubsDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const searchParams = new URLSearchParams(window.location.search);
-  const clubTag = searchParams.get("clubTag");
+  const { clubTag } = useSearch({
+    from: "/",
+    select: ({ clubTag }) => ({ clubTag }),
+  });
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "rank",

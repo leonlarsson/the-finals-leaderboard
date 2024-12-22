@@ -1,4 +1,4 @@
-import Link from "./Link";
+import BasicLink from "./Link";
 
 type LinkifyProps = {
   text: string;
@@ -11,9 +11,9 @@ export const Linkify = ({ text }: LinkifyProps) => {
     if (index % 3 === 1) {
       // This is the link text
       return (
-        <Link key={index} href={parts[index + 1]}>
+        <BasicLink key={index} href={parts[index + 1]}>
           {part}
-        </Link>
+        </BasicLink>
       );
     } else if (index % 3 === 2) {
       // This is the link URL, ignore

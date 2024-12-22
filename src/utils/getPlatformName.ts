@@ -1,12 +1,12 @@
-import { Platforms } from "@/types";
+import { platforms } from "@/types";
 
-export default (platform: Platforms) => {
-  const platforms = {
-    [Platforms.Crossplay]: "Crossplay",
-    [Platforms.Steam]: "Steam",
-    [Platforms.Xbox]: "Xbox",
-    [Platforms.PSN]: "PlayStation",
+export default (platform: string) => {
+  const platformsMap = {
+    [platforms.CROSSPLAY]: "Crossplay",
+    [platforms.STEAM]: "Steam",
+    [platforms.XBOX]: "Xbox",
+    [platforms.PSN]: "PlayStation",
   };
 
-  return platforms[platform] ?? "Unknown";
+  return platformsMap[platform] ?? "Unknown";
 };

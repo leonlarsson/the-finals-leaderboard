@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import { Table } from "@tanstack/react-table";
 import { CheckIcon, PlusCircle } from "lucide-react";
-import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import {
@@ -17,23 +15,28 @@ import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import { getRouteApi } from "@tanstack/react-router";
+import { Input } from "../ui/input";
 
 type LeaderboardDataTableToolbarProps<TData> = {
-  leaderboardVersion: LeaderboardId;
+  leaderboardId: LeaderboardId;
   table: Table<TData>;
 };
 
 export function LeaderboardDataTableToolbar<TData>({
-  leaderboardVersion,
+  leaderboardId,
   table,
 }: LeaderboardDataTableToolbarProps<TData>) {
-  const [didMount, setDidMount] = useState(false);
-  // Just used for the useEffect to trigger on version change
-  // Workaround because DataTable has a key on it, which always remounts this component, causing didMount to always be false
-  const leaderboardParam = new URLSearchParams(window.location.search).get(
-    "leaderboard",
-  );
-  const fameColumn = leaderboards[leaderboardVersion].features.includes(
+  const { useSearch, useNavigate } = getRouteApi("/");
+  const { name } = useSearch({
+    select: ({ name }) => ({
+      name: name ?? "",
+    }),
+  });
+  const navigate = useNavigate();
+
+  const nameColumn = table.getColumn("name")!;
+  const fameColumn = leaderboards[leaderboardId].features.includes(
     "leagueFilter",
   )
     ? table.getColumn("fame")
@@ -48,57 +51,28 @@ export function LeaderboardDataTableToolbar<TData>({
 
   const selectedValues = new Set(fameColumn?.getFilterValue() as string[]);
 
-  // Setting didMount to true upon mounting
-  useEffect(() => {
-    setDidMount(true);
-  }, []);
-
-  // Reset fame filter on version. Only done after first render since we don't want to reset the filter on initial load
-  useEffect(() => {
-    if (!didMount) return;
-    selectedValues.clear();
-    fameColumn?.setFilterValue(selectedValues);
-  }, [leaderboardParam]);
-
-  // Save fame filter in URL
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-
-    selectedValues.size
-      ? searchParams.set("leagues", Array.from(selectedValues).join(","))
-      : searchParams.delete("leagues");
-
-    window.history.replaceState(
-      null,
-      "",
-      searchParams.size > 0 ? `?${searchParams.toString()}` : "/",
-    );
-  }, [selectedValues]);
-
   return (
     <div className="flex flex-wrap gap-2">
       <Input
         className="max-w-xs select-none data-[active=true]:border-black/50 dark:data-[active=true]:border-white/50"
-        data-active={!!table.getColumn("name")?.getFilterValue()}
+        data-active={!!name}
         placeholder="Filter usernames..."
         maxLength={20}
-        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+        defaultValue={name}
         onChange={(event) => {
-          table.getColumn("name")?.setFilterValue(event.target.value);
-          const searchParams = new URLSearchParams(window.location.search);
+          nameColumn.setFilterValue(event.target.value);
 
-          event.target.value.length
-            ? searchParams.set("name", event.target.value)
-            : searchParams.delete("name");
-          window.history.replaceState(
-            null,
-            "",
-            searchParams.size > 0 ? `?${searchParams.toString()}` : "/",
-          );
+          navigate({
+            viewTransition: true,
+            search: (prev) => ({
+              ...prev,
+              name: event.target.value.length ? event.target.value : undefined,
+            }),
+          });
         }}
       />
 
-      {leaderboards[leaderboardVersion].features.includes("leagueFilter") && (
+      {leaderboards[leaderboardId].features.includes("leagueFilter") && (
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -171,6 +145,15 @@ export function LeaderboardDataTableToolbar<TData>({
 
                           const filterValues = Array.from(selectedValues);
                           fameColumn?.setFilterValue(filterValues);
+
+                          navigate({
+                            search: (prev) => ({
+                              ...prev,
+                              leagues: filterValues.length
+                                ? filterValues
+                                : undefined,
+                            }),
+                          });
                         }}
                       >
                         <div
@@ -203,7 +186,15 @@ export function LeaderboardDataTableToolbar<TData>({
                     <CommandSeparator />
                     <CommandGroup>
                       <CommandItem
-                        onSelect={() => fameColumn?.setFilterValue(undefined)}
+                        onSelect={() => {
+                          fameColumn?.setFilterValue(undefined);
+                          navigate({
+                            search: (prev) => ({
+                              ...prev,
+                              leagues: undefined,
+                            }),
+                          });
+                        }}
                         className="justify-center text-center"
                       >
                         Clear filters

@@ -1,6 +1,6 @@
 type IconProps = React.HTMLAttributes<SVGElement>;
 
-const icons = {
+export const Icons = {
   crossplay: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -97,5 +97,3 @@ const icons = {
     </svg>
   ),
 };
-
-export default icons;

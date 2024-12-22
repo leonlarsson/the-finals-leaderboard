@@ -1,5 +1,5 @@
 import { BarChart, DonutChart, Legend } from "@tremor/react";
-import { Platforms, BaseUser } from "@/types";
+import { BaseUser } from "@/types";
 import leagues from "@/utils/leagues";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
@@ -9,7 +9,7 @@ import SponsorImage from "../SponsorImage";
 
 type LeaderboardStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
-  platform: Platforms;
+  platform: string;
   users: BaseUser[];
 };
 
