@@ -1,5 +1,5 @@
 import { BarChart } from "@tremor/react";
-import { Platforms, BaseUser } from "@/types";
+import { BaseUser } from "@/types";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import Loading from "../Loading";
@@ -11,7 +11,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 type ClubsStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
-  platform: Platforms;
+  platform: string;
   users: BaseUser[];
   isLoading: boolean;
   isRefetching: boolean;

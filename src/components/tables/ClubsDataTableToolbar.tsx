@@ -1,11 +1,20 @@
 import { Table } from "@tanstack/react-table";
 import { Input } from "../ui/input";
+import { getRouteApi } from "@tanstack/react-router";
 
 type Props<TData> = {
   table: Table<TData>;
 };
 
 export default function <TData>({ table }: Props<TData>) {
+  const { useSearch, useNavigate } = getRouteApi("/");
+  const clubTag = useSearch({
+    select: ({ clubTag }) => clubTag ?? "",
+  });
+  const navigate = useNavigate();
+
+  const clubTagColumn = table.getColumn("clubTag")!;
+
   return (
     <div className="flex flex-wrap gap-2">
       <Input
@@ -13,19 +22,19 @@ export default function <TData>({ table }: Props<TData>) {
         data-active={!!table.getColumn("clubTag")?.getFilterValue()}
         placeholder="Filter club tags..."
         maxLength={20}
-        value={(table.getColumn("clubTag")?.getFilterValue() as string) ?? ""}
+        defaultValue={clubTag}
         onChange={(event) => {
-          table.getColumn("clubTag")?.setFilterValue(event.target.value);
-          const searchParams = new URLSearchParams(window.location.search);
+          clubTagColumn.setFilterValue(event.target.value);
 
-          event.target.value.length
-            ? searchParams.set("clubTag", event.target.value)
-            : searchParams.delete("clubTag");
-          window.history.replaceState(
-            null,
-            "",
-            searchParams.size > 0 ? `?${searchParams.toString()}` : "/",
-          );
+          navigate({
+            viewTransition: true,
+            search: (prev) => ({
+              ...prev,
+              clubTag: event.target.value.length
+                ? event.target.value
+                : undefined,
+            }),
+          });
         }}
       />
     </div>

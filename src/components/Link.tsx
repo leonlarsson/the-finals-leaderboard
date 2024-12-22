@@ -1,4 +1,4 @@
-const Link = ({
+const BasicLink = ({
   href,
   children,
 }: {
@@ -10,4 +10,4 @@ const Link = ({
   </a>
 );
 
-export default Link;
+export default BasicLink;

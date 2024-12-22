@@ -1,4 +1,5 @@
 import type { BaseUser, BaseUserWithExtras, LeaderboardFeature } from "@/types";
+import { ReactNode } from "react";
 
 export const leaderboards = {
   season5: {
@@ -381,7 +382,7 @@ export type Leaderboard = {
   enabled: boolean;
   name: string;
   nameShort: string;
-  tabIcon?: JSX.Element;
+  tabIcon?: ReactNode;
   tableColumns: (keyof BaseUserWithExtras)[];
   features: LeaderboardFeature[];
   fetchData: (platform: string) => Promise<any>;

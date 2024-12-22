@@ -1,9 +1,9 @@
-import { Platforms } from "@/types";
+import { platforms } from "@/types";
 import { LeaderboardId, leaderboards } from "./leaderboards";
 
 export const fetchData = async (
   leaderboardVersion: LeaderboardId,
-  platform: Platforms,
+  platform: (typeof platforms)[keyof typeof platforms],
 ) => {
   const leaderboard = leaderboards[leaderboardVersion as LeaderboardId];
   const data = await leaderboard.fetchData(platform);

@@ -40,21 +40,21 @@ export type Club = {
   totalPoints?: number;
 };
 
-export enum Platforms {
-  Crossplay = "crossplay",
-  Steam = "steam",
-  Xbox = "xbox",
-  PSN = "psn",
-}
-
-export enum Panels {
-  Leaderboard = "leaderboard",
-  Stats = "stats",
-  Clubs = "clubs",
-}
-
 export type LeaderboardFeature =
   | "platformSelection"
   | "statsPanel"
   | "clubsPanel"
   | "leagueFilter";
+
+export const panels = {
+  LEADERBOARD: "leaderboard",
+  STATS: "stats",
+  CLUBS: "clubs",
+};
+
+export const platforms = {
+  CROSSPLAY: "crossplay",
+  STEAM: "steam",
+  XBOX: "xbox",
+  PSN: "psn",
+};
