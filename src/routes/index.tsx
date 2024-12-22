@@ -4,9 +4,8 @@ import {
   GitHubIcon,
   PlayStationIcon,
   SteamIcon,
-  XboxIcon,
   XTwitterIcon,
-} from "@/components/UPDATEPLSIcons";
+} from "@/components/icons";
 import BasicLink from "@/components/Link";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
@@ -51,6 +50,7 @@ import {
 } from "lucide-react";
 import { useEffect } from "react";
 import { z } from "zod";
+import { XboxIcon } from "@/components/icons";
 
 const searchParamsSchema = z.object({
   lb: z
