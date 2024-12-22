@@ -1,12 +1,12 @@
-import {
-  BlueskyIcon,
-  CrossplayIcon,
-  GitHubIcon,
-  PlayStationIcon,
-  SteamIcon,
-  XboxIcon,
-  XTwitterIcon,
-} from "@/components/Icons";
+// import {
+//   BlueskyIcon,
+//   CrossplayIcon,
+//   GitHubIcon,
+//   PlayStationIcon,
+//   SteamIcon,
+//   XboxIcon,
+//   XTwitterIcon,
+// } from "@/components/Icons";
 import BasicLink from "@/components/Link";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
@@ -291,30 +291,30 @@ function RouteComponent() {
                 {
                   leaderboardPlatform: platforms.CROSSPLAY,
                   title: "Crossplay",
-                  icon: <CrossplayIcon className="inline size-5" />,
+                  // icon: <CrossplayIcon className="inline size-5" />,
                 },
                 {
                   leaderboardPlatform: platforms.STEAM,
                   title: "Steam",
-                  icon: <SteamIcon className="inline size-5" />,
+                  // icon: <SteamIcon className="inline size-5" />,
                 },
                 {
                   leaderboardPlatform: platforms.XBOX,
                   title: "Xbox",
-                  icon: <XboxIcon className="inline size-5" />,
+                  // icon: <XboxIcon className="inline size-5" />,
                 },
                 {
                   leaderboardPlatform: platforms.PSN,
                   title: "PlayStation",
-                  icon: <PlayStationIcon className="inline size-5" />,
+                  // icon: <PlayStationIcon className="inline size-5" />,
                 },
-              ].map(({ leaderboardPlatform: value, icon }) => (
+              ].map(({ leaderboardPlatform: value }) => (
                 <TabsTrigger
                   key={value}
                   value={value}
                   onPointerEnter={() => prefetchData({ platform: value })}
                 >
-                  {icon}
+                  {/* {icon} */}
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -449,7 +449,7 @@ function RouteComponent() {
               columns={(
                 leaderboardDataTableColumns(
                   lbParam,
-                  platformParam,
+                  // platformParam,
                 ) as ColumnDef<unknown>[]
               ).filter((col) =>
                 // @ts-ignore This does exist because I create it
@@ -511,19 +511,19 @@ function RouteComponent() {
           <ThemeToggle />
           <BasicLink href="https://bsky.app/profile/leon.ms">
             <Button variant="outline" size="icon">
-              <BlueskyIcon className="size-5" />
+              {/* <BlueskyIcon className="size-5" /> */}
             </Button>
           </BasicLink>
 
           <BasicLink href="https://x.com/mozzyfx">
             <Button variant="outline" size="icon">
-              <XTwitterIcon className="size-5" />
+              {/* <XTwitterIcon className="size-5" /> */}
             </Button>
           </BasicLink>
 
           <BasicLink href="https://github.com/leonlarsson/the-finals-leaderboard">
             <Button variant="outline" size="icon">
-              <GitHubIcon className="size-5" />
+              {/* <GitHubIcon className="size-5" /> */}
             </Button>
           </BasicLink>
         </div>
