@@ -1,11 +1,14 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
-import { Club } from "@/types";
+import { Club, panels } from "@/types";
 import { LeaderboardId } from "@/utils/leaderboards";
+import { useNavigate } from "@tanstack/react-router";
 
 const columnHelper = createColumnHelper<Club>();
 
 export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
+  const navigate = useNavigate({ from: "/" });
+
   const columns = [
     // Rank
     columnHelper.accessor("rank", {
@@ -37,7 +40,22 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Members (in top 10K)" />
       ),
-      cell: ({ getValue }) => getValue().toLocaleString("en"),
+      cell: ({ getValue, row }) => (
+        <button
+          className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 tabular-nums transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+          onClick={() => {
+            navigate({
+              search: (prev) => ({
+                ...prev,
+                panel: panels.LEADERBOARD,
+                name: row.original.clubTag,
+              }),
+            });
+          }}
+        >
+          {getValue().toLocaleString("en")}
+        </button>
+      ),
     }),
   ];
 
