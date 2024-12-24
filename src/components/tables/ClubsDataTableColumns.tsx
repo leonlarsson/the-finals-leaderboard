@@ -24,8 +24,8 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
     columnHelper.accessor("clubTag", {
       id: "clubTag",
       filterFn: (value, _, filterValue: string) => {
-        if (filterValue.startsWith("exact:")) {
-          const clubTag = filterValue.replace("exact:", "");
+        if (filterValue.startsWith("exactCt:")) {
+          const clubTag = filterValue.replace("exactCt:", "");
           return value.original.clubTag.toLowerCase() === clubTag.toLowerCase();
         }
 

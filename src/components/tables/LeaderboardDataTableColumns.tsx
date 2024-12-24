@@ -403,7 +403,7 @@ const ClickableClubTag = ({ clubTag }: { clubTag: string }) => {
           search: (prev) => ({
             ...prev,
             panel: panels.CLUBS,
-            clubTag: `exact:${clubTag}`,
+            clubTag: `exactCt:${clubTag}`,
           }),
         });
       }}
