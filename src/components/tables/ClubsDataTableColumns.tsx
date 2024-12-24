@@ -23,6 +23,17 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
     // Club Tag
     columnHelper.accessor("clubTag", {
       id: "clubTag",
+      filterFn: (value, _, filterValue: string) => {
+        if (filterValue.startsWith("exact:")) {
+          const clubTag = filterValue.replace("exact:", "");
+          return value.original.clubTag.toLowerCase() === clubTag.toLowerCase();
+        }
+
+        // Fallback to default filter
+        return value.original.clubTag
+          .toLowerCase()
+          .includes(filterValue.toLowerCase());
+      },
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Club Tag" />
       ),
@@ -43,12 +54,13 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
       cell: ({ getValue, row }) => (
         <button
           className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 tabular-nums transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+          title="View members"
           onClick={() => {
             navigate({
               search: (prev) => ({
                 ...prev,
                 panel: panels.LEADERBOARD,
-                name: row.original.clubTag,
+                name: `clubTag:${row.original.clubTag}`,
               }),
             });
           }}

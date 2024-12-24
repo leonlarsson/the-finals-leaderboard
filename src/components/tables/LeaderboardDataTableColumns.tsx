@@ -67,6 +67,20 @@ export const leaderboardDataTableColumns = (
         }`.toLowerCase(),
       {
         id: "name",
+        filterFn: (value, _, filterValue: string) => {
+          // Filter by exact club tag
+          if (filterValue.startsWith("clubTag:")) {
+            const clubTag = filterValue.replace("clubTag:", "");
+            return (
+              value.original.clubTag?.toLowerCase() === clubTag.toLowerCase()
+            );
+          }
+
+          // Regular filter
+          const regularFilterableValue =
+            `${value.original.name} ${value.original.steamName} ${value.original.xboxName} ${value.original.psnName} ${value.original.clubTag}`.toLowerCase();
+          return regularFilterableValue.includes(filterValue.toLowerCase());
+        },
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Name" />
         ),
@@ -295,27 +309,10 @@ export const leaderboardDataTableColumns = (
 };
 
 const platformNamesInline = (user: BaseUser) => {
-  const navigate = useNavigate({ from: "/" });
-
   return (
     <div className="flex flex-col gap-1">
       <div>
-        {user.clubTag && (
-          <button
-            className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-            onClick={() => {
-              navigate({
-                search: (prev) => ({
-                  ...prev,
-                  panel: panels.CLUBS,
-                  clubTag: user.clubTag,
-                }),
-              });
-            }}
-          >
-            {user.clubTag}
-          </button>
-        )}
+        {user.clubTag && <ClickableClubTag clubTag={user.clubTag} />}
         <span className="font-medium">{user.name.split("#")[0]}</span>
         <span className="text-neutral-500">#{user.name.split("#")[1]}</span>
       </div>
@@ -345,28 +342,12 @@ const platformNamesInline = (user: BaseUser) => {
 };
 
 const namePopoverContent = (user: BaseUser) => {
-  const navigate = useNavigate({ from: "/" });
-
   if (!user.steamName && !user.xboxName && !user.psnName) return;
   return (
     <div className="flex flex-col gap-2">
       {user.clubTag && (
         <span>
-          Club tag:{" "}
-          <button
-            className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-            onClick={() => {
-              navigate({
-                search: (prev) => ({
-                  ...prev,
-                  panel: panels.CLUBS,
-                  clubTag: user.clubTag,
-                }),
-              });
-            }}
-          >
-            {user.clubTag}
-          </button>
+          Club tag: <ClickableClubTag clubTag={user.clubTag} />
         </span>
       )}
 
@@ -407,5 +388,27 @@ const namePopoverContent = (user: BaseUser) => {
         </span>
       )}
     </div>
+  );
+};
+
+const ClickableClubTag = ({ clubTag }: { clubTag: string }) => {
+  const navigate = useNavigate({ from: "/" });
+
+  return (
+    <button
+      className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+      title="View club ranking"
+      onClick={() => {
+        navigate({
+          search: (prev) => ({
+            ...prev,
+            panel: panels.CLUBS,
+            clubTag: `exact:${clubTag}`,
+          }),
+        });
+      }}
+    >
+      {clubTag}
+    </button>
   );
 };
