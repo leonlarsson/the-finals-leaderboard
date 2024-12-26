@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { communityEvents } from "@/utils/communityEvents";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -17,7 +17,7 @@ function RootComponent() {
     <ThemeProvider defaultTheme="light" storageKey="ui-theme">
       <div className="container mb-12 mt-2 font-saira max-sm:px-2">
         <h1 className="text-2xl font-medium sm:text-3xl">
-          Enhanced Leaderboard – THE FINALS
+          <Link to="/">Enhanced Leaderboard – THE FINALS</Link>
         </h1>
 
         <h5>
