@@ -1,17 +1,9 @@
-import {
-  BlueskyIcon,
-  CrossplayIcon,
-  GitHubIcon,
-  PlayStationIcon,
-  SteamIcon,
-  XTwitterIcon,
-} from "@/components/icons";
+import { CrossplayIcon, PlayStationIcon, SteamIcon } from "@/components/icons";
 import BasicLink from "@/components/Link";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
 import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
 import { leaderboardDataTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
-import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -189,7 +181,7 @@ function RouteComponent() {
   const loadingOrRefetching = isLoading || isRefetching;
 
   return (
-    <div className="my-4 flex flex-col gap-5">
+    <div className="mb-1 mt-4 flex flex-col gap-5">
       <div className="flex flex-wrap gap-2">
         <div className="block w-full min-[400px]:hidden">
           Leaderboard: <span className="font-medium">{leaderboard.name}</span>
@@ -479,7 +471,7 @@ function RouteComponent() {
         </div>
       )}
 
-      <div className="mt-10 flex flex-col gap-2">
+      <div className="mt-10">
         <span>
           Current data updated at{" "}
           {loadingOrRefetching ? (
@@ -488,45 +480,6 @@ function RouteComponent() {
             new Date(dataUpdatedAt).toLocaleString()
           )}
         </span>
-
-        <span className="text-sm">
-          This site is not affiliated with{" "}
-          <BasicLink href="https://www.embark-studios.com/">
-            Embark Studios
-          </BasicLink>
-          . All imagery and data is owned by{" "}
-          <BasicLink href="https://www.embark-studios.com/">
-            Embark Studios
-          </BasicLink>
-          . Created by{" "}
-          <BasicLink href="https://bsky.app/profile/leon.ms">Mozzy</BasicLink>.
-          Check out the{" "}
-          <BasicLink href="https://github.com/leonlarsson/the-finals-api">
-            API
-          </BasicLink>
-          .
-        </span>
-
-        <div className="flex gap-2">
-          <ThemeToggle />
-          <BasicLink href="https://bsky.app/profile/leon.ms">
-            <Button variant="outline" size="icon">
-              <BlueskyIcon className="size-5" />
-            </Button>
-          </BasicLink>
-
-          <BasicLink href="https://x.com/mozzyfx">
-            <Button variant="outline" size="icon">
-              <XTwitterIcon className="size-5" />
-            </Button>
-          </BasicLink>
-
-          <BasicLink href="https://github.com/leonlarsson/the-finals-leaderboard">
-            <Button variant="outline" size="icon">
-              <GitHubIcon className="size-5" />
-            </Button>
-          </BasicLink>
-        </div>
       </div>
     </div>
   );
