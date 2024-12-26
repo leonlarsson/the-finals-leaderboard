@@ -44,10 +44,8 @@ function RouteComponent() {
 
       <div className="flex flex-col gap-4">
         <div>
-          <div className="text-xl">
-            Club: <span className="font-medium">{club.clubTag}</span>
-          </div>
-
+          Club Page
+          <div className="text-4xl font-medium">{club.clubTag}</div>
           <div>
             <span className="font-medium">{club.clubTag}</span> has{" "}
             {club.members.length.toLocaleString("en")}{" "}
@@ -55,7 +53,6 @@ function RouteComponent() {
             any leaderboard.
           </div>
         </div>
-
         <div>
           <span>Club Players:</span>
           <div className="flex flex-wrap gap-1">
@@ -73,7 +70,6 @@ function RouteComponent() {
               ))}
           </div>
         </div>
-
         <div>
           <span>Club Standings:</span>
           <div className="flex flex-col gap-1">
