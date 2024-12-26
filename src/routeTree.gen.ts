@@ -12,12 +12,19 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as ClubsClubTagImport } from './routes/clubs.$clubTag'
 
 // Create/Update Routes
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ClubsClubTagRoute = ClubsClubTagImport.update({
+  id: '/clubs/$clubTag',
+  path: '/clubs/$clubTag',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -32,6 +39,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/clubs/$clubTag': {
+      id: '/clubs/$clubTag'
+      path: '/clubs/$clubTag'
+      fullPath: '/clubs/$clubTag'
+      preLoaderRoute: typeof ClubsClubTagImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -39,32 +53,37 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/clubs/$clubTag': typeof ClubsClubTagRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/clubs/$clubTag': typeof ClubsClubTagRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/clubs/$clubTag': typeof ClubsClubTagRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/clubs/$clubTag'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/clubs/$clubTag'
+  id: '__root__' | '/' | '/clubs/$clubTag'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ClubsClubTagRoute: typeof ClubsClubTagRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ClubsClubTagRoute: ClubsClubTagRoute,
 }
 
 export const routeTree = rootRoute
@@ -77,11 +96,15 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/"
+        "/",
+        "/clubs/$clubTag"
       ]
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/clubs/$clubTag": {
+      "filePath": "clubs.$clubTag.tsx"
     }
   }
 }

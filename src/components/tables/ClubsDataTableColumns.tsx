@@ -2,7 +2,9 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { Club, panels } from "@/types";
 import { LeaderboardId } from "@/utils/leaderboards";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { HomeIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 const columnHelper = createColumnHelper<Club>();
 
@@ -91,6 +93,25 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
   ) {
     columns.push(totalPointsColumn);
   }
+
+  columns.push(
+    // @ts-ignore It's just because the array have previously been just accessor columns
+    columnHelper.display({
+      header: "Links",
+      cell: ({ row }) => (
+        <Link
+          to="/clubs/$clubTag"
+          params={{ clubTag: row.original.clubTag }}
+          // Remove the panel search param
+          search={(prev) => ({ ...prev, panel: undefined })}
+        >
+          <Button variant="outline" size="icon">
+            <HomeIcon />
+          </Button>
+        </Link>
+      ),
+    }),
+  );
 
   return columns;
 };
