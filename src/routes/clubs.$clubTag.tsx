@@ -4,6 +4,7 @@ import { leaderboards } from "@/utils/leaderboards";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeftIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 export const Route = createFileRoute("/clubs/$clubTag")({
   component: RouteComponent,
@@ -15,11 +16,11 @@ function RouteComponent() {
   const query = useQuery(clubsQueryOptions);
 
   if (query.isLoading) {
-    return <div>Loading...</div>;
+    return <PageWrapper>Loading...</PageWrapper>;
   }
 
   if (query.isError || !query.data) {
-    return <div>Error</div>;
+    return <PageWrapper>An error happened :(</PageWrapper>;
   }
 
   const club = query.data.find(
@@ -27,21 +28,16 @@ function RouteComponent() {
   );
 
   if (!club) {
-    return <div>Club not found</div>;
+    return (
+      <PageWrapper>
+        Club not found. This means that there are no players in the top 10K in
+        this club. Try again later.
+      </PageWrapper>
+    );
   }
 
   return (
-    <div className="my-4">
-      <div>
-        <Link
-          to="/"
-          search={(prev) => ({ ...prev, panel: panels.CLUBS })}
-          className="mb-2 flex w-fit items-center gap-1 font-medium hover:underline"
-        >
-          <ArrowLeftIcon size={20} /> Back to leaderboards
-        </Link>
-      </div>
-
+    <PageWrapper>
       <div className="flex flex-col gap-4">
         <div>
           Club Page
@@ -53,25 +49,9 @@ function RouteComponent() {
             any leaderboard.
           </div>
         </div>
+
         <div>
-          <span>Club Players:</span>
-          <div className="flex flex-wrap gap-1">
-            {club.members
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((member) => (
-                <Link
-                  key={member.name}
-                  to="/"
-                  search={{ name: member.name }}
-                  className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                >
-                  {member.name}
-                </Link>
-              ))}
-          </div>
-        </div>
-        <div>
-          <span>Club Standings:</span>
+          <span className="font-medium">Club Standings:</span>
           <div className="flex flex-col gap-1">
             {club.leaderboards.map(
               (leaderboard: {
@@ -87,7 +67,7 @@ function RouteComponent() {
                     panel: panels.CLUBS,
                     clubTag: `exactCt:${club.clubTag}`,
                   }}
-                  className="flex-cols mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                  className="mr-1 w-fit rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                 >
                   <span className="text-lg font-medium">
                     {Object.values(leaderboards).find(
@@ -104,8 +84,26 @@ function RouteComponent() {
             )}
           </div>
         </div>
+
+        <div>
+          <span className="font-medium">Club Players:</span>
+          <div className="flex flex-wrap gap-1">
+            {club.members
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((member) => (
+                <Link
+                  key={member.name}
+                  to="/"
+                  search={{ name: member.name }}
+                  className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                >
+                  {member.name}
+                </Link>
+              ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
 
@@ -119,3 +117,18 @@ const apiIdToWebId = (lb: string): string =>
     s5quickcash: "season5QuickCash",
     s5bankit: "season5BankIt",
   })[lb] ?? "Unknown";
+
+const PageWrapper = ({ children }: { children: ReactNode }) => (
+  <div className="my-4">
+    <div>
+      <Link
+        to="/"
+        search={(prev) => ({ ...prev, panel: panels.CLUBS })}
+        className="mb-2 flex w-fit items-center gap-1 font-medium hover:underline"
+      >
+        <ArrowLeftIcon size={20} /> Back to leaderboards
+      </Link>
+    </div>
+    {children}
+  </div>
+);
