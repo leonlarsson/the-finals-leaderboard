@@ -1,3 +1,4 @@
+import { clubsQueryOptions } from "@/queries";
 import { panels } from "@/types";
 import { leaderboards } from "@/utils/leaderboards";
 import { useQuery } from "@tanstack/react-query";
@@ -11,17 +12,7 @@ export const Route = createFileRoute("/clubs/$clubTag")({
 function RouteComponent() {
   const { clubTag } = Route.useParams();
 
-  const query = useQuery({
-    queryKey: ["clubs"],
-    queryFn: async () => {
-      const url = new URL("https://api.the-finals-leaderboard.com/v1/clubs");
-      // url.searchParams.append("clubTagFilter", clubTag);
-      // url.searchParams.append("exactClubTag", "true");
-      const res = await fetch(url.href);
-      return await res.json();
-    },
-    staleTime: 1000 * 60 * 2, // 2 minutes
-  });
+  const query = useQuery(clubsQueryOptions);
 
   if (query.isLoading) {
     return <div>Loading...</div>;
@@ -32,7 +23,7 @@ function RouteComponent() {
   }
 
   const club = query.data.find(
-    (x: { clubTag: string }) => x.clubTag === clubTag,
+    (x) => x.clubTag.toLowerCase() === clubTag.toLowerCase(),
   );
 
   if (!club) {
@@ -68,9 +59,9 @@ function RouteComponent() {
         <div>
           <span>Club Players:</span>
           <div className="flex flex-wrap gap-1">
-            {(club.members as { name: string }[])
+            {club.members
               .sort((a, b) => a.name.localeCompare(b.name))
-              .map((member: { name: string }) => (
+              .map((member) => (
                 <Link
                   key={member.name}
                   to="/"

@@ -5,11 +5,14 @@ import { LeaderboardId } from "@/utils/leaderboards";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { HomeIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import { useQueryClient } from "@tanstack/react-query";
+import { clubsQueryOptions } from "@/queries";
 
 const columnHelper = createColumnHelper<Club>();
 
 export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
   const navigate = useNavigate({ from: "/" });
+  const queryClient = useQueryClient();
 
   const columns = [
     // Rank
@@ -105,7 +108,15 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
           // Remove the panel search param
           search={(prev) => ({ ...prev, panel: undefined })}
         >
-          <Button variant="outline" size="icon">
+          <Button
+            variant="outline"
+            size="icon"
+            onPointerEnter={() => {
+              console.log("Prefetching clubs");
+
+              queryClient.prefetchQuery(clubsQueryOptions);
+            }}
+          >
             <HomeIcon />
           </Button>
         </Link>
