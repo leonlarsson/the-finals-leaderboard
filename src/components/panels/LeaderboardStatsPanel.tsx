@@ -6,6 +6,7 @@ import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import Loading from "../Loading";
 import LeagueImage from "../LeagueImage";
 import SponsorImage from "../SponsorImage";
+import { Separator } from "../ui/separator";
 
 type LeaderboardStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
@@ -71,7 +72,7 @@ export const LeaderboardStatsPanel = ({
               </>
             </div>
 
-            <hr className="my-2 border-black/30 dark:border-white/30" />
+            <Separator className="my-3" />
 
             <div className="mb-3 text-lg font-medium">
               Out of the top {users.length.toLocaleString("en")}{" "}
@@ -245,7 +246,7 @@ export const LeaderboardStatsPanel = ({
               </>
             </div>
 
-            <hr className="my-2 border-black/30 dark:border-white/30" />
+            <Separator className="my-3" />
 
             <div className="mb-3 text-lg font-medium">
               Out of the top {users.length.toLocaleString("en")}{" "}
@@ -445,7 +446,7 @@ export const LeaderboardStatsPanel = ({
             )}
           </div>
 
-          <hr className="my-2 border-black/30 dark:border-white/30" />
+          <Separator className="my-3" />
 
           <span className="text-lg font-medium">
             Out of the top {users.length.toLocaleString("en")}{" "}
@@ -486,7 +487,8 @@ export const LeaderboardStatsPanel = ({
                     )}
                   </div>
 
-                  <hr />
+                  <Separator />
+
                   {typeof amount === "number" && (
                     <span>
                       {amount.toLocaleString("en") ?? 0} players (

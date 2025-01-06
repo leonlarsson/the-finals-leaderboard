@@ -8,6 +8,7 @@ import { Checkbox } from "../ui/checkbox";
 import { ClubsDataTable } from "../tables/ClubsDataTable";
 import { clubsDataTableColumns } from "../tables/ClubsDataTableColumns";
 import { ColumnDef } from "@tanstack/react-table";
+import { Separator } from "../ui/separator";
 
 type ClubsStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
@@ -120,7 +121,7 @@ export const ClubsStatsPanel = ({
         data={tableData}
       />
 
-      <hr className="my-2 border-black/30 dark:border-white/30" />
+      <Separator />
 
       <div className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900/50">
         <h2 className="mb-1 text-xl font-medium">
@@ -174,7 +175,7 @@ export const ClubsStatsPanel = ({
               </div>
             </div>
 
-            <br />
+            <Separator className="my-3" />
 
             <div>
               <div>
@@ -182,7 +183,9 @@ export const ClubsStatsPanel = ({
                   Top {topXToDisplay} clubs by{" "}
                   {someMetadataThatIDontKnowWhatToCall.barChartLabel}
                 </span>
+
                 <br />
+
                 <span>
                   Data limited to top {users.length.toLocaleString("en")}{" "}
                   players.
@@ -233,8 +236,13 @@ export const ClubsStatsPanel = ({
                           #{clubPosition.toLocaleString("en")} | {clubTag}
                         </span>
                       </div>
-                      {playersInClub.toLocaleString("en")} players in club
-                      <hr />
+
+                      <span>
+                        {playersInClub.toLocaleString("en")} players in club
+                      </span>
+
+                      <Separator />
+
                       {typeof amount === "number" && (
                         <span>
                           {amount.toLocaleString("en") ?? 0}{" "}
