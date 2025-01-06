@@ -326,7 +326,7 @@ function RouteComponent() {
                 }
                 disabled={loadingOrRefetching}
               >
-                <span className="mr-2 hidden min-[400px]:block">Refresh</span>
+                <span className="hidden min-[400px]:block">Refresh</span>
 
                 <RefreshCwIcon
                   className={cn(

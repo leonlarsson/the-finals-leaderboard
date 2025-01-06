@@ -117,7 +117,7 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
               queryClient.prefetchQuery(clubsQueryOptions);
             }}
           >
-            <HomeIcon />
+            <HomeIcon className="!size-5" />
           </Button>
         </Link>
       ),

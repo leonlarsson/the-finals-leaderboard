@@ -89,19 +89,19 @@ function RootComponent() {
             <ThemeToggle />
             <BasicLink href="https://bsky.app/profile/leon.ms">
               <Button variant="outline" size="icon">
-                <BlueskyIcon className="size-5" />
+                <BlueskyIcon className="!size-5" />
               </Button>
             </BasicLink>
 
             <BasicLink href="https://x.com/mozzyfx">
               <Button variant="outline" size="icon">
-                <XTwitterIcon className="size-5" />
+                <XTwitterIcon className="!size-5" />
               </Button>
             </BasicLink>
 
             <BasicLink href="https://github.com/leonlarsson/the-finals-leaderboard">
               <Button variant="outline" size="icon">
-                <GitHubIcon className="size-5" />
+                <GitHubIcon className="!size-5" />
               </Button>
             </BasicLink>
           </div>

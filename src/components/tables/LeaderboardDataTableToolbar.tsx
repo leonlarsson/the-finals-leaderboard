@@ -81,7 +81,7 @@ export function LeaderboardDataTableToolbar<TData>({
               className="h-10 select-none border-dashed data-[active=true]:border-black/50 dark:data-[active=true]:border-white/50"
               data-active={selectedValues.size > 0}
             >
-              <PlusCircle className="mr-2 h-4 w-4" />
+              <PlusCircle className="h-4 w-4" />
               Filter leagues
               {selectedValues.size > 0 && (
                 <>
