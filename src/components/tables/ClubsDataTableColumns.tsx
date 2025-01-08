@@ -112,8 +112,6 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
             variant="outline"
             size="icon"
             onPointerEnter={() => {
-              console.log("Prefetching clubs");
-
               queryClient.prefetchQuery(clubsQueryOptions);
             }}
           >
