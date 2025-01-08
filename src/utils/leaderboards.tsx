@@ -125,6 +125,23 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "points"],
   },
 
+  orf: {
+    group: "select1",
+    id: "orf",
+    enabled: true,
+    name: "ÖRF",
+    nameShort: "ÖRF",
+    features: [] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/orf/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "score"],
+  },
+
   season4: {
     group: "select2",
     id: "season4",
