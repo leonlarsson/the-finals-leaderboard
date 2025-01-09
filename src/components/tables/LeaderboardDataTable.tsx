@@ -73,6 +73,14 @@ export function LeaderboardDataTable<TData, TValue>({
       sorting,
       columnFilters,
     },
+    initialState: {
+      pagination: {
+        pageSize: Math.min(
+          Number(localStorage.getItem("tfl-table-page-size")) || 10,
+          100,
+        ),
+      },
+    },
   });
 
   const ref = useHotkeys<HTMLTableElement>(["ArrowLeft", "ArrowRight"], (e) => {

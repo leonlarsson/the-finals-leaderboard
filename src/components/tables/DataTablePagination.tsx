@@ -30,6 +30,7 @@ export function DataTablePagination<TData>({
         <Select
           value={`${table.getState().pagination.pageSize}`}
           onValueChange={(value) => {
+            localStorage.setItem("tfl-table-page-size", value);
             table.setPageSize(Number(value));
           }}
         >
