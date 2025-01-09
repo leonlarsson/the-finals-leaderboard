@@ -83,62 +83,66 @@ export function ClubsDataTable<TData, TValue>({
     <div className="space-y-3">
       <ClubsDataTableToolbar table={table} />
 
-      <div className="rounded-md border">
-        <Table className="min-w-[800px] outline-none" tabIndex={-1} ref={ref}>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="hover:bg-inherit">
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
+      <div className="space-y-2">
+        <DataTablePagination table={table} />
+
+        <div className="rounded-md border">
+          <Table className="min-w-[800px] outline-none" tabIndex={-1} ref={ref}>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id} className="hover:bg-inherit">
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                      </TableHead>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <Fragment key={row.id}>
+                    <TableRow>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className="p-3">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
                           )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </Fragment>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    {queryState.isLoading ? (
+                      <Loading justifyCenter />
+                    ) : (
+                      "No results."
+                    )}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <Fragment key={row.id}>
-                  <TableRow>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="p-3">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </Fragment>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  {queryState.isLoading ? (
-                    <Loading justifyCenter />
-                  ) : (
-                    "No results."
-                  )}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        <DataTablePagination table={table} />
       </div>
-
-      <DataTablePagination table={table} />
     </div>
   );
 }
