@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { BaseUser, BaseUserWithExtras, panels } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import SponsorImage from "../SponsorImage";
+import { SponsorImage } from "../SponsorImage";
 import LeagueImage from "../LeagueImage";
 import { useNavigate } from "@tanstack/react-router";
 import { PlayStationIcon, SteamIcon, XboxIcon } from "../icons";

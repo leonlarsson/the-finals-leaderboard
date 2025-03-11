@@ -85,7 +85,7 @@ const styles = {
   },
 } satisfies SponsorStyle;
 
-export default ({
+export const SponsorImage = ({
   sponsor,
   useIcon,
   size = useIcon ? 20 : 60,

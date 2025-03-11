@@ -5,7 +5,7 @@ import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import Loading from "../Loading";
 import LeagueImage from "../LeagueImage";
-import SponsorImage from "../SponsorImage";
+import { SponsorImage } from "../SponsorImage";
 import { Separator } from "../ui/separator";
 
 type LeaderboardStatsPanelProps = {
