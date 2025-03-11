@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { CSSProperties } from "react";
+import { useTheme } from "./ThemeProvider";
 
 type SponsorImageProps = {
   sponsor: string;
@@ -7,122 +7,80 @@ type SponsorImageProps = {
   size?: number;
 };
 
-const sponsors = ["holtow", "iseul-t", "engimo", "dissun", "vaiiya"];
+const sponsors = new Set([
+  "holtow",
+  "iseul-t",
+  "engimo",
+  "dissun",
+  "vaiiya",
+  "alfa-acta",
+]);
 
 type SponsorStyle = Record<
   string,
-  Record<"regular" | "icon", Record<string, CSSProperties>>
+  Record<"regular" | "icon", Record<"light" | "dark", CSSProperties>>
 >;
 
 const styles = {
   holtow: {
     regular: {
-      light: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
-      dark: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
     icon: {
-      light: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
-      dark: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
   },
   "iseul-t": {
     regular: {
-      light: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
-      dark: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
     icon: {
-      light: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
-      dark: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
   },
   engimo: {
     regular: {
-      light: {
-        backgroundColor: "bg-brand-red",
-        padding: "p-1",
-      },
-      dark: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "#d31f3c", padding: 4 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
     icon: {
-      light: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
-      dark: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
   },
   dissun: {
     regular: {
-      light: {
-        backgroundColor: "bg-brand-red",
-        padding: "p-1",
-      },
-      dark: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "#d31f3c", padding: 4 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
     icon: {
-      light: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
-      dark: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
   },
   vaiiya: {
     regular: {
-      light: {
-        backgroundColor: "bg-brand-red",
-        padding: "p-1",
-      },
-      dark: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "#d31f3c", padding: 4 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
     icon: {
-      light: {
-        backgroundColor: "bg-inherit",
-        padding: "p-0",
-      },
-      dark: {
-        backgroundColor: "bg-white",
-        padding: "p-0",
-      },
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "white", padding: 0 },
+    },
+  },
+  "alfa-acta": {
+    regular: {
+      light: { backgroundColor: "#d31f3c", padding: 2 },
+      dark: { backgroundColor: "inherit", padding: 0 },
+    },
+    icon: {
+      // Might go dark background for light theme
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
   },
 } satisfies SponsorStyle;
@@ -132,22 +90,20 @@ export default ({
   useIcon,
   size = useIcon ? 20 : 60,
 }: SponsorImageProps) => {
-  if (!sponsors.includes(sponsor.toLowerCase())) {
+  const { selectedTheme } = useTheme();
+
+  if (!sponsors.has(sponsor.toLowerCase())) {
     return null;
   }
 
-  // @ts-ignore I don't care right now
-  const style = styles[sponsor.toLowerCase()][useIcon ? "icon" : "regular"];
+  const style =
+    styles[sponsor.toLowerCase() as keyof typeof styles][
+      useIcon ? "icon" : "regular"
+    ];
 
   return (
     <img
-      className={cn(
-        "inline",
-        style.light.backgroundColor,
-        `dark:${style.dark.backgroundColor}`,
-        style.light.padding,
-        `dark:${style.dark.padding}`,
-      )}
+      style={selectedTheme === "light" ? style.light : style.dark}
       draggable={false}
       title={`${sponsor} sponsor`}
       width={size}
