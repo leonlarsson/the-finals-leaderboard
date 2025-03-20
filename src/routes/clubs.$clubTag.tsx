@@ -16,7 +16,7 @@ function RouteComponent() {
   const query = useQuery(clubsQueryOptions);
 
   if (query.isLoading) {
-    return <PageWrapper>Loading...</PageWrapper>;
+    return <PageWrapper>Loading a lot of data...</PageWrapper>;
   }
 
   if (query.isError || !query.data) {
