@@ -226,7 +226,7 @@ function RouteComponent() {
               <SelectTrigger className="w-max select-none">
                 {leaderboard.group !== group ? (
                   group === "select1" ? (
-                    "Season 5 Leaderboards"
+                    "Season 6 Leaderboards"
                   ) : (
                     "Older Leaderboards"
                   )
