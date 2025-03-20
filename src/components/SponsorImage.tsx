@@ -96,8 +96,6 @@ const styles = {
   },
 } satisfies SponsorStyle;
 
-// 2
-
 export const SponsorImage = ({
   sponsor,
   useIcon,
