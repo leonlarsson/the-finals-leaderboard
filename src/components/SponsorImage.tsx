@@ -14,6 +14,7 @@ const sponsors = new Set([
   "dissun",
   "vaiiya",
   "alfa-acta",
+  "ospuze",
 ]);
 
 type SponsorStyle = Record<
@@ -79,6 +80,16 @@ const styles = {
     },
     icon: {
       // Might go dark background for light theme
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
+    },
+  },
+  ospuze: {
+    regular: {
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
+    },
+    icon: {
       light: { backgroundColor: "inherit", padding: 0 },
       dark: { backgroundColor: "inherit", padding: 0 },
     },
