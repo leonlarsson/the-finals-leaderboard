@@ -30,6 +30,34 @@ export const ClubsStatsPanel = ({
   const platformName = getPlatformName(platform);
 
   const someMetadataThatIDontKnowWhatToCall = {
+    [leaderboards.season6.id]: {
+      tableColumnName: "totalRankScore",
+      barChartLabel: "Rank Score",
+    },
+    [leaderboards.season6Sponsor.id]: {
+      tableColumnName: "totalFans",
+      barChartLabel: "Fans",
+    },
+    [leaderboards.season6WorldTour.id]: {
+      tableColumnName: "totalCashouts",
+      barChartLabel: "Cashouts",
+    },
+    [leaderboards.season6TerminalAttack.id]: {
+      tableColumnName: "totalPoints",
+      barChartLabel: "Points",
+    },
+    [leaderboards.season6PowerShift.id]: {
+      tableColumnName: "totalPoints",
+      barChartLabel: "Points",
+    },
+    [leaderboards.season6QuickCash.id]: {
+      tableColumnName: "totalPoints",
+      barChartLabel: "Points",
+    },
+    [leaderboards.season6TeamDeathmatch.id]: {
+      tableColumnName: "totalPoints",
+      barChartLabel: "Points",
+    },
     [leaderboards.season5.id]: {
       tableColumnName: "totalRankScore",
       barChartLabel: "Rank Score",

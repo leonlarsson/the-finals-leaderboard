@@ -202,12 +202,14 @@ const config: Config = {
     },
     // For the Tremor bar chart bar color
     ...[
-      "[#d31f3c]", // Brand red
+      "[#d31f3c]", // Brand red. Used by sponsors Engimo
       "[#39015c]", // Brand purple
       "[#0094df]", // ISEUL-T blue
       "[#f36b00]", // HOLTOW orange
       "[#d21f3c]", // Dissun red
       "[#cf2046]", // Vaiiya red but darker
+      "[#f8bc2c]", // Ospuze yellow/lime/orange??
+      "[#e01d45]", // Alfa Acta red
     ].flatMap((customColor) => [
       `bg-${customColor}`,
       `border-${customColor}`,

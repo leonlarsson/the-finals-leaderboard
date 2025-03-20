@@ -13,7 +13,7 @@ const sponsors = new Set([
   "engimo",
   "dissun",
   "vaiiya",
-  "alfa-acta",
+  "alfa acta",
   "ospuze",
 ]);
 
@@ -73,7 +73,7 @@ const styles = {
       dark: { backgroundColor: "white", padding: 0 },
     },
   },
-  "alfa-acta": {
+  "alfa acta": {
     regular: {
       light: { backgroundColor: "#d31f3c", padding: 2 },
       dark: { backgroundColor: "inherit", padding: 0 },
@@ -119,7 +119,7 @@ export const SponsorImage = ({
       title={`${sponsor} sponsor`}
       width={size}
       alt={`${sponsor} sponsor`}
-      src={`/images/sponsors/sponsor-${sponsor.toLowerCase()}${useIcon ? "-icon" : ""}.png`}
+      src={`/images/sponsors/sponsor-${sponsor.toLowerCase().replace(" ", "_")}${useIcon ? "-icon" : ""}.png`}
     />
   );
 };
