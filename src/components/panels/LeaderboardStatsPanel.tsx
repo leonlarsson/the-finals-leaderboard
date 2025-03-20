@@ -8,6 +8,55 @@ import LeagueImage from "../LeagueImage";
 import { SponsorImage } from "../SponsorImage";
 import { Separator } from "../ui/separator";
 
+const allSponsors = {
+  OSPUZE: {
+    name: "OSPUZE",
+    color: "#f8bc2c",
+  },
+  ENGIMO: {
+    name: "ENGIMO",
+    color: "#d31f3c",
+  },
+  "ALFA ACTA": {
+    name: "ALFA ACTA",
+    color: "#e01d45",
+  },
+  DISSUN: {
+    name: "DISSUN",
+    color: "#d21f3c",
+  },
+  VAIIYA: {
+    name: "VAIIYA",
+    color: "#cf2046",
+  },
+  "ISEUL-T": {
+    name: "ISEUL-T",
+    color: "#0094df",
+  },
+  HOLTOW: {
+    name: "HOLTOW",
+    color: "#f36b00",
+  },
+};
+
+const leaderboardToSponsors = {
+  season6Sponsor: [
+    allSponsors.OSPUZE,
+    allSponsors.ENGIMO,
+    allSponsors["ALFA ACTA"],
+  ],
+  season5Sponsor: [
+    allSponsors.DISSUN,
+    allSponsors.VAIIYA,
+    allSponsors["ISEUL-T"],
+  ],
+  season4Sponsor: [
+    allSponsors["ISEUL-T"],
+    allSponsors.HOLTOW,
+    allSponsors.ENGIMO,
+  ],
+};
+
 type LeaderboardStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
   platform: string;
@@ -22,185 +71,16 @@ export const LeaderboardStatsPanel = ({
   const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);
 
-  // TODO: A lot of this is shared. Use a better approach later™
-  // Just an object with sponsor names and their colors
-
-  if (leaderboard.id === "season6Sponsor") {
-    const sponsors = ["OSPUZE", "ENGIMO", "ALFA ACTA"];
-    return (
-      <div className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900/50">
-        <h2 className="mb-1 text-xl font-medium">
-          Stats and Sponsor Distribution{" "}
-          <span>
-            ({leaderboard.name}
-            {leaderboard.features.includes("platformSelection") && (
-              <span> - {platformName}</span>
-            )}
-            )
-          </span>
-        </h2>
-        {users.length === 0 && <Loading />}
-
-        {users.length !== 0 && (
-          <div>
-            <div className="flex flex-col gap-2">
-              {/* AVERAGES */}
-              <span className="text-lg font-medium">Averages</span>
-
-              <span>
-                Average fans:{" "}
-                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                  {(
-                    users.map((user) => user.fans!).reduce((a, b) => a + b, 0) /
-                    users.length
-                  ).toLocaleString("en", { maximumFractionDigits: 0 })}
-                </span>
-              </span>
-
-              <>
-                {sponsors.map((sponsor) => (
-                  <span key={sponsor}>
-                    Average {sponsor} fans:{" "}
-                    <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                      {(
-                        users
-                          .filter((user) => user.sponsor === sponsor)
-                          .map((user) => user.fans!)
-                          .reduce((a, b) => a + b, 0) /
-                        users.filter((user) => user.sponsor === sponsor).length
-                      ).toLocaleString("en", { maximumFractionDigits: 0 })}
-                    </span>
-                  </span>
-                ))}
-              </>
-            </div>
-
-            <Separator className="my-3" />
-
-            <div className="mb-3 text-lg font-medium">
-              Out of the top {users.length.toLocaleString("en")}{" "}
-              {leaderboard.name}
-              {leaderboard.features.includes("platformSelection") && (
-                <span> {platformName}</span>
-              )}{" "}
-              players...
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 text-center max-[850px]:grid-cols-1">
-              <div className="flex flex-col items-center">
-                <div className="mb-1 text-lg font-medium">
-                  Players by sponsor
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex flex-col items-center">
-                    <DonutChart
-                      className="my-2"
-                      variant="pie"
-                      showLabel
-                      data={sponsors.map((sponsor) => ({
-                        name: sponsor,
-                        value: users.filter((user) => user.sponsor === sponsor)
-                          .length,
-                      }))}
-                      colors={["#f8bc2c", "#d31f3c", "#e01d45"]}
-                      valueFormatter={(v) =>
-                        `${v.toLocaleString("en")} players`
-                      }
-                      showAnimation
-                      animationDuration={500}
-                    />
-                    <Legend
-                      categories={sponsors}
-                      colors={["#f8bc2c", "#d31f3c", "#e01d45"]}
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    {sponsors.map((sponsor) => (
-                      <div key={sponsor}>
-                        <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                          {users
-                            .filter((user) => user.sponsor === sponsor)
-                            .length.toLocaleString("en")}{" "}
-                          (
-                          {(
-                            users.filter((user) => user.sponsor === sponsor)
-                              .length / users.length
-                          ).toLocaleString("en", {
-                            style: "percent",
-                            maximumFractionDigits: 1,
-                          })}
-                          )
-                        </span>{" "}
-                        players have signed with{" "}
-                        <span className="inline-flex items-center gap-1">
-                          <span className="font-medium">{sponsor}</span>
-                          <SponsorImage sponsor={sponsor} useIcon size={25} />
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center">
-                <div className="mb-1 text-lg font-medium">Fans by sponsor</div>
-                <div className="space-y-3">
-                  <div className="flex flex-col items-center">
-                    <DonutChart
-                      className="my-2"
-                      variant="pie"
-                      showLabel
-                      data={sponsors.map((sponsor) => ({
-                        name: sponsor,
-                        value: users
-                          .filter((user) => user.sponsor === sponsor)
-                          .map((user) => user.fans!)
-                          .reduce((a, b) => a + b, 0),
-                      }))}
-                      colors={["#f8bc2c", "#d31f3c", "#e01d45"]}
-                      valueFormatter={(v) =>
-                        `${v.toLocaleString("en")} total fans`
-                      }
-                      showAnimation
-                      animationDuration={500}
-                    />
-                    <Legend
-                      categories={sponsors}
-                      colors={["#f8bc2c", "#d31f3c", "#e01d45"]}
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    {sponsors.map((sponsor) => (
-                      <div key={sponsor}>
-                        <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                          {users
-                            .filter((user) => user.sponsor === sponsor)
-                            .map((user) => user.fans!)
-                            .reduce((a, b) => a + b, 0)
-                            .toLocaleString("en")}
-                        </span>{" "}
-                        fans of players signed with{" "}
-                        <span className="inline-flex items-center gap-1">
-                          <span className="font-medium">{sponsor}</span>
-                          <SponsorImage sponsor={sponsor} useIcon size={25} />
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+  if (
+    leaderboard.id === "season6Sponsor" ||
+    leaderboard.id === "season5Sponsor" ||
+    leaderboard.id === "season4Sponsor"
+  ) {
+    const leaderboardSponsors = leaderboardToSponsors[leaderboard.id];
+    const sponsorColorsArray = leaderboardSponsors.map(
+      (sponsor) => sponsor.color,
     );
-  }
 
-  if (leaderboard.id === "season5Sponsor") {
-    const sponsors = ["DISSUN", "VAIIYA", "ISEUL-T"];
     return (
       <div className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900/50">
         <h2 className="mb-1 text-xl font-medium">
@@ -232,16 +112,17 @@ export const LeaderboardStatsPanel = ({
               </span>
 
               <>
-                {sponsors.map((sponsor) => (
-                  <span key={sponsor}>
-                    Average {sponsor} fans:{" "}
+                {leaderboardSponsors.map((sponsor) => (
+                  <span key={sponsor.name}>
+                    Average {sponsor.name} fans:{" "}
                     <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                       {(
                         users
-                          .filter((user) => user.sponsor === sponsor)
+                          .filter((user) => user.sponsor === sponsor.name)
                           .map((user) => user.fans!)
                           .reduce((a, b) => a + b, 0) /
-                        users.filter((user) => user.sponsor === sponsor).length
+                        users.filter((user) => user.sponsor === sponsor.name)
+                          .length
                       ).toLocaleString("en", { maximumFractionDigits: 0 })}
                     </span>
                   </span>
@@ -272,12 +153,13 @@ export const LeaderboardStatsPanel = ({
                       className="my-2"
                       variant="pie"
                       showLabel
-                      data={sponsors.map((sponsor) => ({
-                        name: sponsor,
-                        value: users.filter((user) => user.sponsor === sponsor)
-                          .length,
+                      data={leaderboardSponsors.map((sponsor) => ({
+                        name: sponsor.name,
+                        value: users.filter(
+                          (user) => user.sponsor === sponsor.name,
+                        ).length,
                       }))}
-                      colors={["#d21f3c", "#cf2046", "#0094df"]}
+                      colors={sponsorColorsArray}
                       valueFormatter={(v) =>
                         `${v.toLocaleString("en")} players`
                       }
@@ -285,22 +167,25 @@ export const LeaderboardStatsPanel = ({
                       animationDuration={500}
                     />
                     <Legend
-                      categories={sponsors}
-                      colors={["#d21f3c", "#cf2046", "#0094df"]}
+                      categories={leaderboardSponsors.map(
+                        (sponsor) => sponsor.name,
+                      )}
+                      colors={sponsorColorsArray}
                     />
                   </div>
 
                   <div className="space-y-1">
-                    {sponsors.map((sponsor) => (
-                      <div key={sponsor}>
+                    {leaderboardSponsors.map((sponsor) => (
+                      <div key={sponsor.name}>
                         <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                           {users
-                            .filter((user) => user.sponsor === sponsor)
+                            .filter((user) => user.sponsor === sponsor.name)
                             .length.toLocaleString("en")}{" "}
                           (
                           {(
-                            users.filter((user) => user.sponsor === sponsor)
-                              .length / users.length
+                            users.filter(
+                              (user) => user.sponsor === sponsor.name,
+                            ).length / users.length
                           ).toLocaleString("en", {
                             style: "percent",
                             maximumFractionDigits: 1,
@@ -309,8 +194,12 @@ export const LeaderboardStatsPanel = ({
                         </span>{" "}
                         players have signed with{" "}
                         <span className="inline-flex items-center gap-1">
-                          <span className="font-medium">{sponsor}</span>
-                          <SponsorImage sponsor={sponsor} useIcon size={25} />
+                          <span className="font-medium">{sponsor.name}</span>
+                          <SponsorImage
+                            sponsor={sponsor.name}
+                            useIcon
+                            size={25}
+                          />
                         </span>
                       </div>
                     ))}
@@ -326,14 +215,14 @@ export const LeaderboardStatsPanel = ({
                       className="my-2"
                       variant="pie"
                       showLabel
-                      data={sponsors.map((sponsor) => ({
-                        name: sponsor,
+                      data={leaderboardSponsors.map((sponsor) => ({
+                        name: sponsor.name,
                         value: users
-                          .filter((user) => user.sponsor === sponsor)
+                          .filter((user) => user.sponsor === sponsor.name)
                           .map((user) => user.fans!)
                           .reduce((a, b) => a + b, 0),
                       }))}
-                      colors={["#d21f3c", "#cf2046", "#0094df"]}
+                      colors={sponsorColorsArray}
                       valueFormatter={(v) =>
                         `${v.toLocaleString("en")} total fans`
                       }
@@ -341,199 +230,31 @@ export const LeaderboardStatsPanel = ({
                       animationDuration={500}
                     />
                     <Legend
-                      categories={sponsors}
-                      colors={["#d21f3c", "#cf2046", "#0094df"]}
+                      categories={leaderboardSponsors.map(
+                        (sponsor) => sponsor.name,
+                      )}
+                      colors={sponsorColorsArray}
                     />
                   </div>
 
                   <div className="space-y-1">
-                    {sponsors.map((sponsor) => (
-                      <div key={sponsor}>
+                    {leaderboardSponsors.map((sponsor) => (
+                      <div key={sponsor.name}>
                         <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                           {users
-                            .filter((user) => user.sponsor === sponsor)
+                            .filter((user) => user.sponsor === sponsor.name)
                             .map((user) => user.fans!)
                             .reduce((a, b) => a + b, 0)
                             .toLocaleString("en")}
                         </span>{" "}
                         fans of players signed with{" "}
                         <span className="inline-flex items-center gap-1">
-                          <span className="font-medium">{sponsor}</span>
-                          <SponsorImage sponsor={sponsor} useIcon size={25} />
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  if (leaderboard.id === "season4Sponsor") {
-    const sponsors = ["ISEUL-T", "HOLTOW", "ENGIMO"];
-    return (
-      <div className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900/50">
-        <h2 className="mb-1 text-xl font-medium">
-          Stats and Sponsor Distribution{" "}
-          <span>
-            ({leaderboard.name}
-            {leaderboard.features.includes("platformSelection") && (
-              <span> - {platformName}</span>
-            )}
-            )
-          </span>
-        </h2>
-        {users.length === 0 && <Loading />}
-
-        {users.length !== 0 && (
-          <div>
-            <div className="flex flex-col gap-2">
-              {/* AVERAGES */}
-              <span className="text-lg font-medium">Averages</span>
-
-              <span>
-                Average fans:{" "}
-                <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                  {(
-                    users.map((user) => user.fans!).reduce((a, b) => a + b, 0) /
-                    users.length
-                  ).toLocaleString("en", { maximumFractionDigits: 0 })}
-                </span>
-              </span>
-
-              <>
-                {sponsors.map((sponsor) => (
-                  <span key={sponsor}>
-                    Average {sponsor} fans:{" "}
-                    <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                      {(
-                        users
-                          .filter((user) => user.sponsor === sponsor)
-                          .map((user) => user.fans!)
-                          .reduce((a, b) => a + b, 0) /
-                        users.filter((user) => user.sponsor === sponsor).length
-                      ).toLocaleString("en", { maximumFractionDigits: 0 })}
-                    </span>
-                  </span>
-                ))}
-              </>
-            </div>
-
-            <Separator className="my-3" />
-
-            <div className="mb-3 text-lg font-medium">
-              Out of the top {users.length.toLocaleString("en")}{" "}
-              {leaderboard.name}
-              {leaderboard.features.includes("platformSelection") && (
-                <span> {platformName}</span>
-              )}{" "}
-              players...
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 text-center max-[850px]:grid-cols-1">
-              <div className="flex flex-col items-center">
-                <div className="mb-1 text-lg font-medium">
-                  Players by sponsor
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex flex-col items-center">
-                    <DonutChart
-                      className="my-2"
-                      variant="pie"
-                      showLabel
-                      data={sponsors.map((sponsor) => ({
-                        name: sponsor,
-                        value: users.filter((user) => user.sponsor === sponsor)
-                          .length,
-                      }))}
-                      colors={["#0094df", "#f36b00", "#d31f3c"]}
-                      valueFormatter={(v) =>
-                        `${v.toLocaleString("en")} players`
-                      }
-                      showAnimation
-                      animationDuration={500}
-                    />
-                    <Legend
-                      categories={sponsors}
-                      colors={["#0094df", "#f36b00", "#d31f3c"]}
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    {sponsors.map((sponsor) => (
-                      <div key={sponsor}>
-                        <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                          {users
-                            .filter((user) => user.sponsor === sponsor)
-                            .length.toLocaleString("en")}{" "}
-                          (
-                          {(
-                            users.filter((user) => user.sponsor === sponsor)
-                              .length / users.length
-                          ).toLocaleString("en", {
-                            style: "percent",
-                            maximumFractionDigits: 1,
-                          })}
-                          )
-                        </span>{" "}
-                        players have signed with{" "}
-                        <span className="inline-flex items-center gap-1">
-                          <span className="font-medium">{sponsor}</span>
-                          <SponsorImage sponsor={sponsor} useIcon size={25} />
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center">
-                <div className="mb-1 text-lg font-medium">Fans by sponsor</div>
-                <div className="space-y-3">
-                  <div className="flex flex-col items-center">
-                    <DonutChart
-                      className="my-2"
-                      variant="pie"
-                      showLabel
-                      data={sponsors.map((sponsor) => ({
-                        name: sponsor,
-                        value: users
-                          .filter((user) => user.sponsor === sponsor)
-                          .map((user) => user.fans!)
-                          .reduce((a, b) => a + b, 0),
-                      }))}
-                      colors={["#0094df", "#f36b00", "#d31f3c"]}
-                      valueFormatter={(v) =>
-                        `${v.toLocaleString("en")} total fans`
-                      }
-                      showAnimation
-                      animationDuration={500}
-                    />
-                    <Legend
-                      categories={sponsors}
-                      colors={["#0094df", "#f36b00", "#d31f3c"]}
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    {sponsors.map((sponsor) => (
-                      <div key={sponsor}>
-                        <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                          {users
-                            .filter((user) => user.sponsor === sponsor)
-                            .map((user) => user.fans!)
-                            .reduce((a, b) => a + b, 0)
-                            .toLocaleString("en")}
-                        </span>{" "}
-                        fans of players signed with{" "}
-                        <span className="inline-flex items-center gap-1">
-                          <span className="font-medium">{sponsor}</span>
-                          <SponsorImage sponsor={sponsor} useIcon size={25} />
+                          <span className="font-medium">{sponsor.name}</span>
+                          <SponsorImage
+                            sponsor={sponsor.name}
+                            useIcon
+                            size={25}
+                          />
                         </span>
                       </div>
                     ))}
