@@ -77,8 +77,8 @@ function RootComponent() {
               Embark Studios
             </BasicLink>
             . Created by{" "}
-            <BasicLink href="https://bsky.app/profile/leon.ms">Mozzy</BasicLink>
-            . Check out the{" "}
+            <BasicLink href="https://x.com/mozzyfx">Mozzy</BasicLink>. Check out
+            the{" "}
             <BasicLink href="https://github.com/leonlarsson/the-finals-api">
               API
             </BasicLink>
@@ -87,15 +87,15 @@ function RootComponent() {
 
           <div className="flex gap-2">
             <ThemeToggle />
-            <BasicLink href="https://bsky.app/profile/leon.ms">
-              <Button variant="outline" size="icon">
-                <BlueskyIcon className="!size-5" />
-              </Button>
-            </BasicLink>
-
             <BasicLink href="https://x.com/mozzyfx">
               <Button variant="outline" size="icon">
                 <XTwitterIcon className="!size-5" />
+              </Button>
+            </BasicLink>
+
+            <BasicLink href="https://bsky.app/profile/leon.ms">
+              <Button variant="outline" size="icon">
+                <BlueskyIcon className="!size-5" />
               </Button>
             </BasicLink>
 
