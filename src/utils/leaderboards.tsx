@@ -125,6 +125,23 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "points"],
   },
 
+  season6HeavyHitters: {
+    group: "select1",
+    id: "season6HeavyHitters",
+    enabled: true,
+    name: "Season 6 Heavy Hitters",
+    nameShort: "S5HH",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s6heavyhitters/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   season5: {
     group: "select2",
     id: "season5",
