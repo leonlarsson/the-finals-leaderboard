@@ -29,64 +29,79 @@ export const ClubsStatsPanel = ({
   const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);
 
-  const someMetadataThatIDontKnowWhatToCall = {
-    [leaderboards.season6.id]: {
-      tableColumnName: "totalRankScore",
-      barChartLabel: "Rank Score",
-    },
-    [leaderboards.season6Sponsor.id]: {
-      tableColumnName: "totalFans",
-      barChartLabel: "Fans",
-    },
-    [leaderboards.season6WorldTour.id]: {
-      tableColumnName: "totalCashouts",
-      barChartLabel: "Cashouts",
-    },
-    [leaderboards.season6TerminalAttack.id]: {
-      tableColumnName: "totalPoints",
-      barChartLabel: "Points",
-    },
-    [leaderboards.season6PowerShift.id]: {
-      tableColumnName: "totalPoints",
-      barChartLabel: "Points",
-    },
-    [leaderboards.season6QuickCash.id]: {
-      tableColumnName: "totalPoints",
-      barChartLabel: "Points",
-    },
-    [leaderboards.season6TeamDeathmatch.id]: {
-      tableColumnName: "totalPoints",
-      barChartLabel: "Points",
-    },
-    [leaderboards.season5.id]: {
-      tableColumnName: "totalRankScore",
-      barChartLabel: "Rank Score",
-    },
-    [leaderboards.season5Sponsor.id]: {
-      tableColumnName: "totalFans",
-      barChartLabel: "Fans",
-    },
-    [leaderboards.season5WorldTour.id]: {
-      tableColumnName: "totalCashouts",
-      barChartLabel: "Cashouts",
-    },
-    [leaderboards.season5TerminalAttack.id]: {
-      tableColumnName: "totalPoints",
-      barChartLabel: "Points",
-    },
-    [leaderboards.season5PowerShift.id]: {
-      tableColumnName: "totalPoints",
-      barChartLabel: "Points",
-    },
-    [leaderboards.season5QuickCash.id]: {
-      tableColumnName: "totalPoints",
-      barChartLabel: "Points",
-    },
-    [leaderboards.season5BankIt.id]: {
-      tableColumnName: "totalPoints",
-      barChartLabel: "Points",
-    },
-  }[leaderboardVersion];
+  const getLeaderboardMetadata = (leaderboardVersion: LeaderboardId) => {
+    const metadataMap = {
+      [leaderboards.season6.id]: {
+        tableColumnName: "totalRankScore",
+        barChartLabel: "Rank Score",
+      },
+      [leaderboards.season6Sponsor.id]: {
+        tableColumnName: "totalFans",
+        barChartLabel: "Fans",
+      },
+      [leaderboards.season6WorldTour.id]: {
+        tableColumnName: "totalCashouts",
+        barChartLabel: "Cashouts",
+      },
+      [leaderboards.season6TerminalAttack.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season6PowerShift.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season6QuickCash.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season6TeamDeathmatch.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season6HeavyHitters.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season5.id]: {
+        tableColumnName: "totalRankScore",
+        barChartLabel: "Rank Score",
+      },
+      [leaderboards.season5Sponsor.id]: {
+        tableColumnName: "totalFans",
+        barChartLabel: "Fans",
+      },
+      [leaderboards.season5WorldTour.id]: {
+        tableColumnName: "totalCashouts",
+        barChartLabel: "Cashouts",
+      },
+      [leaderboards.season5TerminalAttack.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season5PowerShift.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season5QuickCash.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season5BankIt.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+    };
+
+    return (
+      metadataMap[leaderboardVersion] || {
+        tableColumnName: "unknownMetric",
+        barChartLabel: "Unknown",
+      }
+    );
+  };
+
+  const leaderboardMetadata = getLeaderboardMetadata(leaderboardVersion);
 
   const amountOfUniqueClubTags = new Set(users.map((user) => user.clubTag))
     .size;
@@ -123,14 +138,10 @@ export const ClubsStatsPanel = ({
         rank: index + 1,
         clubTag,
         members: memberCounts[clubTag] || 0,
-        [someMetadataThatIDontKnowWhatToCall.tableColumnName]: int,
+        [leaderboardMetadata.tableColumnName]: int,
       }),
     );
-  }, [
-    topClubsByRankScoreOrPointsOrFansOrCashouts,
-    users,
-    someMetadataThatIDontKnowWhatToCall,
-  ]);
+  }, [topClubsByRankScoreOrPointsOrFansOrCashouts, users, leaderboardMetadata]);
 
   const averageClubRankScoreOrPointsOrFansOrCashouts =
     topClubsByRankScoreOrPointsOrFansOrCashouts.reduce(
@@ -191,9 +202,7 @@ export const ClubsStatsPanel = ({
               </div>
 
               <div>
-                Average club{" "}
-                {someMetadataThatIDontKnowWhatToCall.barChartLabel.toLowerCase()}
-                :{" "}
+                Average club {leaderboardMetadata.barChartLabel.toLowerCase()}:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                   {averageClubRankScoreOrPointsOrFansOrCashouts.toLocaleString(
                     "en",
@@ -209,7 +218,7 @@ export const ClubsStatsPanel = ({
               <div>
                 <span className="text-lg font-medium">
                   Top {topXToDisplay} clubs by{" "}
-                  {someMetadataThatIDontKnowWhatToCall.barChartLabel}
+                  {leaderboardMetadata.barChartLabel}:
                 </span>
 
                 <br />
@@ -236,10 +245,10 @@ export const ClubsStatsPanel = ({
                   .toReversed()
                   .map(([clubTag, int]) => ({
                     name: clubTag,
-                    [someMetadataThatIDontKnowWhatToCall.barChartLabel]: int,
+                    [leaderboardMetadata.barChartLabel]: int,
                   }))}
                 index="name"
-                categories={[someMetadataThatIDontKnowWhatToCall.barChartLabel]}
+                categories={[leaderboardMetadata.barChartLabel]}
                 colors={["#d31f3c"]}
                 valueFormatter={(v) => v.toLocaleString("en")}
                 showAnimation
@@ -274,7 +283,7 @@ export const ClubsStatsPanel = ({
                       {typeof amount === "number" && (
                         <span>
                           {amount.toLocaleString("en") ?? 0}{" "}
-                          {someMetadataThatIDontKnowWhatToCall.barChartLabel.toLowerCase()}
+                          {leaderboardMetadata.barChartLabel.toLowerCase()}
                         </span>
                       )}
                     </div>
