@@ -1,4 +1,7 @@
-import { createColumnHelper } from "@tanstack/react-table";
+import {
+  AccessorKeyColumnDef,
+  createColumnHelper,
+} from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { Club, panels } from "@/types";
 import { LeaderboardId } from "@/utils/leaderboards";
@@ -76,26 +79,35 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
     }),
   ];
 
-  if (leaderboardId === "season5") {
-    columns.push(totalRankScoreColumn);
-  }
+  const columnsByLeaderboard: [
+    AccessorKeyColumnDef<Club, number | undefined>,
+    LeaderboardId[],
+  ][] = [
+    [totalRankScoreColumn, ["season5", "season6"]],
+    [totalFansColumn, ["season5Sponsor", "season6Sponsor"]],
+    [totalCashoutsColumn, ["season5WorldTour", "season6WorldTour"]],
+    [
+      totalPointsColumn,
+      [
+        "season5TerminalAttack",
+        "season5PowerShift",
+        "season5QuickCash",
+        "season5BankIt",
+        "season6TerminalAttack",
+        "season6PowerShift",
+        "season6QuickCash",
+        "season6TeamDeathmatch",
+        "season6HeavyHitters",
+      ],
+    ],
+  ];
 
-  if (leaderboardId === "season5Sponsor") {
-    columns.push(totalFansColumn);
-  }
+  const colMap = Object.fromEntries(
+    columnsByLeaderboard.flatMap(([col, ids]) => ids.map((id) => [id, col])),
+  );
 
-  if (leaderboardId === "season5WorldTour") {
-    columns.push(totalCashoutsColumn);
-  }
-
-  if (
-    leaderboardId === "season5TerminalAttack" ||
-    leaderboardId === "season5PowerShift" ||
-    leaderboardId === "season5QuickCash" ||
-    leaderboardId === "season5BankIt"
-  ) {
-    columns.push(totalPointsColumn);
-  }
+  // Add columns based on the leaderboardId
+  colMap[leaderboardId] && columns.push(colMap[leaderboardId]);
 
   columns.push(
     // @ts-ignore It's just because the array have previously been just accessor columns
