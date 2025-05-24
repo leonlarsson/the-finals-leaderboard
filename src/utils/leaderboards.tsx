@@ -557,4 +557,5 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season6PowerShift",
   "season6QuickCash",
   "season6TeamDeathmatch",
+  "season6HeavyHitters",
 ];
