@@ -37,9 +37,14 @@ const allSponsors = {
     name: "HOLTOW",
     color: "#f36b00",
   },
+  CNS: {
+    name: "CNS",
+    color: "#ff56ff",
+  },
 };
 
 const leaderboardToSponsors = {
+  season7Sponsor: [allSponsors.VAIIYA, allSponsors.CNS],
   season6Sponsor: [
     allSponsors.OSPUZE,
     allSponsors.ENGIMO,
@@ -72,6 +77,7 @@ export const LeaderboardStatsPanel = ({
   const platformName = getPlatformName(platform);
 
   if (
+    leaderboard.id === "season7Sponsor" ||
     leaderboard.id === "season6Sponsor" ||
     leaderboard.id === "season5Sponsor" ||
     leaderboard.id === "season4Sponsor"

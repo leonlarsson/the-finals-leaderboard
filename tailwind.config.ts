@@ -210,6 +210,7 @@ const config: Config = {
       "[#cf2046]", // Vaiiya red but darker
       "[#f8bc2c]", // Ospuze yellow/lime/orange??
       "[#e01d45]", // Alfa Acta red
+      "[#ff56ff]", // CNS blurple
     ].flatMap((customColor) => [
       `bg-${customColor}`,
       `border-${customColor}`,

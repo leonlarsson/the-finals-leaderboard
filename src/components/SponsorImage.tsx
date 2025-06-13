@@ -7,7 +7,7 @@ type SponsorImageProps = {
   size?: number;
 };
 
-const sponsors = new Set([
+const sponsors = [
   "holtow",
   "iseul-t",
   "engimo",
@@ -15,10 +15,11 @@ const sponsors = new Set([
   "vaiiya",
   "alfa acta",
   "ospuze",
-]);
+  "cns",
+] as const;
 
 type SponsorStyle = Record<
-  string,
+  (typeof sponsors)[number],
   Record<"regular" | "icon", Record<"light" | "dark", CSSProperties>>
 >;
 
@@ -94,6 +95,16 @@ const styles = {
       dark: { backgroundColor: "inherit", padding: 0 },
     },
   },
+  cns: {
+    regular: {
+      light: { backgroundColor: "inherit", padding: 6 },
+      dark: { backgroundColor: "inherit", padding: 6 },
+    },
+    icon: {
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
+    },
+  },
 } satisfies SponsorStyle;
 
 export const SponsorImage = ({
@@ -103,7 +114,7 @@ export const SponsorImage = ({
 }: SponsorImageProps) => {
   const { selectedTheme } = useTheme();
 
-  if (!sponsors.has(sponsor.toLowerCase())) {
+  if (!sponsors.includes(sponsor.toLowerCase() as (typeof sponsors)[number])) {
     return null;
   }
 

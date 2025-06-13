@@ -31,6 +31,34 @@ export const ClubsStatsPanel = ({
 
   const getLeaderboardMetadata = (leaderboardVersion: LeaderboardId) => {
     const metadataMap = {
+      [leaderboards.season7.id]: {
+        tableColumnName: "totalRankScore",
+        barChartLabel: "Rank Score",
+      },
+      [leaderboards.season7Sponsor.id]: {
+        tableColumnName: "totalFans",
+        barChartLabel: "Fans",
+      },
+      [leaderboards.season7WorldTour.id]: {
+        tableColumnName: "totalCashouts",
+        barChartLabel: "Cashouts",
+      },
+      [leaderboards.season7TerminalAttack.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season7PowerShift.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season7QuickCash.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season7TeamDeathmatch.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
       [leaderboards.season6.id]: {
         tableColumnName: "totalRankScore",
         barChartLabel: "Rank Score",

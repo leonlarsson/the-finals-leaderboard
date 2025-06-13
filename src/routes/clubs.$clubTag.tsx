@@ -72,7 +72,8 @@ function RouteComponent() {
                   <span className="text-lg font-medium">
                     {Object.values(leaderboards).find(
                       (x) => x.id === apiIdToWebId(leaderboard.leaderboard),
-                    )?.name ?? "Unknown leaderboard"}
+                    )?.name ??
+                      `Unknown leaderboard (${leaderboard.leaderboard})`}
                   </span>{" "}
                   | <span>Rank #{leaderboard.rank}</span> |{" "}
                   <span>
@@ -109,6 +110,13 @@ function RouteComponent() {
 
 const apiIdToWebId = (lb: string): string =>
   ({
+    s7: "season7",
+    s7sponsor: "season7Sponsor",
+    s7worldtour: "season7WorldTour",
+    s7terminalattack: "season7TerminalAttack",
+    s7powershift: "season7PowerShift",
+    s7quickcash: "season7QuickCash",
+    s7teamdeathmatch: "season7TeamDeathmatch",
     s6: "season6",
     s6sponsor: "season6Sponsor",
     s6worldtour: "season6WorldTour",
@@ -116,6 +124,7 @@ const apiIdToWebId = (lb: string): string =>
     s6powershift: "season6PowerShift",
     s6quickcash: "season6QuickCash",
     s6teamdeathmatch: "season6TeamDeathmatch",
+    // s6heavyhitters: "season6HeavyHitters",
     s5: "season5",
     s5sponsor: "season5Sponsor",
     s5worldtour: "season5WorldTour",
