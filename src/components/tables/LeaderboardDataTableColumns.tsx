@@ -312,31 +312,35 @@ const platformNamesInline = (user: BaseUser) => {
   return (
     <div className="flex flex-col gap-1">
       <div>
-        {user.clubTag && <ClickableClubTag clubTag={user.clubTag} />}
-        <span className="font-medium">{user.name.split("#")[0]}</span>
+        <div className="inline-flex gap-1">
+          {user.clubTag && <ClickableClubTag clubTag={user.clubTag} />}
+          <span className="font-medium">{user.name.split("#")[0]}</span>
+        </div>
         <span className="text-neutral-500">#{user.name.split("#")[1]}</span>
       </div>
 
-      {user.steamName && (
-        <span className="inline-flex items-center gap-1">
-          <SteamIcon className="inline size-5 opacity-60" />
-          <span>{user.steamName}</span>
-        </span>
-      )}
+      <div className="flex flex-wrap gap-1 *:rounded *:bg-neutral-200 *:p-1 *:py-[2px] *:text-xs *:transition-colors *:dark:bg-neutral-800">
+        {user.steamName && (
+          <span className="inline-flex items-center gap-1">
+            <SteamIcon className="size-4 opacity-60" />
+            <span>{user.steamName}</span>
+          </span>
+        )}
 
-      {user.xboxName && (
-        <span className="inline-flex items-center gap-1">
-          <XboxIcon className="inline size-5 opacity-60" />
-          <span>{user.xboxName}</span>
-        </span>
-      )}
+        {user.xboxName && (
+          <span className="inline-flex items-center gap-1">
+            <XboxIcon className="size-4 opacity-60" />
+            <span>{user.xboxName}</span>
+          </span>
+        )}
 
-      {user.psnName && (
-        <span className="inline-flex items-center gap-1">
-          <PlayStationIcon className="inline size-5 opacity-60" />
-          <span>{user.psnName}</span>
-        </span>
-      )}
+        {user.psnName && (
+          <span className="inline-flex items-center gap-1">
+            <PlayStationIcon className="size-4 opacity-60" />
+            <span>{user.psnName}</span>
+          </span>
+        )}
+      </div>
     </div>
   );
 };
@@ -396,7 +400,7 @@ const ClickableClubTag = ({ clubTag }: { clubTag: string }) => {
 
   return (
     <button
-      className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+      className="cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
       title="View club ranking"
       onClick={() => {
         navigate({
