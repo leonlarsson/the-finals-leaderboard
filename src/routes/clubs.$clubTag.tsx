@@ -117,6 +117,7 @@ const apiIdToWebId = (lb: string): string =>
     s7powershift: "season7PowerShift",
     s7quickcash: "season7QuickCash",
     s7teamdeathmatch: "season7TeamDeathmatch",
+    s7blastoff: "season7BlastOff",
     s6: "season6",
     s6sponsor: "season6Sponsor",
     s6worldtour: "season6WorldTour",
