@@ -5,6 +5,12 @@ import { Notice } from "@/components/Notice";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { communityEvents } from "@/utils/communityEvents";
 import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
 
@@ -68,13 +74,23 @@ function RootComponent() {
 
         <div className="mt-2 flex flex-col gap-2">
           <div className="text-sm">
-            This site is not affiliated with{" "}
-            <BasicLink href="https://www.embark-studios.com/">
-              Embark Studios
-            </BasicLink>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipContent className="max-w-xs">
+                  The developer currently works at Embark&nbsp;Studios, but this
+                  website and the API are fully independent.
+                </TooltipContent>
+                <TooltipTrigger className="cursor-default">
+                  This site is not affiliated with{" "}
+                  <BasicLink href="https://www.embark-studios.com/">
+                    Embark&nbsp;Studios
+                  </BasicLink>
+                </TooltipTrigger>
+              </Tooltip>
+            </TooltipProvider>
             . All imagery and data is owned by{" "}
             <BasicLink href="https://www.embark-studios.com/">
-              Embark Studios
+              Embark&nbsp;Studios
             </BasicLink>
             . Created by{" "}
             <BasicLink href="https://x.com/mozzyfx">Mozzy</BasicLink>. Check out
