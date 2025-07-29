@@ -59,6 +59,14 @@ export const ClubsStatsPanel = ({
         tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
+      [leaderboards.season7BlastOff.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
+      [leaderboards.season7CashBall.id]: {
+        tableColumnName: "totalPoints",
+        barChartLabel: "Points",
+      },
       [leaderboards.season6.id]: {
         tableColumnName: "totalRankScore",
         barChartLabel: "Rank Score",

@@ -143,6 +143,23 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "points"],
   },
 
+  season7CashBall: {
+    group: "select1",
+    id: "season7CashBall",
+    enabled: true,
+    name: "Season 7 Cash Ball",
+    nameShort: "S7CB",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s7cashball/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   // Season 6
   season6: {
     group: "select2",
@@ -710,4 +727,5 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season7QuickCash",
   "season7TeamDeathmatch",
   "season7BlastOff",
+  "season7CashBall",
 ];
