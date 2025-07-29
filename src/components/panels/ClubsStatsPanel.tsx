@@ -32,106 +32,81 @@ export const ClubsStatsPanel = ({
   const getLeaderboardMetadata = (leaderboardVersion: LeaderboardId) => {
     const metadataMap = {
       [leaderboards.season7.id]: {
-        tableColumnName: "totalRankScore",
         barChartLabel: "Rank Score",
       },
       [leaderboards.season7Sponsor.id]: {
-        tableColumnName: "totalFans",
         barChartLabel: "Fans",
       },
       [leaderboards.season7WorldTour.id]: {
-        tableColumnName: "totalCashouts",
         barChartLabel: "Cashouts",
       },
       [leaderboards.season7TerminalAttack.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season7PowerShift.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season7QuickCash.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season7TeamDeathmatch.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season7BlastOff.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season7CashBall.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season6.id]: {
-        tableColumnName: "totalRankScore",
         barChartLabel: "Rank Score",
       },
       [leaderboards.season6Sponsor.id]: {
-        tableColumnName: "totalFans",
         barChartLabel: "Fans",
       },
       [leaderboards.season6WorldTour.id]: {
-        tableColumnName: "totalCashouts",
         barChartLabel: "Cashouts",
       },
       [leaderboards.season6TerminalAttack.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season6PowerShift.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season6QuickCash.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season6TeamDeathmatch.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season6HeavyHitters.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season5.id]: {
-        tableColumnName: "totalRankScore",
         barChartLabel: "Rank Score",
       },
       [leaderboards.season5Sponsor.id]: {
-        tableColumnName: "totalFans",
         barChartLabel: "Fans",
       },
       [leaderboards.season5WorldTour.id]: {
-        tableColumnName: "totalCashouts",
         barChartLabel: "Cashouts",
       },
       [leaderboards.season5TerminalAttack.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season5PowerShift.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season5QuickCash.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
       [leaderboards.season5BankIt.id]: {
-        tableColumnName: "totalPoints",
         barChartLabel: "Points",
       },
     };
 
     return (
       metadataMap[leaderboardVersion] || {
-        tableColumnName: "unknownMetric",
         barChartLabel: "Unknown",
       }
     );
@@ -174,7 +149,7 @@ export const ClubsStatsPanel = ({
         rank: index + 1,
         clubTag,
         members: memberCounts[clubTag] || 0,
-        [leaderboardMetadata.tableColumnName]: int,
+        totalValue: int ?? 0,
       }),
     );
   }, [topClubsByRankScoreOrPointsOrFansOrCashouts, users, leaderboardMetadata]);

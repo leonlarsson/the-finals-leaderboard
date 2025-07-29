@@ -34,10 +34,7 @@ export type Club = {
   rank: number;
   clubTag: string;
   members: number;
-  totalRankScore?: number;
-  totalFans?: number;
-  totalCashouts?: number;
-  totalPoints?: number;
+  totalValue: number;
 };
 
 export type LeaderboardFeature =

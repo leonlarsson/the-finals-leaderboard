@@ -80,12 +80,15 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
   ];
 
   const columnsByLeaderboard: [
-    AccessorKeyColumnDef<Club, number | undefined>,
+    AccessorKeyColumnDef<Club, number>,
     LeaderboardId[],
   ][] = [
-    [totalRankScoreColumn, ["season5", "season6"]],
-    [totalFansColumn, ["season5Sponsor", "season6Sponsor"]],
-    [totalCashoutsColumn, ["season5WorldTour", "season6WorldTour"]],
+    [totalRankScoreColumn, ["season5", "season6", "season7"]],
+    [totalFansColumn, ["season5Sponsor", "season6Sponsor", "season7Sponsor"]],
+    [
+      totalCashoutsColumn,
+      ["season5WorldTour", "season6WorldTour", "season7WorldTour"],
+    ],
     [
       totalPointsColumn,
       [
@@ -98,6 +101,12 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
         "season6QuickCash",
         "season6TeamDeathmatch",
         "season6HeavyHitters",
+        "season7TerminalAttack",
+        "season7PowerShift",
+        "season7QuickCash",
+        "season7TeamDeathmatch",
+        "season7BlastOff",
+        "season7CashBall",
       ],
     ],
   ];
@@ -138,31 +147,31 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
 };
 
 // Total Rank Score
-const totalRankScoreColumn = columnHelper.accessor("totalRankScore", {
+const totalRankScoreColumn = columnHelper.accessor("totalValue", {
   id: "rankScore",
   header: ({ column }) => (
     <DataTableColumnHeader column={column} title="Total Rank Score" />
   ),
-  cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  cell: ({ getValue }) => getValue().toLocaleString("en"),
 });
 
 // Total Fans
-const totalFansColumn = columnHelper.accessor("totalFans", {
+const totalFansColumn = columnHelper.accessor("totalValue", {
   id: "fans",
   header: ({ column }) => (
     <DataTableColumnHeader column={column} title="Total Fans" />
   ),
-  cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  cell: ({ getValue }) => getValue().toLocaleString("en"),
 });
 
 // Total Cashouts
-const totalCashoutsColumn = columnHelper.accessor("totalCashouts", {
+const totalCashoutsColumn = columnHelper.accessor("totalValue", {
   id: "cashouts",
   header: ({ column }) => (
     <DataTableColumnHeader column={column} title="Total Cashouts" />
   ),
   cell: ({ getValue }) =>
-    (getValue() ?? 0).toLocaleString("en", {
+    getValue().toLocaleString("en", {
       style: "currency",
       currency: "USD",
       maximumFractionDigits: 0,
@@ -170,10 +179,10 @@ const totalCashoutsColumn = columnHelper.accessor("totalCashouts", {
 });
 
 // Total Points
-const totalPointsColumn = columnHelper.accessor("totalPoints", {
+const totalPointsColumn = columnHelper.accessor("totalValue", {
   id: "points",
   header: ({ column }) => (
     <DataTableColumnHeader column={column} title="Total Points" />
   ),
-  cell: ({ getValue }) => (getValue() ?? 0).toLocaleString("en"),
+  cell: ({ getValue }) => getValue().toLocaleString("en"),
 });
