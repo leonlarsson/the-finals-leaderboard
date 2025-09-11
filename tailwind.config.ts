@@ -211,6 +211,7 @@ const config: Config = {
       "[#f8bc2c]", // Ospuze yellow/lime/orange??
       "[#e01d45]", // Alfa Acta red
       "[#ff56ff]", // CNS blurple
+      "[#66d668]", // Trentila green
     ].flatMap((customColor) => [
       `bg-${customColor}`,
       `border-${customColor}`,

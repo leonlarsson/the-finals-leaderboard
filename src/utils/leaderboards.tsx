@@ -2,9 +2,133 @@ import type { BaseUser, BaseUserWithExtras, LeaderboardFeature } from "@/types";
 import { ReactNode } from "react";
 
 export const leaderboards = {
+  // Season 8
+  season8: {
+    group: "select1",
+    id: "season8",
+    enabled: true,
+    name: "Season 8",
+    nameShort: "S8",
+    features: [
+      "statsPanel",
+      "clubsPanel",
+      "leagueFilter",
+    ] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "change", "name", "fame"],
+  },
+
+  season8Sponsor: {
+    group: "select1",
+    id: "season8Sponsor",
+    enabled: true,
+    name: "Season 8 Sponsor",
+    nameShort: "S8S",
+    features: ["statsPanel", "clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8sponsor/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "sponsor", "fans"],
+  },
+
+  season8WorldTour: {
+    group: "select1",
+    id: "season8WorldTour",
+    enabled: true,
+    name: "Season 8 World Tour",
+    nameShort: "S8WT",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8worldtour/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "cashouts"],
+  },
+
+  season8Head2Head: {
+    group: "select1",
+    id: "season8Head2Head",
+    enabled: true,
+    name: "Season 8 Head2Head",
+    nameShort: "S8H2H",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8head2head/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season8PowerShift: {
+    group: "select1",
+    id: "season8PowerShift",
+    enabled: true,
+    name: "Season 8 PowerShift",
+    nameShort: "S8PS",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8powershift/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season8QuickCash: {
+    group: "select1",
+    id: "season8QuickCash",
+    enabled: true,
+    name: "Season 8 Quick Cash",
+    nameShort: "S8QC",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8quickcash/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season8TeamDeathmatch: {
+    group: "select1",
+    id: "season8TeamDeathmatch",
+    enabled: true,
+    name: "Season 8 Team Deathmatch",
+    nameShort: "S5BI",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8teamdeathmatch/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   // Season 7
   season7: {
-    group: "select1",
+    group: "select2",
     id: "season7",
     enabled: true,
     name: "Season 7",
@@ -25,7 +149,7 @@ export const leaderboards = {
   },
 
   season7Sponsor: {
-    group: "select1",
+    group: "select2",
     id: "season7Sponsor",
     enabled: true,
     name: "Season 7 Sponsor",
@@ -42,7 +166,7 @@ export const leaderboards = {
   },
 
   season7WorldTour: {
-    group: "select1",
+    group: "select2",
     id: "season7WorldTour",
     enabled: true,
     name: "Season 7 World Tour",
@@ -59,7 +183,7 @@ export const leaderboards = {
   },
 
   season7TerminalAttack: {
-    group: "select1",
+    group: "select2",
     id: "season7TerminalAttack",
     enabled: true,
     name: "Season 7 Terminal Attack",
@@ -76,7 +200,7 @@ export const leaderboards = {
   },
 
   season7PowerShift: {
-    group: "select1",
+    group: "select2",
     id: "season7PowerShift",
     enabled: true,
     name: "Season 7 PowerShift",
@@ -93,7 +217,7 @@ export const leaderboards = {
   },
 
   season7QuickCash: {
-    group: "select1",
+    group: "select2",
     id: "season7QuickCash",
     enabled: true,
     name: "Season 7 Quick Cash",
@@ -110,7 +234,7 @@ export const leaderboards = {
   },
 
   season7TeamDeathmatch: {
-    group: "select1",
+    group: "select2",
     id: "season7TeamDeathmatch",
     enabled: true,
     name: "Season 7 Team Deathmatch",
@@ -127,7 +251,7 @@ export const leaderboards = {
   },
 
   season7BlastOff: {
-    group: "select1",
+    group: "select2",
     id: "season7BlastOff",
     enabled: true,
     name: "Season 7 Blast Off",
@@ -144,7 +268,7 @@ export const leaderboards = {
   },
 
   season7CashBall: {
-    group: "select1",
+    group: "select2",
     id: "season7CashBall",
     enabled: true,
     name: "Season 7 Cash Ball",
@@ -717,15 +841,13 @@ export type Leaderboard = {
 
 export type LeaderboardId = keyof typeof leaderboards;
 
-export const defaultLeaderboardId: LeaderboardId = "season7";
+export const defaultLeaderboardId: LeaderboardId = "season8";
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
-  "season7",
-  "season7Sponsor",
-  "season7WorldTour",
-  "season7TerminalAttack",
-  "season7PowerShift",
-  "season7QuickCash",
-  "season7TeamDeathmatch",
-  "season7BlastOff",
-  "season7CashBall",
+  "season8",
+  "season8Sponsor",
+  "season8WorldTour",
+  "season8Head2Head",
+  "season8PowerShift",
+  "season8QuickCash",
+  "season8TeamDeathmatch",
 ];

@@ -41,9 +41,14 @@ const allSponsors = {
     name: "CNS",
     color: "#ff56ff",
   },
+  TRENTILA: {
+    name: "TRENTILA",
+    color: "#66d668",
+  },
 };
 
 const leaderboardToSponsors = {
+  season8Sponsor: [allSponsors.HOLTOW, allSponsors.TRENTILA],
   season7Sponsor: [allSponsors.VAIIYA, allSponsors.CNS],
   season6Sponsor: [
     allSponsors.OSPUZE,
@@ -60,7 +65,7 @@ const leaderboardToSponsors = {
     allSponsors.HOLTOW,
     allSponsors.ENGIMO,
   ],
-};
+} satisfies Partial<Record<LeaderboardId, { name: string; color: string }[]>>;
 
 type LeaderboardStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
@@ -77,6 +82,7 @@ export const LeaderboardStatsPanel = ({
   const platformName = getPlatformName(platform);
 
   if (
+    leaderboard.id === "season8Sponsor" ||
     leaderboard.id === "season7Sponsor" ||
     leaderboard.id === "season6Sponsor" ||
     leaderboard.id === "season5Sponsor" ||

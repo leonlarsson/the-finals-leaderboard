@@ -31,6 +31,27 @@ export const ClubsStatsPanel = ({
 
   const getLeaderboardMetadata = (leaderboardVersion: LeaderboardId) => {
     const metadataMap = {
+      [leaderboards.season8.id]: {
+        barChartLabel: "Rank Score",
+      },
+      [leaderboards.season8Sponsor.id]: {
+        barChartLabel: "Fans",
+      },
+      [leaderboards.season8WorldTour.id]: {
+        barChartLabel: "Cashouts",
+      },
+      [leaderboards.season8Head2Head.id]: {
+        barChartLabel: "Points",
+      },
+      [leaderboards.season8PowerShift.id]: {
+        barChartLabel: "Points",
+      },
+      [leaderboards.season8QuickCash.id]: {
+        barChartLabel: "Points",
+      },
+      [leaderboards.season8TeamDeathmatch.id]: {
+        barChartLabel: "Points",
+      },
       [leaderboards.season7.id]: {
         barChartLabel: "Rank Score",
       },

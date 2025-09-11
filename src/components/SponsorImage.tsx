@@ -16,6 +16,7 @@ const sponsors = [
   "alfa acta",
   "ospuze",
   "cns",
+  "trentila",
 ] as const;
 
 type SponsorStyle = Record<
@@ -99,6 +100,16 @@ const styles = {
     regular: {
       light: { backgroundColor: "inherit", padding: 6 },
       dark: { backgroundColor: "inherit", padding: 6 },
+    },
+    icon: {
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
+    },
+  },
+  trentila: {
+    regular: {
+      light: { backgroundColor: "#d31f3c", padding: 6 },
+      dark: { backgroundColor: "inherit", padding: 0 },
     },
     icon: {
       light: { backgroundColor: "inherit", padding: 0 },

@@ -16,6 +16,6 @@ npm run dev
 3. Add new leaderboards to `src/utils/leagues.ts`
 4. Add new leaderboards to `src/routes/clubs.$clubTag.tsx` (`apiIdToWebId`)
 5. Add new leaderboards to `src/components/tables/ClubsDataTableColumns.tsx` (`columnsByLeaderboard`)
-6. For sponsors, add sponsors in `src/components/panels/LeaderboardStatsPanel.tsx`. (`allSponsors`, `leaderboardToSponsors`). Add seasonXSponsors to if check
+6. For sponsors, add sponsors in `src/components/panels/LeaderboardStatsPanel.tsx`. (`allSponsors`, `leaderboardToSponsors`). Add seasonXSponsors to if check. Add sponsor color to `tailwind.config.ts`
 7. For sponsors, add new sponsors to `src/components/SponsorImage.tsx` (`sponsors`, `styles`)
 8. For sponsors, make sure to create and add the relevant images normal and -icon variants to `public/images/sponsors/`

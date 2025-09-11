@@ -110,6 +110,13 @@ function RouteComponent() {
 
 const apiIdToWebId = (lb: string): string =>
   ({
+    s8: "season7",
+    s8sponsor: "season8Sponsor",
+    s8worldtour: "season8WorldTour",
+    s8head2head: "season8Head2Head",
+    s8powershift: "season8PowerShift",
+    s8quickcash: "season8QuickCash",
+    s8teamdeathmatch: "season8TeamDeathmatch",
     s7: "season7",
     s7sponsor: "season7Sponsor",
     s7worldtour: "season7WorldTour",
