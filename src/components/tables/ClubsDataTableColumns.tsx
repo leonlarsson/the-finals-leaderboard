@@ -119,6 +119,7 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
         "season8PowerShift",
         "season8QuickCash",
         "season8TeamDeathmatch",
+        "season8HeavenOrElse",
       ],
     ],
   ];

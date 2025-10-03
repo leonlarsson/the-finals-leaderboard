@@ -126,6 +126,23 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "points"],
   },
 
+  season8HeavenOrElse: {
+    group: "select1",
+    id: "season8HeavenOrElse",
+    enabled: true,
+    name: "Season 8 Heaven Or Else",
+    nameShort: "S8HE",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8heavenorelse/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   // Season 7
   season7: {
     group: "select2",
@@ -850,4 +867,5 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season8PowerShift",
   "season8QuickCash",
   "season8TeamDeathmatch",
+  "season8HeavenOrElse",
 ];

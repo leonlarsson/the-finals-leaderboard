@@ -52,6 +52,9 @@ export const ClubsStatsPanel = ({
       [leaderboards.season8TeamDeathmatch.id]: {
         barChartLabel: "Points",
       },
+      [leaderboards.season8HeavenOrElse.id]: {
+        barChartLabel: "Points",
+      },
       [leaderboards.season7.id]: {
         barChartLabel: "Rank Score",
       },
