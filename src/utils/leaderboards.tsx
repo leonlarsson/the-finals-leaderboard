@@ -143,6 +143,23 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "points"],
   },
 
+  season8GhoulRush: {
+    group: "select1",
+    id: "season8GhoulRush",
+    enabled: true,
+    name: "Season 8 Ghoul Rush",
+    nameShort: "S8GR",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8ghoulrush/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   // Season 7
   season7: {
     group: "select2",
@@ -868,4 +885,5 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season8QuickCash",
   "season8TeamDeathmatch",
   "season8HeavenOrElse",
+  "season8GhoulRush",
 ];
