@@ -160,6 +160,23 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "points"],
   },
 
+  season8BlastOff: {
+    group: "select1",
+    id: "season8BlastOff",
+    enabled: true,
+    name: "Season 8 Blast Off",
+    nameShort: "S8BO",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s8blastoff/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   // Season 7
   season7: {
     group: "select2",
@@ -886,4 +903,5 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season8TeamDeathmatch",
   "season8HeavenOrElse",
   "season8GhoulRush",
+  "season8BlastOff",
 ];

@@ -58,6 +58,9 @@ export const ClubsStatsPanel = ({
       [leaderboards.season8GhoulRush.id]: {
         barChartLabel: "Points",
       },
+      [leaderboards.season8BlastOff.id]: {
+        barChartLabel: "Points",
+      },
       [leaderboards.season7.id]: {
         barChartLabel: "Rank Score",
       },
