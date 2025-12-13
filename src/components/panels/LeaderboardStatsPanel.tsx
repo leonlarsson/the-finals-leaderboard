@@ -45,9 +45,24 @@ const allSponsors = {
     name: "TRENTILA",
     color: "#66d668",
   },
+  VOLPE: {
+    name: "VOLPE",
+    color: "#d41d3f",
+  },
 };
 
 const leaderboardToSponsors = {
+  season9Sponsor: [
+    allSponsors.OSPUZE,
+    allSponsors.ENGIMO,
+    allSponsors["ALFA ACTA"],
+    allSponsors.DISSUN,
+    allSponsors.VAIIYA,
+    allSponsors["ISEUL-T"],
+    allSponsors.HOLTOW,
+    allSponsors.TRENTILA,
+    allSponsors.VOLPE,
+  ],
   season8Sponsor: [allSponsors.HOLTOW, allSponsors.TRENTILA],
   season7Sponsor: [allSponsors.VAIIYA, allSponsors.CNS],
   season6Sponsor: [
@@ -82,6 +97,7 @@ export const LeaderboardStatsPanel = ({
   const platformName = getPlatformName(platform);
 
   if (
+    leaderboard.id === "season9Sponsor" ||
     leaderboard.id === "season8Sponsor" ||
     leaderboard.id === "season7Sponsor" ||
     leaderboard.id === "season6Sponsor" ||

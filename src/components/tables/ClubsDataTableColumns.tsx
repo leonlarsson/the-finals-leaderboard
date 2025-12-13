@@ -83,10 +83,19 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
     AccessorKeyColumnDef<Club, number>,
     LeaderboardId[],
   ][] = [
-    [totalRankScoreColumn, ["season5", "season6", "season7", "season8"]],
+    [
+      totalRankScoreColumn,
+      ["season5", "season6", "season7", "season8", "season9"],
+    ],
     [
       totalFansColumn,
-      ["season5Sponsor", "season6Sponsor", "season7Sponsor", "season8Sponsor"],
+      [
+        "season5Sponsor",
+        "season6Sponsor",
+        "season7Sponsor",
+        "season8Sponsor",
+        "season9Sponsor",
+      ],
     ],
     [
       totalCashoutsColumn,
@@ -95,6 +104,7 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
         "season6WorldTour",
         "season7WorldTour",
         "season8WorldTour",
+        "season9WorldTour",
       ],
     ],
     [
@@ -122,6 +132,11 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
         "season8HeavenOrElse",
         "season8GhoulRush",
         "season8BlastOff",
+        "season9Head2Head",
+        "season9PowerShift",
+        "season9QuickCash",
+        "season9TeamDeathmatch",
+        "season9PointBreak",
       ],
     ],
   ];

@@ -212,6 +212,7 @@ const config: Config = {
       "[#e01d45]", // Alfa Acta red
       "[#ff56ff]", // CNS blurple
       "[#66d668]", // Trentila green
+      "[#d41d3f]", // Volpe red
     ].flatMap((customColor) => [
       `bg-${customColor}`,
       `border-${customColor}`,

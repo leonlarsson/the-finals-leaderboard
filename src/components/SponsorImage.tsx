@@ -17,6 +17,7 @@ const sponsors = [
   "ospuze",
   "cns",
   "trentila",
+  "volpe",
 ] as const;
 
 type SponsorStyle = Record<
@@ -109,6 +110,16 @@ const styles = {
   trentila: {
     regular: {
       light: { backgroundColor: "#d31f3c", padding: 6 },
+      dark: { backgroundColor: "inherit", padding: 0 },
+    },
+    icon: {
+      light: { backgroundColor: "inherit", padding: 0 },
+      dark: { backgroundColor: "inherit", padding: 0 },
+    },
+  },
+  volpe: {
+    regular: {
+      light: { backgroundColor: "inherit", padding: 0 },
       dark: { backgroundColor: "inherit", padding: 0 },
     },
     icon: {
