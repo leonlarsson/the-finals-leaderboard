@@ -7,6 +7,7 @@ import Loading from "../Loading";
 import LeagueImage from "../LeagueImage";
 import { SponsorImage } from "../SponsorImage";
 import { Separator } from "../ui/separator";
+import { useMemo } from "react";
 
 const allSponsors = {
   OSPUZE: {
@@ -105,7 +106,44 @@ export const LeaderboardStatsPanel = ({
     leaderboard.id === "season4Sponsor"
   ) {
     const leaderboardSponsors = leaderboardToSponsors[leaderboard.id];
-    const sponsorColorsArray = leaderboardSponsors.map(
+
+    const sortedSponsorsByAvgFans = useMemo(() => {
+      return [...leaderboardSponsors].sort((a, b) => {
+        const aUsers = users.filter((user) => user.sponsor === a.name);
+        const bUsers = users.filter((user) => user.sponsor === b.name);
+        const aAvg =
+          aUsers.reduce((sum, u) => sum + u.fans!, 0) / aUsers.length;
+        const bAvg =
+          bUsers.reduce((sum, u) => sum + u.fans!, 0) / bUsers.length;
+        return bAvg - aAvg;
+      });
+    }, [leaderboardSponsors, users]);
+
+    const sortedSponsorsByPlayerCount = useMemo(() => {
+      return [...leaderboardSponsors].sort((a, b) => {
+        const aCount = users.filter((user) => user.sponsor === a.name).length;
+        const bCount = users.filter((user) => user.sponsor === b.name).length;
+        return bCount - aCount;
+      });
+    }, [leaderboardSponsors, users]);
+
+    const sortedSponsorsByTotalFans = useMemo(() => {
+      return [...leaderboardSponsors].sort((a, b) => {
+        const aTotal = users
+          .filter((user) => user.sponsor === a.name)
+          .reduce((sum, u) => sum + u.fans!, 0);
+        const bTotal = users
+          .filter((user) => user.sponsor === b.name)
+          .reduce((sum, u) => sum + u.fans!, 0);
+        return bTotal - aTotal;
+      });
+    }, [leaderboardSponsors, users]);
+
+    const sponsorColorsArrayByPlayerCount = sortedSponsorsByPlayerCount.map(
+      (sponsor) => sponsor.color,
+    );
+
+    const sponsorColorsArrayByTotalFans = sortedSponsorsByTotalFans.map(
       (sponsor) => sponsor.color,
     );
 
@@ -140,7 +178,7 @@ export const LeaderboardStatsPanel = ({
               </span>
 
               <>
-                {leaderboardSponsors.map((sponsor) => (
+                {sortedSponsorsByAvgFans.map((sponsor) => (
                   <span key={sponsor.name}>
                     Average {sponsor.name} fans:{" "}
                     <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
@@ -181,13 +219,13 @@ export const LeaderboardStatsPanel = ({
                       className="my-2"
                       variant="pie"
                       showLabel
-                      data={leaderboardSponsors.map((sponsor) => ({
+                      data={sortedSponsorsByPlayerCount.map((sponsor) => ({
                         name: sponsor.name,
                         value: users.filter(
                           (user) => user.sponsor === sponsor.name,
                         ).length,
                       }))}
-                      colors={sponsorColorsArray}
+                      colors={sponsorColorsArrayByPlayerCount}
                       valueFormatter={(v) =>
                         `${v.toLocaleString("en")} players`
                       }
@@ -195,15 +233,15 @@ export const LeaderboardStatsPanel = ({
                       animationDuration={500}
                     />
                     <Legend
-                      categories={leaderboardSponsors.map(
+                      categories={sortedSponsorsByPlayerCount.map(
                         (sponsor) => sponsor.name,
                       )}
-                      colors={sponsorColorsArray}
+                      colors={sponsorColorsArrayByPlayerCount}
                     />
                   </div>
 
                   <div className="space-y-1">
-                    {leaderboardSponsors.map((sponsor) => (
+                    {sortedSponsorsByPlayerCount.map((sponsor) => (
                       <div key={sponsor.name}>
                         <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                           {users
@@ -243,14 +281,14 @@ export const LeaderboardStatsPanel = ({
                       className="my-2"
                       variant="pie"
                       showLabel
-                      data={leaderboardSponsors.map((sponsor) => ({
+                      data={sortedSponsorsByTotalFans.map((sponsor) => ({
                         name: sponsor.name,
                         value: users
                           .filter((user) => user.sponsor === sponsor.name)
                           .map((user) => user.fans!)
                           .reduce((a, b) => a + b, 0),
                       }))}
-                      colors={sponsorColorsArray}
+                      colors={sponsorColorsArrayByTotalFans}
                       valueFormatter={(v) =>
                         `${v.toLocaleString("en")} total fans`
                       }
@@ -258,15 +296,15 @@ export const LeaderboardStatsPanel = ({
                       animationDuration={500}
                     />
                     <Legend
-                      categories={leaderboardSponsors.map(
+                      categories={sortedSponsorsByTotalFans.map(
                         (sponsor) => sponsor.name,
                       )}
-                      colors={sponsorColorsArray}
+                      colors={sponsorColorsArrayByTotalFans}
                     />
                   </div>
 
                   <div className="space-y-1">
-                    {leaderboardSponsors.map((sponsor) => (
+                    {sortedSponsorsByTotalFans.map((sponsor) => (
                       <div key={sponsor.name}>
                         <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
                           {users
