@@ -53,15 +53,16 @@ export function LeaderboardDataTableToolbar<TData>({
   );
 
   const handleSelectHistory = (selectedName: string) => {
+    const cleaned = selectedName.replace(/\s/g, "");
     if (searchInputRef.current) {
-      searchInputRef.current.value = selectedName;
+      searchInputRef.current.value = cleaned;
     }
-    nameColumn.setFilterValue(selectedName);
+    nameColumn.setFilterValue(cleaned);
     navigate({
       viewTransition: true,
       search: (prev) => ({
         ...prev,
-        name: selectedName.length ? selectedName : undefined,
+        name: cleaned.length ? cleaned : undefined,
       }),
     });
     setHistoryOpen(false);
@@ -101,15 +102,28 @@ export function LeaderboardDataTableToolbar<TData>({
             setHistoryOpen(false);
             if (e.target.value) addToHistory(e.target.value);
           }}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              if (searchInputRef.current) searchInputRef.current.value = "";
+              nameColumn.setFilterValue("");
+              navigate({
+                viewTransition: true,
+                search: (prev) => ({ ...prev, name: undefined }),
+              });
+              setHistoryOpen(false);
+            }
+          }}
           onChange={(event) => {
-            nameColumn.setFilterValue(event.target.value);
+            const cleaned = event.target.value.replace(/\s/g, "");
+            if (event.target.value !== cleaned) {
+              event.target.value = cleaned;
+            }
+            nameColumn.setFilterValue(cleaned);
             navigate({
               viewTransition: true,
               search: (prev) => ({
                 ...prev,
-                name: event.target.value.length
-                  ? event.target.value
-                  : undefined,
+                name: cleaned.length ? cleaned : undefined,
               }),
             });
           }}

@@ -93,10 +93,10 @@ function RouteComponent() {
   const isLoading = queries.some((q) => q.isLoading);
 
   const handleCompare = () => {
-    const trimmed = inputs.map((s) => s.trim()).filter(Boolean);
+    const cleaned = inputs.map((s) => s.replace(/\s/g, "")).filter(Boolean);
     navigate({
       to: "/compare",
-      search: { players: trimmed.length ? trimmed : undefined },
+      search: { players: cleaned.length ? cleaned : undefined },
     });
   };
 

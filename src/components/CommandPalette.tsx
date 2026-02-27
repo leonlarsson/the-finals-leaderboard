@@ -26,20 +26,20 @@ export function CommandPalette() {
 
   // Search on main leaderboard page — partial match, like the main filter
   const handleSearch = (name: string) => {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    addToHistory(trimmed);
-    navigate({ to: "/", search: { name: trimmed } });
+    const cleaned = name.replace(/\s/g, "");
+    if (!cleaned) return;
+    addToHistory(cleaned);
+    navigate({ to: "/", search: { name: cleaned } });
     setOpen(false);
     setQuery("");
   };
 
   // Navigate directly to player profile — requires exact name (e.g. Name#1234)
   const handleProfile = (name: string) => {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    addToHistory(trimmed);
-    navigate({ to: "/players/$playerName", params: { playerName: trimmed } });
+    const cleaned = name.replace(/\s/g, "");
+    if (!cleaned) return;
+    addToHistory(cleaned);
+    navigate({ to: "/players/$playerName", params: { playerName: cleaned } });
     setOpen(false);
     setQuery("");
   };
@@ -51,8 +51,8 @@ export function CommandPalette() {
         value={query}
         onValueChange={setQuery}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && query.trim()) {
-            handleSearch(query.trim());
+          if (e.key === "Enter" && query.replace(/\s/g, "")) {
+            handleSearch(query);
           }
         }}
       />
