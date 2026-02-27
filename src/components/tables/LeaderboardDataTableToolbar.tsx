@@ -1,5 +1,11 @@
 import { Table } from "@tanstack/react-table";
-import { CheckIcon, ClockIcon, DownloadIcon, PlusCircle, XIcon } from "lucide-react";
+import {
+  CheckIcon,
+  ClockIcon,
+  DownloadIcon,
+  PlusCircle,
+  XIcon,
+} from "lucide-react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -131,7 +137,9 @@ export function LeaderboardDataTableToolbar<TData>({
               viewTransition: true,
               search: (prev) => ({
                 ...prev,
-                name: event.target.value.length ? event.target.value : undefined,
+                name: event.target.value.length
+                  ? event.target.value
+                  : undefined,
               }),
             });
           }}

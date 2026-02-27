@@ -144,8 +144,9 @@ function RouteComponent() {
         (u) => u.name.toLowerCase() === playerName.toLowerCase(),
       ),
     }))
-    .filter((e): e is { lb: Leaderboard; user: BaseUserWithExtras } =>
-      e.user !== undefined,
+    .filter(
+      (e): e is { lb: Leaderboard; user: BaseUserWithExtras } =>
+        e.user !== undefined,
     );
 
   const baseUser = playerEntries[0]?.user;
@@ -156,7 +157,9 @@ function RouteComponent() {
       <PageWrapper playerName={playerName}>
         <div className="flex flex-col gap-4">
           <div>
-            <div className="mb-1 text-2xl font-medium break-all">{playerName}</div>
+            <div className="mb-1 break-all text-2xl font-medium">
+              {playerName}
+            </div>
             <p className="text-neutral-500">
               This player wasn't found in the top 10,000 of any leaderboard.
             </p>
@@ -245,10 +248,7 @@ function RouteComponent() {
           {/* Action buttons */}
           <div className="flex shrink-0 items-center gap-2">
             <Button variant="outline" size="sm" className="gap-1.5" asChild>
-              <Link
-                to="/compare"
-                search={{ players: [playerName] }}
-              >
+              <Link to="/compare" search={{ players: [playerName] }}>
                 <GitCompareArrowsIcon className="size-4" />
                 <span className="hidden sm:inline">Compare</span>
               </Link>
@@ -431,12 +431,12 @@ function StatCard({
       {cols.includes("change") && (
         <div>
           {user.change > 0 ? (
-            <span className="animate-in slide-in-from-bottom-1 inline-flex items-center text-sm text-indigo-400 dark:text-indigo-300">
+            <span className="inline-flex items-center text-sm text-indigo-400 animate-in slide-in-from-bottom-1 dark:text-indigo-300">
               <ChevronUp className="h-4" />
               {user.change.toLocaleString("en")}
             </span>
           ) : user.change < 0 ? (
-            <span className="animate-in slide-in-from-top-1 inline-flex items-center text-sm text-red-500">
+            <span className="inline-flex items-center text-sm text-red-500 animate-in slide-in-from-top-1">
               <ChevronDown className="h-4" />
               {Math.abs(user.change).toLocaleString("en")}
             </span>

@@ -41,12 +41,12 @@ export const leaderboardDataTableColumns = (
       cell: ({ getValue }) => {
         const value = getValue();
         return value > 0 ? (
-          <span className="animate-in slide-in-from-bottom-1 inline-flex items-center text-indigo-400 dark:text-indigo-300">
+          <span className="inline-flex items-center text-indigo-400 animate-in slide-in-from-bottom-1 dark:text-indigo-300">
             {<ChevronUp className="inline h-6" />}
             {value.toLocaleString("en")}
           </span>
         ) : value < 0 ? (
-          <span className="animate-in slide-in-from-top-1 inline-flex items-center text-red-500 dark:text-red-500">
+          <span className="inline-flex items-center text-red-500 animate-in slide-in-from-top-1 dark:text-red-500">
             {<ChevronDown className="inline h-6" />}
             {Math.abs(value).toLocaleString("en")}
           </span>

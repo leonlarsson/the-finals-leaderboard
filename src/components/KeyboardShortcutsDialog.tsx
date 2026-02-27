@@ -27,7 +27,7 @@ export function KeyboardShortcutsDialog() {
           ?
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-xs font-saira">
+      <DialogContent className="font-saira sm:max-w-xs">
         <DialogHeader>
           <DialogTitle>Keyboard shortcuts</DialogTitle>
         </DialogHeader>
