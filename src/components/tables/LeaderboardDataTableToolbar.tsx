@@ -1,10 +1,5 @@
 import { Table } from "@tanstack/react-table";
-import {
-  CheckIcon,
-  ClockIcon,
-  PlusCircle,
-  XIcon,
-} from "lucide-react";
+import { CheckIcon, ClockIcon, PlusCircle, XIcon } from "lucide-react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -295,7 +290,6 @@ export function LeaderboardDataTableToolbar<TData>({
           </PopoverContent>
         </Popover>
       )}
-
     </div>
   );
 }

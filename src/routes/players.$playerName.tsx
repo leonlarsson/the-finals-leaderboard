@@ -419,9 +419,7 @@ function StatCard({
     >
       {/* Leaderboard name + rank */}
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium text-neutral-500">
-          {lb.name}
-        </span>
+        <span className="text-sm font-medium text-neutral-500">{lb.name}</span>
         <span className="text-lg font-semibold">
           #{user.rank.toLocaleString("en")}
         </span>
