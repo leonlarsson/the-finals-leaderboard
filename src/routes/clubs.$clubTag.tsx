@@ -3,8 +3,9 @@ import { panels } from "@/types";
 import { leaderboards } from "@/utils/leaderboards";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeftIcon } from "lucide-react";
-import { ReactNode } from "react";
+import { AlertCircleIcon, ArrowLeftIcon } from "lucide-react";
+import { ReactNode, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/clubs/$clubTag")({
   component: RouteComponent,
@@ -13,6 +14,13 @@ export const Route = createFileRoute("/clubs/$clubTag")({
 function RouteComponent() {
   const { clubTag } = Route.useParams();
 
+  useEffect(() => {
+    document.title = `[${clubTag}] · Enhanced Leaderboard – THE FINALS`;
+    return () => {
+      document.title = "Enhanced Leaderboard – THE FINALS";
+    };
+  }, [clubTag]);
+
   const query = useQuery(clubsQueryOptions);
 
   if (query.isLoading) {
@@ -20,7 +28,22 @@ function RouteComponent() {
   }
 
   if (query.isError || !query.data) {
-    return <PageWrapper>An error happened :(</PageWrapper>;
+    return (
+      <PageWrapper>
+        <div className="flex flex-col items-start gap-3">
+          <div className="flex items-center gap-2 text-red-500">
+            <AlertCircleIcon className="size-5" />
+            <span className="font-medium">Failed to load club data</span>
+          </div>
+          <p className="text-sm text-neutral-500">
+            Something went wrong while fetching data. Please try again.
+          </p>
+          <Button variant="outline" size="sm" onClick={() => query.refetch()}>
+            Try again
+          </Button>
+        </div>
+      </PageWrapper>
+    );
   }
 
   const club = query.data.find(
@@ -94,8 +117,8 @@ function RouteComponent() {
               .map((member) => (
                 <Link
                   key={member.name}
-                  to="/"
-                  search={{ name: member.name }}
+                  to="/players/$playerName"
+                  params={{ playerName: member.name }}
                   className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                 >
                   {member.name}

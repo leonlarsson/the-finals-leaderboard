@@ -11,14 +11,28 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as CompareImport } from './routes/compare'
 import { Route as IndexImport } from './routes/index'
+import { Route as PlayersPlayerNameImport } from './routes/players.$playerName'
 import { Route as ClubsClubTagImport } from './routes/clubs.$clubTag'
 
 // Create/Update Routes
 
+const CompareRoute = CompareImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PlayersPlayerNameRoute = PlayersPlayerNameImport.update({
+  id: '/players/$playerName',
+  path: '/players/$playerName',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -39,11 +53,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareImport
+      parentRoute: typeof rootRoute
+    }
     '/clubs/$clubTag': {
       id: '/clubs/$clubTag'
       path: '/clubs/$clubTag'
       fullPath: '/clubs/$clubTag'
       preLoaderRoute: typeof ClubsClubTagImport
+      parentRoute: typeof rootRoute
+    }
+    '/players/$playerName': {
+      id: '/players/$playerName'
+      path: '/players/$playerName'
+      fullPath: '/players/$playerName'
+      preLoaderRoute: typeof PlayersPlayerNameImport
       parentRoute: typeof rootRoute
     }
   }
@@ -53,37 +81,47 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/compare': typeof CompareRoute
   '/clubs/$clubTag': typeof ClubsClubTagRoute
+  '/players/$playerName': typeof PlayersPlayerNameRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/compare': typeof CompareRoute
   '/clubs/$clubTag': typeof ClubsClubTagRoute
+  '/players/$playerName': typeof PlayersPlayerNameRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/compare': typeof CompareRoute
   '/clubs/$clubTag': typeof ClubsClubTagRoute
+  '/players/$playerName': typeof PlayersPlayerNameRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/clubs/$clubTag'
+  fullPaths: '/' | '/compare' | '/clubs/$clubTag' | '/players/$playerName'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/clubs/$clubTag'
-  id: '__root__' | '/' | '/clubs/$clubTag'
+  to: '/' | '/compare' | '/clubs/$clubTag' | '/players/$playerName'
+  id: '__root__' | '/' | '/compare' | '/clubs/$clubTag' | '/players/$playerName'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CompareRoute: typeof CompareRoute
   ClubsClubTagRoute: typeof ClubsClubTagRoute
+  PlayersPlayerNameRoute: typeof PlayersPlayerNameRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CompareRoute: CompareRoute,
   ClubsClubTagRoute: ClubsClubTagRoute,
+  PlayersPlayerNameRoute: PlayersPlayerNameRoute,
 }
 
 export const routeTree = rootRoute
@@ -97,14 +135,22 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/clubs/$clubTag"
+        "/compare",
+        "/clubs/$clubTag",
+        "/players/$playerName"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/compare": {
+      "filePath": "compare.tsx"
+    },
     "/clubs/$clubTag": {
       "filePath": "clubs.$clubTag.tsx"
+    },
+    "/players/$playerName": {
+      "filePath": "players.$playerName.tsx"
     }
   }
 }
