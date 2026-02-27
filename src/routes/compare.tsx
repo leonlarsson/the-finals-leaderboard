@@ -275,7 +275,7 @@ function ComparisonRow({
           search={{ lb: lb.id as LeaderboardId, panel: panels.LEADERBOARD }}
           className="text-xs font-medium text-neutral-500 hover:underline"
         >
-          {lb.nameShort}
+          {lb.name}
         </Link>
       </td>
       <td className="px-4 py-3 text-right">

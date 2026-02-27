@@ -2,7 +2,6 @@ import { Table } from "@tanstack/react-table";
 import {
   CheckIcon,
   ClockIcon,
-  DownloadIcon,
   PlusCircle,
   XIcon,
 } from "lucide-react";
@@ -71,30 +70,6 @@ export function LeaderboardDataTableToolbar<TData>({
       }),
     });
     setHistoryOpen(false);
-  };
-
-  const handleExportCSV = () => {
-    const cols = table
-      .getVisibleLeafColumns()
-      .filter((c) => c.id !== "actions");
-    const headers = cols.map((c) => c.id);
-    const rows = table.getFilteredRowModel().rows.map((row) =>
-      headers
-        .map((h) => {
-          const val = row.getValue(h);
-          if (val === null || val === undefined) return "";
-          return typeof val === "string" ? `"${val.replace(/"/g, '""')}"` : val;
-        })
-        .join(","),
-    );
-    const csv = [headers.join(","), ...rows].join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${leaderboardId}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
   };
 
   const nameColumn = table.getColumn("name")!;
@@ -321,16 +296,6 @@ export function LeaderboardDataTableToolbar<TData>({
         </Popover>
       )}
 
-      <Button
-        variant="outline"
-        size="sm"
-        className="ml-auto h-10 select-none gap-1.5"
-        onClick={handleExportCSV}
-        title="Export current table as CSV"
-      >
-        <DownloadIcon className="size-4" />
-        <span className="hidden sm:inline">Export CSV</span>
-      </Button>
     </div>
   );
 }
