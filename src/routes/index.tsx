@@ -21,6 +21,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { useFavorites } from "@/hooks/useFavorites";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { LeaderboardFeature, panels, platforms } from "@/types";
 import { fetchData } from "@/utils/fetchData";
 import {
@@ -31,14 +37,18 @@ import {
   leaderboards,
 } from "@/utils/leaderboards";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { HOUR, MINUTE } from "@/utils/time";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   BarChartIcon,
   HomeIcon,
   Loader2Icon,
   RefreshCwIcon,
+  StarIcon,
   TrophyIcon,
+  UserRoundIcon,
+  XIcon,
 } from "lucide-react";
 import { useEffect } from "react";
 import { z } from "zod";
@@ -78,11 +88,19 @@ function RouteComponent() {
   });
   const navigate = Route.useNavigate();
   const queryClient = useQueryClient();
+  const { favorites, toggleFavorite } = useFavorites();
 
   // This is safe because lbParam is validated above
   const leaderboard = Object.values(leaderboards).find(
     (x) => x.id === lbParam,
   )!;
+
+  useEffect(() => {
+    document.title = `${leaderboard.name} · The Finals Leaderboard`;
+    return () => {
+      document.title = "The Finals Leaderboard";
+    };
+  }, [leaderboard.name]);
 
   // Use TanStack Query to fetch data
   // This will cache all combinations of leaderboard version and platform infinitely
@@ -313,6 +331,57 @@ function RouteComponent() {
           </Tabs>
         )}
 
+        {/* Favorites popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="select-none gap-1.5">
+              <StarIcon className="size-4" />
+              <span className="hidden min-[400px]:block">Favorites</span>
+              {favorites.length > 0 && (
+                <span className="rounded-full bg-neutral-200 px-1.5 py-0.5 text-xs font-medium leading-none dark:bg-neutral-700">
+                  {favorites.length}
+                </span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="end" className="w-64 p-2 font-saira">
+            {favorites.length === 0 ? (
+              <p className="px-2 py-1.5 text-sm text-neutral-500">
+                No favorites yet. Open a player profile and click{" "}
+                <StarIcon className="inline size-3" /> to save them here.
+              </p>
+            ) : (
+              <div className="flex flex-col gap-0.5">
+                <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                  Saved Players
+                </p>
+                {favorites.map((name) => (
+                  <div
+                    key={name}
+                    className="flex items-center justify-between gap-1 rounded px-2 py-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                  >
+                    <Link
+                      to="/players/$playerName"
+                      params={{ playerName: name }}
+                      className="flex min-w-0 flex-1 items-center gap-1.5 text-sm"
+                    >
+                      <UserRoundIcon className="size-3.5 shrink-0 text-neutral-400" />
+                      <span className="truncate">{name}</span>
+                    </Link>
+                    <button
+                      onClick={() => toggleFavorite(name)}
+                      className="shrink-0 text-neutral-400 hover:text-red-500"
+                      title="Remove"
+                    >
+                      <XIcon className="size-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </PopoverContent>
+        </Popover>
+
         <TooltipProvider disableHoverableContent>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -358,10 +427,13 @@ function RouteComponent() {
           );
 
           return (
-            <div>
-              <div className="text-lg">
+            <div className="flex flex-col items-start gap-3">
+              <span className="text-lg font-medium text-red-500">
+                Failed to load data
+              </span>
+              <p className="text-neutral-600 dark:text-neutral-400">
                 An error happened. Please contact the developer on{" "}
-                <BasicLink href="https://x.com/mozzyfx">Twitter</BasicLink>,
+                <BasicLink href="https://x.com/mozzyfx">Twitter</BasicLink>,{" "}
                 <BasicLink href="https://bsky.app/profile/leon.ms">
                   Bluesky
                 </BasicLink>{" "}
@@ -370,17 +442,27 @@ function RouteComponent() {
                   file an issue on GitHub
                 </BasicLink>{" "}
                 if this error persists.
-              </div>
-
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  queryClient.invalidateQueries({
+                    predicate: (query) => query.queryKey[0] !== "notice",
+                  })
+                }
+              >
+                Try again
+              </Button>
               {error && (
-                <div className="mt-3">
-                  <div className="font-medium">
-                    Useful information to include:
-                  </div>
-                  <pre className="overflow-x-auto rounded bg-neutral-100 p-2 dark:bg-neutral-900">
+                <details className="w-full">
+                  <summary className="cursor-pointer text-sm font-medium text-neutral-500">
+                    Error details
+                  </summary>
+                  <pre className="mt-2 overflow-x-auto rounded bg-neutral-100 p-2 text-xs dark:bg-neutral-900">
                     {error.stack}
                   </pre>
-                </div>
+                </details>
               )}
             </div>
           );
@@ -472,15 +554,32 @@ function RouteComponent() {
         </div>
       )}
 
-      <div className="mt-10">
-        <span>
-          Current data updated at{" "}
-          {loadingOrRefetching ? (
-            <Loader2Icon className="inline size-5 animate-spin" />
-          ) : (
-            new Date(dataUpdatedAt).toLocaleString()
-          )}
-        </span>
+      <div className="mt-10 flex items-center gap-2 text-sm text-neutral-500">
+        {loadingOrRefetching ? (
+          <>
+            <Loader2Icon className="size-4 animate-spin" />
+            <span>Updating...</span>
+          </>
+        ) : isError ? (
+          <>
+            <span className="size-2 rounded-full bg-red-500" />
+            <span>Error loading data</span>
+          </>
+        ) : (
+          <>
+            <span className="size-2 rounded-full bg-green-500" />
+            <span>
+              Live · Updated{" "}
+              {dataUpdatedAt === 0
+                ? "never"
+                : Date.now() - dataUpdatedAt < MINUTE
+                  ? "just now"
+                  : Date.now() - dataUpdatedAt < HOUR
+                    ? `${Math.floor((Date.now() - dataUpdatedAt) / MINUTE)}m ago`
+                    : `${Math.floor((Date.now() - dataUpdatedAt) / HOUR)}h ago`}
+            </span>
+          </>
+        )}
       </div>
     </div>
   );

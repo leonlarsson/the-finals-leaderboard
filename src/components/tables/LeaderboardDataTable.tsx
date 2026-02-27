@@ -22,7 +22,6 @@ import {
 import { DataTablePagination } from "./DataTablePagination";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import { useHotkeys } from "react-hotkeys-hook";
-import Loading from "../Loading";
 import { LeaderboardDataTableToolbar } from "./LeaderboardDataTableToolbar";
 import { useSearch } from "@tanstack/react-router";
 
@@ -125,7 +124,27 @@ export function LeaderboardDataTable<TData, TValue>({
             </TableHeader>
 
             <TableBody>
-              {table.getRowModel().rows?.length ? (
+              {queryState.isLoading ? (
+                Array.from({ length: 10 }).map((_, i) => (
+                  <TableRow key={i} className="animate-pulse">
+                    {columns.map((_, j) => (
+                      <TableCell key={j} className="p-3">
+                        <div
+                          className={`h-5 rounded bg-neutral-200 dark:bg-neutral-700 ${
+                            j === 0
+                              ? "w-8"
+                              : j === 1
+                                ? "w-10"
+                                : j === 2
+                                  ? "w-36"
+                                  : "w-16"
+                          }`}
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <Fragment key={row.id}>
                     <TableRow>
@@ -146,11 +165,7 @@ export function LeaderboardDataTable<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    {queryState.isLoading ? (
-                      <Loading justifyCenter />
-                    ) : (
-                      "No results."
-                    )}
+                    No results.
                   </TableCell>
                 </TableRow>
               )}

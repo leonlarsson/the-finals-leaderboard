@@ -1,5 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { ChevronDown, ChevronUp, Minus } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink, Minus } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -12,7 +12,7 @@ import { BaseUser, BaseUserWithExtras, panels } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import { SponsorImage } from "../SponsorImage";
 import LeagueImage from "../LeagueImage";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { PlayStationIcon, SteamIcon, XboxIcon } from "../icons";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
@@ -41,12 +41,12 @@ export const leaderboardDataTableColumns = (
       cell: ({ getValue }) => {
         const value = getValue();
         return value > 0 ? (
-          <span className="inline-flex items-center text-indigo-400 dark:text-indigo-300">
+          <span className="animate-in slide-in-from-bottom-1 inline-flex items-center text-indigo-400 dark:text-indigo-300">
             {<ChevronUp className="inline h-6" />}
             {value.toLocaleString("en")}
           </span>
         ) : value < 0 ? (
-          <span className="inline-flex items-center text-red-500 dark:text-red-500">
+          <span className="animate-in slide-in-from-top-1 inline-flex items-center text-red-500 dark:text-red-500">
             {<ChevronDown className="inline h-6" />}
             {Math.abs(value).toLocaleString("en")}
           </span>
@@ -97,7 +97,7 @@ export const leaderboardDataTableColumns = (
               </Tooltip>
             </TooltipProvider>
           ) : (
-            <span className="inline-flex gap-1">
+            <span className="group/playerlink inline-flex items-center gap-1">
               {/* If platform selection is enabled, add the selected platform icon before the name */}
               {leaderboards[leaderboardId].features.includes(
                 "platformSelection",
@@ -114,7 +114,14 @@ export const leaderboardDataTableColumns = (
                   )}
                 </>
               )}
-              {user.name}
+              <Link
+                to="/players/$playerName"
+                params={{ playerName: user.name }}
+                className="hover:underline"
+              >
+                {user.name}
+              </Link>
+              <ExternalLink className="size-3 opacity-0 transition-opacity group-hover/playerlink:opacity-40" />
             </span>
           );
         },
@@ -314,9 +321,17 @@ const platformNamesInline = (user: BaseUser) => {
       <div>
         <div className="inline-flex gap-1">
           {user.clubTag && <ClickableClubTag clubTag={user.clubTag} />}
-          <span className="font-medium">{user.name.split("#")[0]}</span>
+          <Link
+            to="/players/$playerName"
+            params={{ playerName: user.name }}
+            className="group/namelink inline-flex items-center gap-1 hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="font-medium">{user.name.split("#")[0]}</span>
+            <span className="text-neutral-500">#{user.name.split("#")[1]}</span>
+            <ExternalLink className="size-3 opacity-0 transition-opacity group-hover/namelink:opacity-40" />
+          </Link>
         </div>
-        <span className="text-neutral-500">#{user.name.split("#")[1]}</span>
       </div>
 
       <div className="flex flex-wrap gap-1 *:rounded *:bg-neutral-200 *:p-1 *:py-[2px] *:text-xs *:transition-colors *:dark:bg-neutral-800">

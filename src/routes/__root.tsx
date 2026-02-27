@@ -1,4 +1,6 @@
 import CommunityProgress from "@/components/CommunityProgress";
+import { CommandPalette } from "@/components/CommandPalette";
+import { KeyboardShortcutsDialog } from "@/components/KeyboardShortcutsDialog";
 import { BlueskyIcon, GitHubIcon, XTwitterIcon } from "@/components/icons";
 import BasicLink from "@/components/Link";
 import { Notice } from "@/components/Notice";
@@ -21,6 +23,10 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+      <CommandPalette />
+      <div className="fixed bottom-4 right-4 z-40 font-saira">
+        <KeyboardShortcutsDialog />
+      </div>
       <div className="container mb-12 mt-2 font-saira max-sm:px-2">
         <h1 className="text-2xl font-medium sm:text-3xl">
           <Link to="/">Enhanced Leaderboard – THE FINALS</Link>

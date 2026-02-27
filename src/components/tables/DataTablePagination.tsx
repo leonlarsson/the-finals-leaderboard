@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useHotkeys } from "react-hotkeys-hook";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -23,8 +24,42 @@ interface DataTablePaginationProps<TData> {
 export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
+  useHotkeys(
+    "ArrowLeft",
+    () => {
+      if (table.getCanPreviousPage()) table.previousPage();
+    },
+    { enableOnFormTags: false },
+  );
+
+  useHotkeys(
+    "ArrowRight",
+    () => {
+      if (table.getCanNextPage()) table.nextPage();
+    },
+    { enableOnFormTags: false },
+  );
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-1">
+      {table.getCoreRowModel().rows.length > 0 && (
+        <div className="text-sm text-neutral-500">
+          {table.getFilteredRowModel().rows.length <
+          table.getCoreRowModel().rows.length ? (
+            <>
+              <span className="font-medium text-foreground">
+                {table.getFilteredRowModel().rows.length.toLocaleString("en")}
+              </span>
+              {" of "}
+              {table.getCoreRowModel().rows.length.toLocaleString("en")} players
+            </>
+          ) : (
+            <>
+              {table.getCoreRowModel().rows.length.toLocaleString("en")} players
+            </>
+          )}
+        </div>
+      )}
       <div className="flex items-center space-x-2">
         <p className="text-sm font-medium">Rows per page</p>
         <Select
