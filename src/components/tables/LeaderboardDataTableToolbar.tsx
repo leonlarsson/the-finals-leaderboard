@@ -53,7 +53,7 @@ export function LeaderboardDataTableToolbar<TData>({
   );
 
   const handleSelectHistory = (selectedName: string) => {
-    const cleaned = selectedName.replace(/\s/g, "");
+    const cleaned = selectedName.replace(/\s*#\s*/g, "#");
     if (searchInputRef.current) {
       searchInputRef.current.value = cleaned;
     }
@@ -114,7 +114,7 @@ export function LeaderboardDataTableToolbar<TData>({
             }
           }}
           onChange={(event) => {
-            const cleaned = event.target.value.replace(/\s/g, "");
+            const cleaned = event.target.value.replace(/\s*#\s*/g, "#");
             if (event.target.value !== cleaned) {
               event.target.value = cleaned;
             }
