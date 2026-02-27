@@ -15,9 +15,9 @@ function RouteComponent() {
   const { clubTag } = Route.useParams();
 
   useEffect(() => {
-    document.title = `[${clubTag}] · The Finals Leaderboard`;
+    document.title = `[${clubTag}] · THE FINALS - Enhanced Leaderboard`;
     return () => {
-      document.title = "The Finals Leaderboard";
+      document.title = "THE FINALS - Enhanced Leaderboard";
     };
   }, [clubTag]);
 

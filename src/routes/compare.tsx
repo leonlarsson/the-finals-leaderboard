@@ -74,11 +74,11 @@ function RouteComponent() {
   useEffect(() => {
     const title =
       player1 && player2
-        ? `${player1} vs ${player2} · The Finals Leaderboard`
-        : "Compare Players · The Finals Leaderboard";
+        ? `${player1} vs ${player2} · THE FINALS - Enhanced Leaderboard`
+        : "Compare Players · THE FINALS - Enhanced Leaderboard";
     document.title = title;
     return () => {
-      document.title = "The Finals Leaderboard";
+      document.title = "THE FINALS - Enhanced Leaderboard";
     };
   }, [player1, player2]);
 

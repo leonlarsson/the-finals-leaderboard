@@ -96,9 +96,9 @@ function RouteComponent() {
   )!;
 
   useEffect(() => {
-    document.title = `${leaderboard.name} · The Finals Leaderboard`;
+    document.title = `${leaderboard.name} · THE FINALS - Enhanced Leaderboard`;
     return () => {
-      document.title = "The Finals Leaderboard";
+      document.title = "THE FINALS - Enhanced Leaderboard";
     };
   }, [leaderboard.name]);
 
