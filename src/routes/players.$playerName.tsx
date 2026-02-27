@@ -73,9 +73,9 @@ function RouteComponent() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    document.title = `${playerName} · THE FINALS - Enhanced Leaderboard`;
+    document.title = `${playerName} · Enhanced Leaderboard – THE FINALS`;
     return () => {
-      document.title = "THE FINALS - Enhanced Leaderboard";
+      document.title = "Enhanced Leaderboard – THE FINALS";
     };
   }, [playerName]);
 
