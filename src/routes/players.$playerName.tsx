@@ -11,7 +11,12 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/useFavorites";
-import { Leaderboard, LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import {
+  defaultLeaderboard,
+  Leaderboard,
+  LeaderboardId,
+  leaderboards,
+} from "@/utils/leaderboards";
 import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
@@ -67,6 +72,8 @@ const seasonOrder = [
   "Closed Beta",
   "Other",
 ];
+
+const defaultLeaderboardName = defaultLeaderboard.name;
 
 function RouteComponent() {
   const { playerName } = Route.useParams();
@@ -291,7 +298,7 @@ function RouteComponent() {
 
         {/* Current season — always visible */}
         {sortedGroups
-          .filter(([season]) => season === "Season 9")
+          .filter(([season]) => season === defaultLeaderboardName)
           .map(([season, entries]) => (
             <SeasonSection
               key={season}
@@ -302,7 +309,7 @@ function RouteComponent() {
           ))}
 
         {/* Older seasons — collapsible accordion */}
-        {sortedGroups.some(([season]) => season !== "Season 9") && (
+        {sortedGroups.some(([season]) => season !== defaultLeaderboardName) && (
           <div className="rounded-lg border border-neutral-200 px-4 dark:border-neutral-800">
             <div className="flex items-center gap-2 py-3">
               <History className="size-4 text-neutral-500" />
@@ -311,14 +318,14 @@ function RouteComponent() {
               </span>
               <span className="rounded-full bg-neutral-200 px-2 py-0.5 text-xs font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
                 {sortedGroups
-                  .filter(([s]) => s !== "Season 9")
+                  .filter(([s]) => s !== defaultLeaderboardName)
                   .reduce((acc, [, e]) => acc + e.length, 0)}{" "}
                 leaderboards
               </span>
             </div>
             <Accordion type="multiple" className="w-full">
               {sortedGroups
-                .filter(([season]) => season !== "Season 9")
+                .filter(([season]) => season !== defaultLeaderboardName)
                 .map(([season, entries]) => (
                   <AccordionItem key={season} value={season}>
                     <AccordionTrigger className="text-sm font-medium hover:no-underline">
@@ -383,7 +390,7 @@ const SeasonSection = ({
 }) => {
   return (
     <div>
-      {season !== "Season 9" && (
+      {season !== defaultLeaderboardName && (
         <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-500">
           {season}
         </div>

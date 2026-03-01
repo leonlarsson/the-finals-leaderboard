@@ -1034,6 +1034,7 @@ export type Leaderboard = {
 export type LeaderboardId = keyof typeof leaderboards;
 
 export const defaultLeaderboardId: LeaderboardId = "season9";
+export const defaultLeaderboard = leaderboards[defaultLeaderboardId];
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season9",
   "season9Sponsor",
