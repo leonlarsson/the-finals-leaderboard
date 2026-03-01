@@ -1,3 +1,4 @@
+import { BarChart } from "@tremor/react";
 import { clubsQueryOptions } from "@/queries";
 import { panels } from "@/types";
 import {
@@ -78,39 +79,90 @@ function RouteComponent() {
           </div>
         </div>
 
-        <div>
-          <span className="font-medium">Club Standings:</span>
-          <div className="flex flex-col gap-1">
-            {club.leaderboards.map(
-              (leaderboard: {
-                leaderboard: string;
-                rank: number;
-                totalValue: number;
-              }) => (
-                <Link
-                  key={leaderboard.leaderboard}
-                  to="/"
-                  search={{
-                    lb: apiIdToWebId(leaderboard.leaderboard),
-                    panel: panels.CLUBS,
-                    clubTag: `exactCt:${club.clubTag}`,
-                  }}
-                  className="mr-1 w-fit rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                >
-                  <span className="text-lg font-medium">
-                    {leaderboards[
-                      apiIdToWebId(leaderboard.leaderboard) as LeaderboardId
-                    ]?.name ??
-                      `Unknown leaderboard (${leaderboard.leaderboard})`}
-                  </span>{" "}
-                  | <span>Rank #{leaderboard.rank}</span> |{" "}
-                  <span>
-                    Combined points:{" "}
-                    {leaderboard.totalValue.toLocaleString("en")}
-                  </span>
-                </Link>
-              ),
-            )}
+        <div className="flex flex-col gap-4">
+          {club.leaderboards.length >= 2 && (
+            <div className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900/50">
+              <div className="mb-1 text-lg font-medium">
+                Rank across leaderboards
+              </div>
+              <p className="mb-2 text-neutral-500">Lower rank is better.</p>
+              <BarChart
+                data={[...club.leaderboards]
+                  .sort((a, b) => b.rank - a.rank)
+                  .map((lb) => ({
+                    name:
+                      leaderboards[
+                        apiIdToWebId(lb.leaderboard) as LeaderboardId
+                      ]?.nameShort ?? lb.leaderboard,
+                    Rank: 10001 - lb.rank,
+                  }))}
+                index="name"
+                categories={["Rank"]}
+                colors={["#d31f3c"]}
+                valueFormatter={(v) => `#${(10001 - v).toLocaleString("en")}`}
+                showAnimation
+                animationDuration={400}
+                customTooltip={({ label, payload }) => {
+                  const invertedRank = payload?.[0]?.value;
+                  const lb = club.leaderboards.find(
+                    (l) =>
+                      (leaderboards[
+                        apiIdToWebId(l.leaderboard) as LeaderboardId
+                      ]?.nameShort ?? l.leaderboard) === label,
+                  );
+                  const lbName =
+                    leaderboards[
+                      apiIdToWebId(lb?.leaderboard ?? "") as LeaderboardId
+                    ]?.name ?? label;
+                  return (
+                    <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
+                      <span className="font-medium">{lbName}</span>
+                      {typeof invertedRank === "number" && (
+                        <span>
+                          Rank #{(10001 - invertedRank).toLocaleString("en")}
+                        </span>
+                      )}
+                    </div>
+                  );
+                }}
+              />
+            </div>
+          )}
+
+          <div>
+            <span className="font-medium">Club Standings:</span>
+            <div className="flex flex-col gap-1">
+              {club.leaderboards.map(
+                (leaderboard: {
+                  leaderboard: string;
+                  rank: number;
+                  totalValue: number;
+                }) => (
+                  <Link
+                    key={leaderboard.leaderboard}
+                    to="/"
+                    search={{
+                      lb: apiIdToWebId(leaderboard.leaderboard),
+                      panel: panels.CLUBS,
+                      clubTag: `exactCt:${club.clubTag}`,
+                    }}
+                    className="mr-1 w-fit rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                  >
+                    <span className="text-lg font-medium">
+                      {leaderboards[
+                        apiIdToWebId(leaderboard.leaderboard) as LeaderboardId
+                      ]?.name ??
+                        `Unknown leaderboard (${leaderboard.leaderboard})`}
+                    </span>{" "}
+                    | <span>Rank #{leaderboard.rank}</span> |{" "}
+                    <span>
+                      Combined points:{" "}
+                      {leaderboard.totalValue.toLocaleString("en")}
+                    </span>
+                  </Link>
+                ),
+              )}
+            </div>
           </div>
         </div>
 

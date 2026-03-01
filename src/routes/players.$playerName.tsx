@@ -1,3 +1,4 @@
+import { BarChart } from "@tremor/react";
 import { panels } from "@/types";
 import type { BaseUserWithExtras } from "@/types";
 import { SearchNavLinks } from "@/components/SearchNavLinks";
@@ -267,6 +268,48 @@ function RouteComponent() {
             </Button>
           </div>
         </div>
+
+        {/* Rank chart */}
+        {playerEntries.length >= 2 && !someLoading && (
+          <div className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900/50">
+            <div className="mb-1 text-lg font-medium">
+              Rank across leaderboards
+            </div>
+            <p className="mb-2 text-neutral-500">Lower rank is better.</p>
+            <BarChart
+              data={[...playerEntries]
+                .sort((a, b) => b.user.rank - a.user.rank)
+                .map(({ lb, user }) => ({
+                  name: lb.nameShort,
+                  Rank: 10001 - user.rank,
+                }))}
+              index="name"
+              categories={["Rank"]}
+              colors={["#d31f3c"]}
+              valueFormatter={(v) => `#${(10001 - v).toLocaleString("en")}`}
+              showAnimation
+              animationDuration={400}
+              customTooltip={({ label, payload }) => {
+                const invertedRank = payload?.[0]?.value;
+                const entry = playerEntries.find(
+                  ({ lb }) => lb.nameShort === label,
+                );
+                return (
+                  <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
+                    <span className="font-medium">
+                      {entry?.lb.name ?? label}
+                    </span>
+                    {typeof invertedRank === "number" && (
+                      <span>
+                        Rank #{(10001 - invertedRank).toLocaleString("en")}
+                      </span>
+                    )}
+                  </div>
+                );
+              }}
+            />
+          </div>
+        )}
 
         {/* Current season — always visible */}
         {sortedGroups
