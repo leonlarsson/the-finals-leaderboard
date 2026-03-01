@@ -1095,3 +1095,33 @@ export const apiIdToWebId = (id: string): string =>
       s5bankit: "season5BankIt",
     }) as Record<string, string>
   )[id] ?? id;
+
+export const getSeasonGroup = (id: string): string => {
+  if (id.startsWith("season9")) return "Season 9";
+  if (id.startsWith("season8")) return "Season 8";
+  if (id.startsWith("season7")) return "Season 7";
+  if (id.startsWith("season6")) return "Season 6";
+  if (id.startsWith("season5")) return "Season 5";
+  if (id.startsWith("season4")) return "Season 4";
+  if (id.startsWith("season3")) return "Season 3";
+  if (id.startsWith("season2")) return "Season 2";
+  if (id.startsWith("season1")) return "Season 1";
+  if (id.startsWith("openBeta")) return "Open Beta";
+  if (id.startsWith("closedBeta")) return "Closed Beta";
+  return "Other";
+};
+
+export const seasonOrder = [
+  "Season 9",
+  "Season 8",
+  "Season 7",
+  "Season 6",
+  "Season 5",
+  "Season 4",
+  "Season 3",
+  "Season 2",
+  "Season 1",
+  "Open Beta",
+  "Closed Beta",
+  "Other",
+];

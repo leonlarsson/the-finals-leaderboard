@@ -11,10 +11,12 @@ import {
 } from "@/components/ui/popover";
 import {
   defaultLeaderboardId,
+  getSeasonGroup,
   Leaderboard,
   LeaderboardId,
   leaderboardIdsToPrefetch,
   leaderboards,
+  seasonOrder,
 } from "@/utils/leaderboards";
 import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -44,36 +46,6 @@ const allLeaderboards = Object.values(leaderboards).filter(
   (lb) => lb.enabled,
 ) as Leaderboard[];
 
-const getSeasonGroup = (id: string): string => {
-  if (id.startsWith("season9")) return "Season 9";
-  if (id.startsWith("season8")) return "Season 8";
-  if (id.startsWith("season7")) return "Season 7";
-  if (id.startsWith("season6")) return "Season 6";
-  if (id.startsWith("season5")) return "Season 5";
-  if (id.startsWith("season4")) return "Season 4";
-  if (id.startsWith("season3")) return "Season 3";
-  if (id.startsWith("season2")) return "Season 2";
-  if (id.startsWith("season1")) return "Season 1";
-  if (id.startsWith("openBeta")) return "Open Beta";
-  if (id.startsWith("closedBeta")) return "Closed Beta";
-  return "Other";
-};
-
-const groupOrder = [
-  "Season 9",
-  "Season 8",
-  "Season 7",
-  "Season 6",
-  "Season 5",
-  "Season 4",
-  "Season 3",
-  "Season 2",
-  "Season 1",
-  "Open Beta",
-  "Closed Beta",
-  "Other",
-];
-
 const leaderboardsByGroup = (() => {
   const map = new Map<string, Leaderboard[]>();
   for (const lb of allLeaderboards) {
@@ -81,7 +53,7 @@ const leaderboardsByGroup = (() => {
     if (!map.has(g)) map.set(g, []);
     map.get(g)!.push(lb);
   }
-  return groupOrder
+  return seasonOrder
     .filter((g) => map.has(g))
     .map((g) => ({ label: g, items: map.get(g)! }));
 })();

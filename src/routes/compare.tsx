@@ -4,7 +4,13 @@ import LeagueImage from "@/components/LeagueImage";
 import { SponsorImage } from "@/components/SponsorImage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Leaderboard, LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import {
+  getSeasonGroup,
+  Leaderboard,
+  LeaderboardId,
+  leaderboards,
+  seasonOrder,
+} from "@/utils/leaderboards";
 import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
@@ -29,36 +35,6 @@ export const Route = createFileRoute("/compare")({
 const allLeaderboards = Object.values(leaderboards).filter(
   (lb) => lb.enabled,
 ) as Leaderboard[];
-
-const getSeasonGroup = (id: string): string => {
-  if (id.startsWith("season9")) return "Season 9";
-  if (id.startsWith("season8")) return "Season 8";
-  if (id.startsWith("season7")) return "Season 7";
-  if (id.startsWith("season6")) return "Season 6";
-  if (id.startsWith("season5")) return "Season 5";
-  if (id.startsWith("season4")) return "Season 4";
-  if (id.startsWith("season3")) return "Season 3";
-  if (id.startsWith("season2")) return "Season 2";
-  if (id.startsWith("season1")) return "Season 1";
-  if (id.startsWith("openBeta")) return "Open Beta";
-  if (id.startsWith("closedBeta")) return "Closed Beta";
-  return "Other";
-};
-
-const seasonOrder = [
-  "Season 9",
-  "Season 8",
-  "Season 7",
-  "Season 6",
-  "Season 5",
-  "Season 4",
-  "Season 3",
-  "Season 2",
-  "Season 1",
-  "Open Beta",
-  "Closed Beta",
-  "Other",
-];
 
 function RouteComponent() {
   const { players = [] } = Route.useSearch();
