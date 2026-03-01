@@ -1,5 +1,6 @@
 import { panels } from "@/types";
 import type { BaseUserWithExtras } from "@/types";
+import { SearchNavLinks } from "@/components/SearchNavLinks";
 import LeagueImage from "@/components/LeagueImage";
 import { SponsorImage } from "@/components/SponsorImage";
 import {
@@ -506,13 +507,16 @@ const PageWrapper = ({
   playerName: string;
 }) => (
   <div className="my-4">
-    <Link
-      to="/"
-      search={{ name: playerName }}
-      className="mb-4 flex w-fit items-center gap-1 font-medium hover:underline"
-    >
-      <ArrowLeftIcon size={20} /> Back to leaderboards
-    </Link>
+    <div className="mb-4 flex items-center gap-4">
+      <Link
+        to="/"
+        search={{ name: playerName }}
+        className="flex w-fit items-center gap-1 font-medium hover:underline"
+      >
+        <ArrowLeftIcon size={20} /> Back to leaderboards
+      </Link>
+      <SearchNavLinks />
+    </div>
     {children}
   </div>
 );

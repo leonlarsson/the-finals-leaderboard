@@ -1044,3 +1044,53 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season9TeamDeathmatch",
   "season9PointBreak",
 ];
+
+// Maps short API leaderboard IDs (e.g. "s9") to web IDs (e.g. "season9").
+// Used when displaying club leaderboard standings from the clubs API.
+export const apiIdToWebId = (id: string): string =>
+  (
+    ({
+      s9: "season9",
+      s9sponsor: "season9Sponsor",
+      s9worldtour: "season9WorldTour",
+      s9head2head: "season9Head2Head",
+      s9powershift: "season9PowerShift",
+      s9quickcash: "season9QuickCash",
+      s9teamdeathmatch: "season9TeamDeathmatch",
+      s9pointbreak: "season9PointBreak",
+      s8: "season8",
+      s8sponsor: "season8Sponsor",
+      s8worldtour: "season8WorldTour",
+      s8head2head: "season8Head2Head",
+      s8powershift: "season8PowerShift",
+      s8quickcash: "season8QuickCash",
+      s8teamdeathmatch: "season8TeamDeathmatch",
+      s8heavenorelse: "season8HeavenOrElse",
+      s8ghoulrush: "season8GhoulRush",
+      s8blastoff: "season8BlastOff",
+      s7: "season7",
+      s7sponsor: "season7Sponsor",
+      s7worldtour: "season7WorldTour",
+      s7terminalattack: "season7TerminalAttack",
+      s7powershift: "season7PowerShift",
+      s7quickcash: "season7QuickCash",
+      s7teamdeathmatch: "season7TeamDeathmatch",
+      s7blastoff: "season7BlastOff",
+      s7cashball: "season7CashBall",
+      s6: "season6",
+      s6sponsor: "season6Sponsor",
+      s6worldtour: "season6WorldTour",
+      s6terminalattack: "season6TerminalAttack",
+      s6powershift: "season6PowerShift",
+      s6quickcash: "season6QuickCash",
+      s6teamdeathmatch: "season6TeamDeathmatch",
+      s6heavyhitters: "season6HeavyHitters",
+      s5: "season5",
+      s5sponsor: "season5Sponsor",
+      s5worldtour: "season5WorldTour",
+      s5terminalattack: "season5TerminalAttack",
+      s5powershift: "season5PowerShift",
+      s5quickcash: "season5QuickCash",
+      s5bankit: "season5BankIt",
+    }) as Record<string, string>
+  )[id] ?? id;

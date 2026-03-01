@@ -1,8 +1,9 @@
 import { panels } from "@/types";
 import type { BaseUserWithExtras } from "@/types";
+import { SearchInput } from "@/components/SearchInput";
+import { SearchNavLinks } from "@/components/SearchNavLinks";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -24,43 +25,7 @@ import {
   SearchIcon,
   UserRoundIcon,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
-
-const SearchInput = ({
-  initialValue,
-  onSubmit,
-}: {
-  initialValue: string;
-  onSubmit: (value: string) => void;
-}) => {
-  const [inputValue, setInputValue] = useState(initialValue);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setInputValue(initialValue);
-  }, [initialValue]);
-
-  const handleSubmit = () => onSubmit(inputValue.trim());
-
-  return (
-    <div className="flex gap-2">
-      <Input
-        type="search"
-        ref={inputRef}
-        className="max-w-sm"
-        placeholder="Search players... (partial match)"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-        autoFocus
-      />
-      <Button onClick={handleSubmit}>
-        <SearchIcon className="mr-2 size-4" />
-        Search
-      </Button>
-    </div>
-  );
-};
+import { useEffect, useMemo } from "react";
 import { z } from "zod";
 
 const searchSchema = z.object({
@@ -176,8 +141,9 @@ const buildResults = (
       if (!matches) continue;
 
       const key = user.name.toLowerCase();
-      if (!playerMap.has(key)) {
-        playerMap.set(key, {
+      let entry = playerMap.get(key);
+      if (!entry) {
+        entry = {
           name: user.name,
           clubTag: user.clubTag,
           steamName: user.steamName,
@@ -185,10 +151,9 @@ const buildResults = (
           xboxName: user.xboxName,
           appearances: [],
           bestRank: user.rank,
-        });
+        };
+        playerMap.set(key, entry);
       }
-
-      const entry = playerMap.get(key)!;
       entry.appearances.push({ lb, user });
       if (user.rank < entry.bestRank) entry.bestRank = user.rank;
       if (!entry.clubTag && user.clubTag) entry.clubTag = user.clubTag;
@@ -341,18 +306,25 @@ function RouteComponent() {
 
   return (
     <div className="my-4 flex flex-col gap-6">
-      <Link
-        to="/"
-        className="flex w-fit items-center gap-1 font-medium hover:underline"
-      >
-        <ArrowLeftIcon size={20} /> Back to leaderboards
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link
+          to="/"
+          className="flex w-fit items-center gap-1 font-medium hover:underline"
+        >
+          <ArrowLeftIcon size={20} /> Back to leaderboards
+        </Link>
+        <SearchNavLinks exclude="players" />
+      </div>
 
       <div className="flex flex-col gap-4">
         <div className="text-2xl font-medium">Player Search</div>
 
         <div className="flex flex-col gap-2">
-          <SearchInput initialValue={q ?? ""} onSubmit={handleSubmit} />
+          <SearchInput
+            initialValue={q ?? ""}
+            placeholder="Search players... (partial match)"
+            onSubmit={handleSubmit}
+          />
 
           <div className="flex flex-wrap gap-2">
             <Popover>

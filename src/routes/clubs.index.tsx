@@ -1,8 +1,13 @@
 import { clubsQueryOptions } from "@/queries";
-import { panels } from "@/types";
+import { ClubsAPIData, panels } from "@/types";
+import { SearchInput } from "@/components/SearchInput";
+import { SearchNavLinks } from "@/components/SearchNavLinks";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import {
+  apiIdToWebId,
+  LeaderboardId,
+  leaderboards,
+} from "@/utils/leaderboards";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
@@ -11,44 +16,8 @@ import {
   SearchIcon,
   UsersRoundIcon,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { z } from "zod";
-
-const SearchInput = ({
-  initialValue,
-  onSubmit,
-}: {
-  initialValue: string;
-  onSubmit: (value: string) => void;
-}) => {
-  const [inputValue, setInputValue] = useState(initialValue);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setInputValue(initialValue);
-  }, [initialValue]);
-
-  const handleSubmit = () => onSubmit(inputValue.trim());
-
-  return (
-    <div className="flex gap-2">
-      <Input
-        type="search"
-        ref={inputRef}
-        className="max-w-sm"
-        placeholder="Search clubs... (partial match)"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-        autoFocus
-      />
-      <Button onClick={handleSubmit}>
-        <SearchIcon className="mr-2 size-4" />
-        Search
-      </Button>
-    </div>
-  );
-};
 
 const searchSchema = z.object({
   q: z.string().optional(),
@@ -59,15 +28,9 @@ export const Route = createFileRoute("/clubs/")({
   component: RouteComponent,
 });
 
-type ClubData = {
-  clubTag: string;
-  members: { name: string }[];
-  leaderboards: { leaderboard: string; rank: number; totalValue: number }[];
-};
+type ClubResult = ClubsAPIData & { bestRank: number };
 
-type ClubResult = ClubData & { bestRank: number };
-
-const buildResults = (data: ClubData[], q: string): ClubResult[] => {
+const buildResults = (data: ClubsAPIData[], q: string): ClubResult[] => {
   const normalizedQ = q.trim().toLowerCase();
   if (!normalizedQ) return [];
   return data
@@ -82,52 +45,6 @@ const buildResults = (data: ClubData[], q: string): ClubResult[] => {
     .sort((a, b) => a.bestRank - b.bestRank)
     .slice(0, 50);
 };
-
-const apiIdToWebId = (lb: string): string =>
-  ({
-    s9: "season9",
-    s9sponsor: "season9Sponsor",
-    s9worldtour: "season9WorldTour",
-    s9head2head: "season9Head2Head",
-    s9powershift: "season9PowerShift",
-    s9quickcash: "season9QuickCash",
-    s9teamdeathmatch: "season9TeamDeathmatch",
-    s9pointbreak: "season9PointBreak",
-    s8: "season8",
-    s8sponsor: "season8Sponsor",
-    s8worldtour: "season8WorldTour",
-    s8head2head: "season8Head2Head",
-    s8powershift: "season8PowerShift",
-    s8quickcash: "season8QuickCash",
-    s8teamdeathmatch: "season8TeamDeathmatch",
-    s8heavenorelse: "season8HeavenOrElse",
-    s8ghoulrush: "season8GhoulRush",
-    s8blastoff: "season8BlastOff",
-    s7: "season7",
-    s7sponsor: "season7Sponsor",
-    s7worldtour: "season7WorldTour",
-    s7terminalattack: "season7TerminalAttack",
-    s7powershift: "season7PowerShift",
-    s7quickcash: "season7QuickCash",
-    s7teamdeathmatch: "season7TeamDeathmatch",
-    s7blastoff: "season7BlastOff",
-    s7cashball: "season7CashBall",
-    s6: "season6",
-    s6sponsor: "season6Sponsor",
-    s6worldtour: "season6WorldTour",
-    s6terminalattack: "season6TerminalAttack",
-    s6powershift: "season6PowerShift",
-    s6quickcash: "season6QuickCash",
-    s6teamdeathmatch: "season6TeamDeathmatch",
-    s6heavyhitters: "season6HeavyHitters",
-    s5: "season5",
-    s5sponsor: "season5Sponsor",
-    s5worldtour: "season5WorldTour",
-    s5terminalattack: "season5TerminalAttack",
-    s5powershift: "season5PowerShift",
-    s5quickcash: "season5QuickCash",
-    s5bankit: "season5BankIt",
-  })[lb] ?? lb;
 
 function RouteComponent() {
   const { q } = Route.useSearch();
@@ -152,23 +69,30 @@ function RouteComponent() {
 
   const results = useMemo(
     () => (hasQuery && query.data ? buildResults(query.data, q!) : []),
-    [hasQuery, query.data, q],
+    [q, query.data],
   );
 
   const isCapped = results.length === 50;
 
   return (
     <div className="my-4 flex flex-col gap-6">
-      <Link
-        to="/"
-        className="flex w-fit items-center gap-1 font-medium hover:underline"
-      >
-        <ArrowLeftIcon size={20} /> Back to leaderboards
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link
+          to="/"
+          className="flex w-fit items-center gap-1 font-medium hover:underline"
+        >
+          <ArrowLeftIcon size={20} /> Back to leaderboards
+        </Link>
+        <SearchNavLinks exclude="clubs" />
+      </div>
 
       <div className="flex flex-col gap-4">
         <div className="text-2xl font-medium">Club Search</div>
-        <SearchInput initialValue={q ?? ""} onSubmit={handleSubmit} />
+        <SearchInput
+          initialValue={q ?? ""}
+          placeholder="Search clubs... (partial match)"
+          onSubmit={handleSubmit}
+        />
       </div>
 
       {query.isError && <ErrorState onRetry={() => query.refetch()} />}
@@ -233,9 +157,7 @@ const LeaderboardBadge = ({
   clubTag: string;
 }) => {
   const webId = apiIdToWebId(lb.leaderboard);
-  const lbName =
-    Object.values(leaderboards).find((x) => x.id === webId)?.name ??
-    lb.leaderboard;
+  const lbName = leaderboards[webId as LeaderboardId]?.name ?? lb.leaderboard;
 
   return (
     <Link

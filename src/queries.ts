@@ -1,4 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
+import { ClubsAPIData } from "./types";
 
 export const clubsQueryOptions = queryOptions({
   queryKey: ["clubs"],
@@ -7,11 +8,7 @@ export const clubsQueryOptions = queryOptions({
     // url.searchParams.append("clubTagFilter", clubTag);
     // url.searchParams.append("exactClubTag", "true");
     const res = await fetch(url.href);
-    return (await res.json()) as {
-      clubTag: string;
-      members: { name: string }[];
-      leaderboards: { leaderboard: string; rank: number; totalValue: number }[];
-    }[];
+    return (await res.json()) as ClubsAPIData[];
   },
   staleTime: 1000 * 60 * 2, // 2 minutes
 });
