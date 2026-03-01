@@ -48,6 +48,7 @@ import {
   StarIcon,
   TrophyIcon,
   UserRoundIcon,
+  UsersRoundIcon,
   XIcon,
 } from "lucide-react";
 import { useEffect } from "react";
@@ -336,6 +337,14 @@ function RouteComponent() {
           <Link to="/players">
             <UserRoundIcon className="size-4" />
             <span className="hidden min-[400px]:block">Players</span>
+          </Link>
+        </Button>
+
+        {/* Club Search */}
+        <Button variant="outline" className="select-none gap-1.5" asChild>
+          <Link to="/clubs">
+            <UsersRoundIcon className="size-4" />
+            <span className="hidden min-[400px]:block">Clubs</span>
           </Link>
         </Button>
 
