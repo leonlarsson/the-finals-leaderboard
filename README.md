@@ -11,6 +11,8 @@ npm run dev
 
 ### Adding a new leaderboard
 
+TODO: Update due to changes in https://github.com/leonlarsson/the-finals-leaderboard/pull/17 and https://github.com/leonlarsson/the-finals-leaderboard/pull/19 for the new routes /players/{player}, /players, and /clubs
+
 1. Add new leaderboards to `src/utils/leaderboards.tsx`. Usually just means copy pasting, updating `leaderboard.group`, `defaultLeaderboardId`, and `leaderboardIdsToPrefetch`
 2. Add new leaderboards metadata to `src/components/panels/ClubsStatsPanel.tsx`
 3. Add new leaderboards to `src/utils/leagues.ts`
