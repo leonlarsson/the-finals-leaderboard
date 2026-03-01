@@ -242,7 +242,7 @@ function RouteComponent() {
               value={lbParam}
               onValueChange={(e) => setLeaderboard(e as LeaderboardId)}
             >
-              <SelectTrigger className="w-max select-none">
+              <SelectTrigger className="h-9 w-max select-none">
                 {leaderboard.group !== group ? (
                   group === "select1" ? (
                     `Season ${defaultLeaderboardId.match(/(\d{1})/)?.[0] ?? "7"} Leaderboards`
@@ -297,30 +297,31 @@ function RouteComponent() {
               });
             }}
           >
-            <TabsList>
+            <TabsList className="h-9">
               {[
                 {
                   leaderboardPlatform: platforms.CROSSPLAY,
                   title: "Crossplay",
-                  icon: <CrossplayIcon className="inline size-5" />,
+                  icon: <CrossplayIcon className="inline size-[18px]" />,
                 },
                 {
                   leaderboardPlatform: platforms.STEAM,
                   title: "Steam",
-                  icon: <SteamIcon className="inline size-5" />,
+                  icon: <SteamIcon className="inline size-[18px]" />,
                 },
                 {
                   leaderboardPlatform: platforms.XBOX,
                   title: "Xbox",
-                  icon: <XboxIcon className="inline size-5" />,
+                  icon: <XboxIcon className="inline size-[18px]" />,
                 },
                 {
                   leaderboardPlatform: platforms.PSN,
                   title: "PlayStation",
-                  icon: <PlayStationIcon className="inline size-5" />,
+                  icon: <PlayStationIcon className="inline size-[18px]" />,
                 },
               ].map(({ leaderboardPlatform: value, icon }) => (
                 <TabsTrigger
+                  // className="h-full w-8 p-0"
                   key={value}
                   value={value}
                   onPointerEnter={() => prefetchData({ platform: value })}
@@ -333,7 +334,12 @@ function RouteComponent() {
         )}
 
         {/* Player Search */}
-        <Button variant="outline" className="select-none gap-1.5" asChild>
+        <Button
+          size="sm"
+          variant="outline"
+          className="select-none gap-1.5"
+          asChild
+        >
           <Link to="/players">
             <UserRoundIcon className="size-4" />
             <span className="hidden min-[400px]:block">Players</span>
@@ -341,7 +347,12 @@ function RouteComponent() {
         </Button>
 
         {/* Club Search */}
-        <Button variant="outline" className="select-none gap-1.5" asChild>
+        <Button
+          size="sm"
+          variant="outline"
+          className="select-none gap-1.5"
+          asChild
+        >
           <Link to="/clubs">
             <UsersRoundIcon className="size-4" />
             <span className="hidden min-[400px]:block">Clubs</span>
@@ -351,7 +362,7 @@ function RouteComponent() {
         {/* Favorites popover */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="select-none gap-1.5">
+            <Button size="sm" variant="outline" className="select-none gap-1.5">
               <StarIcon className="size-4" />
               <span className="hidden min-[400px]:block">Favorites</span>
               {favorites.length > 0 && (
@@ -403,6 +414,7 @@ function RouteComponent() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                size="sm"
                 variant="outline"
                 className="select-none"
                 onClick={() =>
