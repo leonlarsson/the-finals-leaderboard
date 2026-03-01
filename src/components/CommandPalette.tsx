@@ -24,12 +24,12 @@ export function CommandPalette() {
     setOpen((o) => !o);
   });
 
-  // Search on main leaderboard page — partial match, like the main filter
-  const handleSearch = (name: string) => {
+  // Search across all leaderboards on the /players route
+  const handlePlayerSearch = (name: string) => {
     const trimmed = name.trim();
     if (!trimmed) return;
     addToHistory(trimmed);
-    navigate({ to: "/", search: { name: trimmed } });
+    navigate({ to: "/players", search: { q: trimmed, all: true } });
     setOpen(false);
     setQuery("");
   };
@@ -52,16 +52,16 @@ export function CommandPalette() {
         onValueChange={setQuery}
         onKeyDown={(e) => {
           if (e.key === "Enter" && query.trim()) {
-            handleSearch(query.trim());
+            handlePlayerSearch(query.trim());
           }
         }}
       />
       <CommandList>
         {query.trim() && (
           <CommandGroup heading="Search">
-            <CommandItem onSelect={() => handleSearch(query.trim())}>
-              <SearchIcon className="mr-2 size-4 text-neutral-400" />
-              <span>Search for &ldquo;{query.trim()}&rdquo;</span>
+            <CommandItem onSelect={() => handlePlayerSearch(query.trim())}>
+              <UserRoundIcon className="mr-2 size-4 text-neutral-400" />
+              <span>Find players &ldquo;{query.trim()}&rdquo;</span>
               <span className="ml-auto text-xs text-neutral-400">↵</span>
             </CommandItem>
             <CommandItem onSelect={() => handleProfile(query.trim())}>
@@ -79,7 +79,10 @@ export function CommandPalette() {
             {query.trim() && <CommandSeparator />}
             <CommandGroup heading="Recent searches">
               {history.map((name) => (
-                <CommandItem key={name} onSelect={() => handleSearch(name)}>
+                <CommandItem
+                  key={name}
+                  onSelect={() => handlePlayerSearch(name)}
+                >
                   <ClockIcon className="mr-2 size-4 text-neutral-400" />
                   {name}
                 </CommandItem>

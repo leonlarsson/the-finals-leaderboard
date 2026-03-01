@@ -1,5 +1,6 @@
 import { panels } from "@/types";
 import type { BaseUserWithExtras } from "@/types";
+import { SearchNavLinks } from "@/components/SearchNavLinks";
 import LeagueImage from "@/components/LeagueImage";
 import { SponsorImage } from "@/components/SponsorImage";
 import {
@@ -10,7 +11,14 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/useFavorites";
-import { Leaderboard, LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import {
+  defaultLeaderboard,
+  getSeasonGroup,
+  Leaderboard,
+  LeaderboardId,
+  leaderboards,
+  seasonOrder,
+} from "@/utils/leaderboards";
 import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
@@ -22,6 +30,7 @@ import {
   GitCompareArrowsIcon,
   History,
   Link2Icon,
+  Loader2Icon,
   Minus,
   StarIcon,
 } from "lucide-react";
@@ -36,35 +45,7 @@ const allLeaderboards = Object.values(leaderboards).filter(
   (lb) => lb.enabled,
 ) as Leaderboard[];
 
-const getSeasonGroup = (id: string): string => {
-  if (id.startsWith("season9")) return "Season 9";
-  if (id.startsWith("season8")) return "Season 8";
-  if (id.startsWith("season7")) return "Season 7";
-  if (id.startsWith("season6")) return "Season 6";
-  if (id.startsWith("season5")) return "Season 5";
-  if (id.startsWith("season4")) return "Season 4";
-  if (id.startsWith("season3")) return "Season 3";
-  if (id.startsWith("season2")) return "Season 2";
-  if (id.startsWith("season1")) return "Season 1";
-  if (id.startsWith("openBeta")) return "Open Beta";
-  if (id.startsWith("closedBeta")) return "Closed Beta";
-  return "Other";
-};
-
-const seasonOrder = [
-  "Season 9",
-  "Season 8",
-  "Season 7",
-  "Season 6",
-  "Season 5",
-  "Season 4",
-  "Season 3",
-  "Season 2",
-  "Season 1",
-  "Open Beta",
-  "Closed Beta",
-  "Other",
-];
+const defaultLeaderboardName = defaultLeaderboard.name;
 
 function RouteComponent() {
   const { playerName } = Route.useParams();
@@ -211,6 +192,10 @@ function RouteComponent() {
               <span className="text-neutral-500">
                 #{playerName.split("#")[1]}
               </span>
+
+              {someLoading && (
+                <Loader2Icon className="inline size-5 animate-spin text-neutral-400" />
+              )}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
               {baseUser?.clubTag && (
@@ -238,11 +223,6 @@ function RouteComponent() {
                 </span>
               )}
             </div>
-            {someLoading && (
-              <div className="mt-1 text-sm text-neutral-500">
-                Loading more leaderboards...
-              </div>
-            )}
           </div>
 
           {/* Action buttons */}
@@ -290,7 +270,7 @@ function RouteComponent() {
 
         {/* Current season — always visible */}
         {sortedGroups
-          .filter(([season]) => season === "Season 9")
+          .filter(([season]) => season === defaultLeaderboardName)
           .map(([season, entries]) => (
             <SeasonSection
               key={season}
@@ -301,7 +281,7 @@ function RouteComponent() {
           ))}
 
         {/* Older seasons — collapsible accordion */}
-        {sortedGroups.some(([season]) => season !== "Season 9") && (
+        {sortedGroups.some(([season]) => season !== defaultLeaderboardName) && (
           <div className="rounded-lg border border-neutral-200 px-4 dark:border-neutral-800">
             <div className="flex items-center gap-2 py-3">
               <History className="size-4 text-neutral-500" />
@@ -310,14 +290,14 @@ function RouteComponent() {
               </span>
               <span className="rounded-full bg-neutral-200 px-2 py-0.5 text-xs font-medium text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
                 {sortedGroups
-                  .filter(([s]) => s !== "Season 9")
+                  .filter(([s]) => s !== defaultLeaderboardName)
                   .reduce((acc, [, e]) => acc + e.length, 0)}{" "}
                 leaderboards
               </span>
             </div>
             <Accordion type="multiple" className="w-full">
               {sortedGroups
-                .filter(([season]) => season !== "Season 9")
+                .filter(([season]) => season !== defaultLeaderboardName)
                 .map(([season, entries]) => (
                   <AccordionItem key={season} value={season}>
                     <AccordionTrigger className="text-sm font-medium hover:no-underline">
@@ -345,16 +325,16 @@ function RouteComponent() {
   );
 }
 
-function PlayerHeader() {
+const PlayerHeader = () => {
   return (
     <div className="mb-4">
       <div className="h-9 w-48 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800 sm:h-10 sm:w-64" />
-      <div className="mt-2 h-4 w-32 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+      <div className="mt-2 h-7 w-32 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
     </div>
   );
-}
+};
 
-function SkeletonCard() {
+const SkeletonCard = () => {
   return (
     <div className="flex animate-pulse flex-col gap-2 rounded-lg border border-neutral-200 p-3 dark:border-neutral-800">
       <div className="flex items-center justify-between">
@@ -369,9 +349,9 @@ function SkeletonCard() {
       <div className="h-4 w-24 rounded bg-neutral-200 dark:bg-neutral-700" />
     </div>
   );
-}
+};
 
-function SeasonSection({
+const SeasonSection = ({
   season,
   entries,
   playerName,
@@ -379,10 +359,10 @@ function SeasonSection({
   season: string;
   entries: { lb: Leaderboard; user: BaseUserWithExtras }[];
   playerName: string;
-}) {
+}) => {
   return (
     <div>
-      {season !== "Season 9" && (
+      {season !== defaultLeaderboardName && (
         <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-neutral-500">
           {season}
         </div>
@@ -394,9 +374,9 @@ function SeasonSection({
       </div>
     </div>
   );
-}
+};
 
-function StatCard({
+const StatCard = ({
   lb,
   user,
   playerName,
@@ -404,7 +384,7 @@ function StatCard({
   lb: Leaderboard;
   user: BaseUserWithExtras;
   playerName: string;
-}) {
+}) => {
   const cols = lb.tableColumns;
 
   return (
@@ -496,7 +476,7 @@ function StatCard({
       </div>
     </Link>
   );
-}
+};
 
 const PageWrapper = ({
   children,
@@ -506,13 +486,16 @@ const PageWrapper = ({
   playerName: string;
 }) => (
   <div className="my-4">
-    <Link
-      to="/"
-      search={{ name: playerName }}
-      className="mb-4 flex w-fit items-center gap-1 font-medium hover:underline"
-    >
-      <ArrowLeftIcon size={20} /> Back to leaderboards
-    </Link>
+    <div className="mb-4 flex items-center gap-4">
+      <Link
+        to="/"
+        search={{ name: playerName }}
+        className="flex w-fit items-center gap-1 font-medium hover:underline"
+      >
+        <ArrowLeftIcon size={20} /> Back to leaderboards
+      </Link>
+      <SearchNavLinks />
+    </div>
     {children}
   </div>
 );

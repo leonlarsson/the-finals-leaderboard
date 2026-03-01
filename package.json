@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "deploy": "vite build && wrangler deploy",
     "prettier": "prettier . --write",
+    "prettier:check": "prettier . --check",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

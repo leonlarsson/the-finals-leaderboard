@@ -1034,6 +1034,7 @@ export type Leaderboard = {
 export type LeaderboardId = keyof typeof leaderboards;
 
 export const defaultLeaderboardId: LeaderboardId = "season9";
+export const defaultLeaderboard = leaderboards[defaultLeaderboardId];
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season9",
   "season9Sponsor",
@@ -1043,4 +1044,84 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season9QuickCash",
   "season9TeamDeathmatch",
   "season9PointBreak",
+];
+
+// Maps short API leaderboard IDs (e.g. "s9") to web IDs (e.g. "season9").
+// Used when displaying club leaderboard standings from the clubs API.
+export const apiIdToWebId = (id: string): string =>
+  (
+    ({
+      s9: "season9",
+      s9sponsor: "season9Sponsor",
+      s9worldtour: "season9WorldTour",
+      s9head2head: "season9Head2Head",
+      s9powershift: "season9PowerShift",
+      s9quickcash: "season9QuickCash",
+      s9teamdeathmatch: "season9TeamDeathmatch",
+      s9pointbreak: "season9PointBreak",
+      s8: "season8",
+      s8sponsor: "season8Sponsor",
+      s8worldtour: "season8WorldTour",
+      s8head2head: "season8Head2Head",
+      s8powershift: "season8PowerShift",
+      s8quickcash: "season8QuickCash",
+      s8teamdeathmatch: "season8TeamDeathmatch",
+      s8heavenorelse: "season8HeavenOrElse",
+      s8ghoulrush: "season8GhoulRush",
+      s8blastoff: "season8BlastOff",
+      s7: "season7",
+      s7sponsor: "season7Sponsor",
+      s7worldtour: "season7WorldTour",
+      s7terminalattack: "season7TerminalAttack",
+      s7powershift: "season7PowerShift",
+      s7quickcash: "season7QuickCash",
+      s7teamdeathmatch: "season7TeamDeathmatch",
+      s7blastoff: "season7BlastOff",
+      s7cashball: "season7CashBall",
+      s6: "season6",
+      s6sponsor: "season6Sponsor",
+      s6worldtour: "season6WorldTour",
+      s6terminalattack: "season6TerminalAttack",
+      s6powershift: "season6PowerShift",
+      s6quickcash: "season6QuickCash",
+      s6teamdeathmatch: "season6TeamDeathmatch",
+      s6heavyhitters: "season6HeavyHitters",
+      s5: "season5",
+      s5sponsor: "season5Sponsor",
+      s5worldtour: "season5WorldTour",
+      s5terminalattack: "season5TerminalAttack",
+      s5powershift: "season5PowerShift",
+      s5quickcash: "season5QuickCash",
+      s5bankit: "season5BankIt",
+    }) as Record<string, string>
+  )[id] ?? id;
+
+export const getSeasonGroup = (id: string): string => {
+  if (id.startsWith("season9")) return "Season 9";
+  if (id.startsWith("season8")) return "Season 8";
+  if (id.startsWith("season7")) return "Season 7";
+  if (id.startsWith("season6")) return "Season 6";
+  if (id.startsWith("season5")) return "Season 5";
+  if (id.startsWith("season4")) return "Season 4";
+  if (id.startsWith("season3")) return "Season 3";
+  if (id.startsWith("season2")) return "Season 2";
+  if (id.startsWith("season1")) return "Season 1";
+  if (id.startsWith("openBeta")) return "Open Beta";
+  if (id.startsWith("closedBeta")) return "Closed Beta";
+  return "Other";
+};
+
+export const seasonOrder = [
+  "Season 9",
+  "Season 8",
+  "Season 7",
+  "Season 6",
+  "Season 5",
+  "Season 4",
+  "Season 3",
+  "Season 2",
+  "Season 1",
+  "Open Beta",
+  "Closed Beta",
+  "Other",
 ];
