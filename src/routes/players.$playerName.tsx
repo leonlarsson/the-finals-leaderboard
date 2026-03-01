@@ -350,7 +350,7 @@ const PlayerHeader = () => {
   return (
     <div className="mb-4">
       <div className="h-9 w-48 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800 sm:h-10 sm:w-64" />
-      <div className="mt-2 h-4 w-32 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+      <div className="mt-2 h-7 w-32 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
     </div>
   );
 };
