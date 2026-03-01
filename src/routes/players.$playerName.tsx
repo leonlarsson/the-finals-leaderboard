@@ -23,6 +23,7 @@ import {
   GitCompareArrowsIcon,
   History,
   Link2Icon,
+  Loader2Icon,
   Minus,
   StarIcon,
 } from "lucide-react";
@@ -212,6 +213,10 @@ function RouteComponent() {
               <span className="text-neutral-500">
                 #{playerName.split("#")[1]}
               </span>
+
+              {someLoading && (
+                <Loader2Icon className="inline size-5 animate-spin text-neutral-400" />
+              )}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
               {baseUser?.clubTag && (
@@ -239,11 +244,6 @@ function RouteComponent() {
                 </span>
               )}
             </div>
-            {someLoading && (
-              <div className="mt-1 text-sm text-neutral-500">
-                Loading more leaderboards...
-              </div>
-            )}
           </div>
 
           {/* Action buttons */}
