@@ -346,16 +346,16 @@ function RouteComponent() {
   );
 }
 
-function PlayerHeader() {
+const PlayerHeader = () => {
   return (
     <div className="mb-4">
       <div className="h-9 w-48 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800 sm:h-10 sm:w-64" />
       <div className="mt-2 h-4 w-32 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
     </div>
   );
-}
+};
 
-function SkeletonCard() {
+const SkeletonCard = () => {
   return (
     <div className="flex animate-pulse flex-col gap-2 rounded-lg border border-neutral-200 p-3 dark:border-neutral-800">
       <div className="flex items-center justify-between">
@@ -370,9 +370,9 @@ function SkeletonCard() {
       <div className="h-4 w-24 rounded bg-neutral-200 dark:bg-neutral-700" />
     </div>
   );
-}
+};
 
-function SeasonSection({
+const SeasonSection = ({
   season,
   entries,
   playerName,
@@ -380,7 +380,7 @@ function SeasonSection({
   season: string;
   entries: { lb: Leaderboard; user: BaseUserWithExtras }[];
   playerName: string;
-}) {
+}) => {
   return (
     <div>
       {season !== "Season 9" && (
@@ -395,9 +395,9 @@ function SeasonSection({
       </div>
     </div>
   );
-}
+};
 
-function StatCard({
+const StatCard = ({
   lb,
   user,
   playerName,
@@ -405,7 +405,7 @@ function StatCard({
   lb: Leaderboard;
   user: BaseUserWithExtras;
   playerName: string;
-}) {
+}) => {
   const cols = lb.tableColumns;
 
   return (
@@ -497,7 +497,7 @@ function StatCard({
       </div>
     </Link>
   );
-}
+};
 
 const PageWrapper = ({
   children,
