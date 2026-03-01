@@ -97,15 +97,11 @@ export const LeaderboardStatsPanel = ({
   const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);
 
-  if (
-    leaderboard.id === "season9Sponsor" ||
-    leaderboard.id === "season8Sponsor" ||
-    leaderboard.id === "season7Sponsor" ||
-    leaderboard.id === "season6Sponsor" ||
-    leaderboard.id === "season5Sponsor" ||
-    leaderboard.id === "season4Sponsor"
-  ) {
-    const leaderboardSponsors = leaderboardToSponsors[leaderboard.id];
+  if (leaderboard.id in leaderboardToSponsors) {
+    const leaderboardSponsors =
+      leaderboardToSponsors[
+        leaderboard.id as keyof typeof leaderboardToSponsors
+      ];
 
     const sortedSponsorsByAvgFans = useMemo(() => {
       return [...leaderboardSponsors].sort((a, b) => {

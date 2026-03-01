@@ -4,7 +4,7 @@ import {
 } from "@tanstack/react-table";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { Club, panels } from "@/types";
-import { LeaderboardId } from "@/utils/leaderboards";
+import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { HomeIcon } from "lucide-react";
 import { Button } from "../ui/button";
@@ -79,74 +79,23 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
     }),
   ];
 
-  const columnsByLeaderboard: [
-    AccessorKeyColumnDef<Club, number>,
-    LeaderboardId[],
-  ][] = [
-    [
-      totalRankScoreColumn,
-      ["season5", "season6", "season7", "season8", "season9"],
-    ],
-    [
-      totalFansColumn,
-      [
-        "season5Sponsor",
-        "season6Sponsor",
-        "season7Sponsor",
-        "season8Sponsor",
-        "season9Sponsor",
-      ],
-    ],
-    [
-      totalCashoutsColumn,
-      [
-        "season5WorldTour",
-        "season6WorldTour",
-        "season7WorldTour",
-        "season8WorldTour",
-        "season9WorldTour",
-      ],
-    ],
-    [
-      totalPointsColumn,
-      [
-        "season5TerminalAttack",
-        "season5PowerShift",
-        "season5QuickCash",
-        "season5BankIt",
-        "season6TerminalAttack",
-        "season6PowerShift",
-        "season6QuickCash",
-        "season6TeamDeathmatch",
-        "season6HeavyHitters",
-        "season7TerminalAttack",
-        "season7PowerShift",
-        "season7QuickCash",
-        "season7TeamDeathmatch",
-        "season7BlastOff",
-        "season7CashBall",
-        "season8Head2Head",
-        "season8PowerShift",
-        "season8QuickCash",
-        "season8TeamDeathmatch",
-        "season8HeavenOrElse",
-        "season8GhoulRush",
-        "season8BlastOff",
-        "season9Head2Head",
-        "season9PowerShift",
-        "season9QuickCash",
-        "season9TeamDeathmatch",
-        "season9PointBreak",
-      ],
-    ],
-  ];
+  const columnByTableColumn: Partial<
+    Record<string, AccessorKeyColumnDef<Club, number>>
+  > = {
+    fame: totalRankScoreColumn,
+    fans: totalFansColumn,
+    cashouts: totalCashoutsColumn,
+    points: totalPointsColumn,
+  };
 
-  const colMap = Object.fromEntries(
-    columnsByLeaderboard.flatMap(([col, ids]) => ids.map((id) => [id, col])),
-  );
-
-  // Add columns based on the leaderboardId
-  colMap[leaderboardId] && columns.push(colMap[leaderboardId]);
+  // Add column based on the leaderboard's tableColumns
+  for (const col of leaderboards[leaderboardId]?.tableColumns ?? []) {
+    const matched = columnByTableColumn[col];
+    if (matched) {
+      columns.push(matched);
+      break;
+    }
+  }
 
   columns.push(
     // @ts-ignore It's just because the array have previously been just accessor columns

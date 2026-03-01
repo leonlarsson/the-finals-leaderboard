@@ -11,13 +11,8 @@ npm run dev
 
 ### Adding a new leaderboard
 
-TODO: Update due to changes in https://github.com/leonlarsson/the-finals-leaderboard/pull/17 and https://github.com/leonlarsson/the-finals-leaderboard/pull/19 for the new routes /players/{player}, /players, and /clubs
-
-1. Add new leaderboards to `src/utils/leaderboards.tsx`. Usually just means copy pasting, updating `leaderboard.group`, `defaultLeaderboardId`, and `leaderboardIdsToPrefetch`
-2. Add new leaderboards metadata to `src/components/panels/ClubsStatsPanel.tsx`
+1. Add new leaderboards to `src/utils/leaderboards.tsx`. Usually just means copy pasting, updating `leaderboard.group`, `defaultLeaderboardId`, `leaderboardIdsToPrefetch`, `apiIdToWebId`, `getSeasonGroup`, and `seasonOrder`
+2. If the leaderboard uses the `"leagueFilter"` feature, add it to `src/utils/leagues.ts`
 3. Add new leaderboards to `src/utils/leagues.ts`
-4. Add new leaderboards to `src/routes/clubs.$clubTag.tsx` (`apiIdToWebId`)
-5. Add new leaderboards to `src/components/tables/ClubsDataTableColumns.tsx` (`columnsByLeaderboard`)
-6. For sponsors, add sponsors in `src/components/panels/LeaderboardStatsPanel.tsx`. (`allSponsors`, `leaderboardToSponsors`). Add seasonXSponsors to if check. Add sponsor color to `tailwind.config.ts`
-7. For sponsors, add new sponsors to `src/components/SponsorImage.tsx` (`sponsors`, `styles`)
-8. For sponsors, make sure to create and add the relevant images normal and -icon variants to `public/images/sponsors/`
+4. **(Sponsor leaderboards only)** Add the sponsor list to `leaderboardToSponsors` in `src/components/panels/LeaderboardStatsPanel.tsx`. Add new sponsors to `allSponsors` in the same file if they're new. Add sponsor color to `tailwind.config.ts`.
+5. **(New sponsors only)** Add the sponsor to `src/components/SponsorImage.tsx` (`sponsors` array + `styles` object). Create and add sponsor images (normal and `-icon` variants) to `public/images/sponsors/`.
