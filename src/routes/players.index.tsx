@@ -1,0 +1,610 @@
+import { panels } from "@/types";
+import type { BaseUserWithExtras } from "@/types";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  defaultLeaderboardId,
+  Leaderboard,
+  LeaderboardId,
+  leaderboardIdsToPrefetch,
+  leaderboards,
+} from "@/utils/leaderboards";
+import { useQueries } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+  ArrowLeftIcon,
+  ChevronDownIcon,
+  ListFilterIcon,
+  SearchIcon,
+  UserRoundIcon,
+} from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+const SearchInput = ({
+  initialValue,
+  onSubmit,
+}: {
+  initialValue: string;
+  onSubmit: (value: string) => void;
+}) => {
+  const [inputValue, setInputValue] = useState(initialValue);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setInputValue(initialValue);
+  }, [initialValue]);
+
+  const handleSubmit = () => onSubmit(inputValue.trim());
+
+  return (
+    <div className="flex gap-2">
+      <Input
+        type="search"
+        ref={inputRef}
+        className="max-w-sm"
+        placeholder="Search players... (partial match)"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+        autoFocus
+      />
+      <Button onClick={handleSubmit}>
+        <SearchIcon className="mr-2 size-4" />
+        Search
+      </Button>
+    </div>
+  );
+};
+import { z } from "zod";
+
+const searchSchema = z.object({
+  q: z.string().optional(),
+  lbs: z.string().array().optional(),
+  all: z.coerce.boolean().optional(),
+  platforms: z.string().array().optional(),
+});
+
+export const Route = createFileRoute("/players/")({
+  validateSearch: (search) => searchSchema.parse(search),
+  component: RouteComponent,
+});
+
+const allLeaderboards = Object.values(leaderboards).filter(
+  (lb) => lb.enabled,
+) as Leaderboard[];
+
+const getSeasonGroup = (id: string): string => {
+  if (id.startsWith("season9")) return "Season 9";
+  if (id.startsWith("season8")) return "Season 8";
+  if (id.startsWith("season7")) return "Season 7";
+  if (id.startsWith("season6")) return "Season 6";
+  if (id.startsWith("season5")) return "Season 5";
+  if (id.startsWith("season4")) return "Season 4";
+  if (id.startsWith("season3")) return "Season 3";
+  if (id.startsWith("season2")) return "Season 2";
+  if (id.startsWith("season1")) return "Season 1";
+  if (id.startsWith("openBeta")) return "Open Beta";
+  if (id.startsWith("closedBeta")) return "Closed Beta";
+  return "Other";
+};
+
+const groupOrder = [
+  "Season 9",
+  "Season 8",
+  "Season 7",
+  "Season 6",
+  "Season 5",
+  "Season 4",
+  "Season 3",
+  "Season 2",
+  "Season 1",
+  "Open Beta",
+  "Closed Beta",
+  "Other",
+];
+
+const leaderboardsByGroup = (() => {
+  const map = new Map<string, Leaderboard[]>();
+  for (const lb of allLeaderboards) {
+    const g = getSeasonGroup(lb.id);
+    if (!map.has(g)) map.set(g, []);
+    map.get(g)!.push(lb);
+  }
+  return groupOrder
+    .filter((g) => map.has(g))
+    .map((g) => ({ label: g, items: map.get(g)! }));
+})();
+
+const defaultLbIds = leaderboardIdsToPrefetch as string[];
+
+const namePlatformOptions = [
+  { id: "name", label: "Embark" },
+  { id: "steam", label: "Steam" },
+  { id: "psn", label: "PlayStation" },
+  { id: "xbox", label: "Xbox" },
+] as const;
+
+const allPlatformIds = namePlatformOptions.map((f) => f.id as string);
+
+type PlayerAppearance = {
+  lb: Leaderboard;
+  user: BaseUserWithExtras;
+};
+
+type PlayerResult = {
+  name: string;
+  clubTag: string | undefined;
+  steamName: string;
+  psnName: string;
+  xboxName: string;
+  appearances: PlayerAppearance[];
+  bestRank: number;
+};
+
+const buildResults = (
+  lbsToSearch: Leaderboard[],
+  queries: { data: unknown }[],
+  q: string,
+  platforms: string[],
+): PlayerResult[] => {
+  const normalizedQ = q.trim().toLowerCase();
+  if (!normalizedQ) return [];
+
+  const platformSet = new Set(platforms);
+  const playerMap = new Map<string, PlayerResult>();
+
+  lbsToSearch.forEach((lb, i) => {
+    const data = queries[i].data as BaseUserWithExtras[] | undefined;
+    if (!data) return;
+
+    for (const user of data) {
+      const matches =
+        (platformSet.has("name") &&
+          user.name.toLowerCase().includes(normalizedQ)) ||
+        (platformSet.has("steam") &&
+          user.steamName.toLowerCase().includes(normalizedQ)) ||
+        (platformSet.has("psn") &&
+          user.psnName.toLowerCase().includes(normalizedQ)) ||
+        (platformSet.has("xbox") &&
+          user.xboxName.toLowerCase().includes(normalizedQ));
+      if (!matches) continue;
+
+      const key = user.name.toLowerCase();
+      if (!playerMap.has(key)) {
+        playerMap.set(key, {
+          name: user.name,
+          clubTag: user.clubTag,
+          steamName: user.steamName,
+          psnName: user.psnName,
+          xboxName: user.xboxName,
+          appearances: [],
+          bestRank: user.rank,
+        });
+      }
+
+      const entry = playerMap.get(key)!;
+      entry.appearances.push({ lb, user });
+      if (user.rank < entry.bestRank) entry.bestRank = user.rank;
+      if (!entry.clubTag && user.clubTag) entry.clubTag = user.clubTag;
+      if (!entry.steamName && user.steamName) entry.steamName = user.steamName;
+      if (!entry.psnName && user.psnName) entry.psnName = user.psnName;
+      if (!entry.xboxName && user.xboxName) entry.xboxName = user.xboxName;
+    }
+  });
+
+  return Array.from(playerMap.values())
+    .sort((a, b) => a.bestRank - b.bestRank)
+    .slice(0, 50);
+};
+
+function RouteComponent() {
+  const {
+    q,
+    lbs: lbsParam,
+    all,
+    platforms: platformsParam,
+  } = Route.useSearch();
+  const navigate = useNavigate();
+
+  const isAllSelected = Boolean(all);
+  const isDefault = !lbsParam && !all;
+  const selectedIds = isAllSelected
+    ? new Set(allLeaderboards.map((lb) => lb.id))
+    : new Set(lbsParam ?? defaultLbIds);
+
+  const selectedPlatforms = new Set(platformsParam ?? allPlatformIds);
+
+  useEffect(() => {
+    document.title = "Player Search · Enhanced Leaderboard – THE FINALS";
+    return () => {
+      document.title = "Enhanced Leaderboard – THE FINALS";
+    };
+  }, []);
+
+  const hasQuery = Boolean(q?.trim());
+
+  const lbsToSearch = useMemo(() => {
+    if (isAllSelected) return allLeaderboards;
+    const ids = new Set(lbsParam ?? defaultLbIds);
+    return allLeaderboards.filter((lb) => ids.has(lb.id));
+  }, [isAllSelected, lbsParam]);
+
+  const queries = useQueries({
+    queries: lbsToSearch.map((lb) => ({
+      queryKey: ["leaderboard", lb.id],
+      queryFn: () => lb.fetchData("crossplay") as Promise<BaseUserWithExtras[]>,
+      staleTime: Infinity,
+      enabled: hasQuery,
+    })),
+  });
+
+  const platformsToSearch = platformsParam ?? allPlatformIds;
+
+  const handleSubmit = (value: string) => {
+    navigate({
+      to: "/players",
+      search: {
+        q: value || undefined,
+        lbs: lbsParam,
+        all: all || undefined,
+        platforms: platformsParam,
+      },
+    });
+  };
+
+  const handleToggleLb = (id: string, checked: boolean) => {
+    if (!checked && selectedIds.size === 1) return;
+    const next = new Set(selectedIds);
+    if (checked) next.add(id);
+    else next.delete(id);
+    const nextArr = [...next];
+    const equalsDefault =
+      nextArr.length === defaultLbIds.length &&
+      nextArr.every((id) => defaultLbIds.includes(id));
+    navigate({
+      to: "/players",
+      search: {
+        q: q || undefined,
+        lbs: equalsDefault ? undefined : nextArr,
+        platforms: platformsParam,
+      },
+    });
+  };
+
+  const handleSelectAll = () => {
+    navigate({
+      to: "/players",
+      search: { q: q || undefined, all: true, platforms: platformsParam },
+    });
+  };
+
+  const handleClearAll = () => {
+    navigate({
+      to: "/players",
+      search: { q: q || undefined, platforms: platformsParam },
+    });
+  };
+
+  const handleSelectAllPlatforms = () => {
+    navigate({
+      to: "/players",
+      search: { q: q || undefined, lbs: lbsParam, all: all || undefined },
+    });
+  };
+
+  const handleTogglePlatform = (id: string, checked: boolean) => {
+    if (!checked && selectedPlatforms.size === 1) return;
+    const next = new Set(selectedPlatforms);
+    if (checked) next.add(id);
+    else next.delete(id);
+    const nextArr = [...next];
+    const equalsAll = nextArr.length === allPlatformIds.length;
+    navigate({
+      to: "/players",
+      search: {
+        q: q || undefined,
+        lbs: lbsParam,
+        all: all || undefined,
+        platforms: equalsAll ? undefined : nextArr,
+      },
+    });
+  };
+
+  const isLoading = hasQuery && queries.some((q) => q.isLoading);
+  const results = useMemo(
+    () =>
+      hasQuery && !isLoading
+        ? buildResults(lbsToSearch, queries, q!, platformsToSearch)
+        : [],
+    [hasQuery, isLoading, lbsToSearch, queries, q, platformsToSearch],
+  );
+  const isCapped = results.length === 50;
+
+  const lbFilterLabel = isAllSelected
+    ? "All leaderboards"
+    : isDefault
+      ? getSeasonGroup(defaultLeaderboardId)
+      : `${selectedIds.size} leaderboard${selectedIds.size === 1 ? "" : "s"}`;
+
+  const platformFilterLabel = !platformsParam
+    ? "All platforms"
+    : selectedPlatforms.size === 1
+      ? (namePlatformOptions.find((f) => selectedPlatforms.has(f.id))?.label ??
+        "1 platform")
+      : `${selectedPlatforms.size} platforms`;
+
+  return (
+    <div className="my-4 flex flex-col gap-6">
+      <Link
+        to="/"
+        className="flex w-fit items-center gap-1 font-medium hover:underline"
+      >
+        <ArrowLeftIcon size={20} /> Back to leaderboards
+      </Link>
+
+      <div className="flex flex-col gap-4">
+        <div className="text-2xl font-medium">Player Search</div>
+
+        <div className="flex flex-col gap-2">
+          <SearchInput initialValue={q ?? ""} onSubmit={handleSubmit} />
+
+          <div className="flex flex-wrap gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-fit gap-1.5 text-sm"
+                >
+                  <ListFilterIcon className="size-3.5" />
+                  {lbFilterLabel}
+                  <ChevronDownIcon className="size-3 text-neutral-400" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="start" className="w-56 p-1.5">
+                <div className="flex flex-col gap-0.5">
+                  <div className="flex gap-0.5">
+                    <button
+                      onClick={handleSelectAll}
+                      className="flex flex-1 items-center rounded px-2 py-1.5 text-left text-sm font-medium transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                      All
+                    </button>
+                    <button
+                      onClick={handleClearAll}
+                      className="flex flex-1 items-center rounded px-2 py-1.5 text-left text-sm text-neutral-500 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                  <div className="my-1 border-t border-neutral-200 dark:border-neutral-700" />
+                  <div className="max-h-72 overflow-y-auto">
+                    {leaderboardsByGroup.map((group) => (
+                      <div key={group.label}>
+                        <div className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+                          {group.label}
+                        </div>
+                        {group.items.map((lb) => (
+                          <label
+                            key={lb.id}
+                            className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                          >
+                            <Checkbox
+                              checked={selectedIds.has(lb.id)}
+                              onCheckedChange={(v) =>
+                                handleToggleLb(lb.id, Boolean(v))
+                              }
+                            />
+                            {lb.name}
+                          </label>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-fit gap-1.5 text-sm"
+                >
+                  <ListFilterIcon className="size-3.5" />
+                  {platformFilterLabel}
+                  <ChevronDownIcon className="size-3 text-neutral-400" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="start" className="w-40 p-1.5">
+                <div className="flex flex-col gap-0.5">
+                  <div className="flex gap-0.5">
+                    <button
+                      onClick={handleSelectAllPlatforms}
+                      className="flex flex-1 items-center rounded px-2 py-1.5 text-left text-sm text-neutral-500 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                      Reset
+                    </button>
+                  </div>
+                  <div className="my-1 border-t border-neutral-200 dark:border-neutral-700" />
+                  {namePlatformOptions.map((platform) => (
+                    <label
+                      key={platform.id}
+                      className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 text-sm transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                      <Checkbox
+                        checked={selectedPlatforms.has(platform.id)}
+                        onCheckedChange={(v) =>
+                          handleTogglePlatform(platform.id, Boolean(v))
+                        }
+                      />
+                      {platform.label}
+                    </label>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+      </div>
+
+      {!hasQuery && <EmptyState />}
+      {hasQuery && isLoading && <SearchSkeletons />}
+      {hasQuery && !isLoading && results.length === 0 && (
+        <NoResultsState query={q!} />
+      )}
+      {hasQuery && !isLoading && results.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <div className="text-sm text-neutral-500">
+            {isCapped
+              ? "Showing top 50 results — refine your search for more specific results"
+              : `${results.length} player${results.length === 1 ? "" : "s"} found`}
+          </div>
+          {results.map((player) => (
+            <PlayerResultCard key={player.name.toLowerCase()} player={player} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const PlayerResultCard = ({ player }: { player: PlayerResult }) => {
+  const hashIndex = player.name.lastIndexOf("#");
+  const base = hashIndex !== -1 ? player.name.slice(0, hashIndex) : player.name;
+  const tag = hashIndex !== -1 ? player.name.slice(hashIndex + 1) : null;
+
+  return (
+    <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+      <div className="flex items-center justify-between gap-2">
+        <Link
+          to="/players/$playerName"
+          params={{ playerName: player.name }}
+          className="flex min-w-0 items-center gap-1.5 font-medium hover:underline"
+        >
+          <UserRoundIcon className="size-4 shrink-0 text-neutral-400" />
+          <span className="truncate">
+            {base}
+            {tag && <span className="text-neutral-400">#{tag}</span>}
+          </span>
+        </Link>
+
+        {player.clubTag && (
+          <Link
+            to="/clubs/$clubTag"
+            params={{ clubTag: player.clubTag }}
+            className="shrink-0 rounded bg-neutral-200 px-1.5 py-0.5 text-xs font-medium transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+          >
+            [{player.clubTag}]
+          </Link>
+        )}
+      </div>
+
+      {(player.steamName || player.psnName || player.xboxName) && (
+        <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-neutral-500">
+          {player.steamName && <span>Steam: {player.steamName}</span>}
+          {player.xboxName && <span>Xbox: {player.xboxName}</span>}
+          {player.psnName && <span>PSN: {player.psnName}</span>}
+        </div>
+      )}
+
+      <div className="mt-3 flex flex-wrap gap-1.5">
+        {player.appearances.map(({ lb, user }) => (
+          <AppearanceBadge key={lb.id} lb={lb} user={user} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const AppearanceBadge = ({
+  lb,
+  user,
+}: {
+  lb: Leaderboard;
+  user: BaseUserWithExtras;
+}) => {
+  return (
+    <Link
+      to="/"
+      search={{
+        lb: lb.id as LeaderboardId,
+        name: user.name,
+        panel: panels.LEADERBOARD,
+      }}
+      className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs transition-colors hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
+    >
+      <span className="text-neutral-500">{lb.name}</span>
+      <span className="font-semibold">#{user.rank.toLocaleString("en")}</span>
+    </Link>
+  );
+};
+
+const SearchSkeletons = () => {
+  return (
+    <div className="flex flex-col gap-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div
+          key={i}
+          className="animate-pulse rounded-lg border border-neutral-200 p-4 dark:border-neutral-800"
+        >
+          <div className="flex items-center gap-2">
+            <div className="size-4 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-4 w-40 rounded bg-neutral-200 dark:bg-neutral-700" />
+          </div>
+          <div className="mt-3 flex gap-1.5">
+            {Array.from({ length: 3 }).map((_, j) => (
+              <div
+                key={j}
+                className="h-5 w-24 rounded-full bg-neutral-200 dark:bg-neutral-700"
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const EmptyState = () => {
+  return (
+    <div className="flex flex-col items-center gap-3 py-12 text-center">
+      <SearchIcon className="size-10 text-neutral-300 dark:text-neutral-600" />
+      <div className="font-medium text-neutral-500">Search for players</div>
+      <p className="max-w-sm text-sm text-neutral-400">
+        Enter a partial name above to find players. Use the filters to choose
+        which leaderboards and platform names to search.
+      </p>
+    </div>
+  );
+};
+
+const NoResultsState = ({ query }: { query: string }) => {
+  return (
+    <div className="flex flex-col gap-3">
+      <p className="font-medium text-neutral-500">
+        No players found for &ldquo;{query}&rdquo;
+      </p>
+      <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+        <p className="mb-2 text-sm font-medium text-neutral-600 dark:text-neutral-400">
+          Suggestions:
+        </p>
+        <ul className="flex flex-col gap-1.5 text-sm text-neutral-500">
+          <li>• Try a shorter search term</li>
+          <li>• Check your spelling</li>
+          <li>• Expand the leaderboard filter to search more data</li>
+          <li>
+            • The player may not be in the top 10K on any searched leaderboard
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+};

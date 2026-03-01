@@ -331,6 +331,14 @@ function RouteComponent() {
           </Tabs>
         )}
 
+        {/* Player Search */}
+        <Button variant="outline" className="select-none gap-1.5" asChild>
+          <Link to="/players">
+            <UserRoundIcon className="size-4" />
+            <span className="hidden min-[400px]:block">Players</span>
+          </Link>
+        </Button>
+
         {/* Favorites popover */}
         <Popover>
           <PopoverTrigger asChild>
