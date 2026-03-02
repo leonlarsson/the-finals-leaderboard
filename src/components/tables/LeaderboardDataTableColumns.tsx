@@ -8,11 +8,11 @@ import {
 } from "../ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
-import { BaseUser, BaseUserWithExtras, panels } from "@/types";
+import { BaseUser, BaseUserWithExtras } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import { SponsorImage } from "../SponsorImage";
 import LeagueImage from "../LeagueImage";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { PlayStationIcon, SteamIcon, XboxIcon } from "../icons";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
@@ -411,23 +411,14 @@ const namePopoverContent = (user: BaseUser) => {
 };
 
 const ClickableClubTag = ({ clubTag }: { clubTag: string }) => {
-  const navigate = useNavigate({ from: "/" });
-
   return (
-    <button
+    <Link
       className="cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-      title="View club ranking"
-      onClick={() => {
-        navigate({
-          search: (prev) => ({
-            ...prev,
-            panel: panels.CLUBS,
-            clubTag: `exactCt:${clubTag}`,
-          }),
-        });
-      }}
+      title="View club page"
+      to="/clubs/$clubTag"
+      params={{ clubTag }}
     >
       {clubTag}
-    </button>
+    </Link>
   );
 };

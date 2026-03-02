@@ -207,6 +207,7 @@ function RouteComponent() {
                 <Link
                   to="/clubs/$clubTag"
                   params={{ clubTag: baseUser.clubTag }}
+                  title="View club page"
                   className="rounded bg-neutral-200 px-1.5 py-0.5 font-medium transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
                 >
                   [{baseUser.clubTag}]
