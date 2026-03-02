@@ -2,6 +2,7 @@ import { CrossplayIcon, PlayStationIcon, SteamIcon } from "@/components/icons";
 import BasicLink from "@/components/Link";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
+import { TopMoversPanel } from "@/components/panels/TopMoversPanel";
 import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
 import { leaderboardDataTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useFavorites } from "@/hooks/useFavorites";
+import { useClubFavorites } from "@/hooks/useClubFavorites";
 import {
   Popover,
   PopoverContent,
@@ -42,6 +44,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   BarChartIcon,
+  ChevronsUpDownIcon,
+  ExternalLinkIcon,
   HomeIcon,
   Loader2Icon,
   RefreshCwIcon,
@@ -90,6 +94,7 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
   const queryClient = useQueryClient();
   const { favorites, toggleFavorite } = useFavorites();
+  const { clubFavorites, toggleClubFavorite } = useClubFavorites();
 
   // This is safe because lbParam is validated above
   const leaderboard = Object.values(leaderboards).find(
@@ -365,46 +370,88 @@ function RouteComponent() {
             <Button size="sm" variant="outline" className="select-none gap-1.5">
               <StarIcon className="size-4" />
               <span className="hidden min-[400px]:block">Favorites</span>
-              {favorites.length > 0 && (
+              {(favorites.length > 0 || clubFavorites.length > 0) && (
                 <span className="rounded-full bg-neutral-200 px-1.5 py-0.5 text-xs font-medium leading-none dark:bg-neutral-700">
-                  {favorites.length}
+                  {favorites.length + clubFavorites.length}
                 </span>
               )}
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-64 p-2 font-saira">
-            {favorites.length === 0 ? (
+            {favorites.length === 0 && clubFavorites.length === 0 ? (
               <p className="px-2 py-1.5 text-sm text-neutral-500">
-                No favorites yet. Open a player profile and click{" "}
+                No favorites yet. Open a player or club profile and click{" "}
                 <StarIcon className="inline size-3" /> to save them here.
               </p>
             ) : (
               <div className="flex flex-col gap-0.5">
-                <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                  Saved Players
-                </p>
-                {favorites.map((name) => (
-                  <div
-                    key={name}
-                    className="flex items-center justify-between gap-1 rounded px-2 py-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                {favorites.length > 0 && (
+                  <>
+                    <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                      Saved Players
+                    </p>
+                    {favorites.map((name) => (
+                      <div
+                        key={name}
+                        className="flex items-center justify-between gap-1 rounded px-2 py-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      >
+                        <Link
+                          to="/players/$playerName"
+                          params={{ playerName: name }}
+                          className="flex min-w-0 flex-1 items-center gap-1.5 text-sm"
+                        >
+                          <UserRoundIcon className="size-3.5 shrink-0 text-neutral-400" />
+                          <span className="truncate">{name}</span>
+                        </Link>
+                        <button
+                          onClick={() => toggleFavorite(name)}
+                          className="shrink-0 text-neutral-400 hover:text-red-500"
+                          title="Remove"
+                        >
+                          <XIcon className="size-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </>
+                )}
+                {clubFavorites.length > 0 && (
+                  <>
+                    <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                      Saved Clubs
+                    </p>
+                    {clubFavorites.map((tag) => (
+                      <div
+                        key={tag}
+                        className="flex items-center justify-between gap-1 rounded px-2 py-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                      >
+                        <Link
+                          to="/clubs/$clubTag"
+                          params={{ clubTag: tag }}
+                          className="flex min-w-0 flex-1 items-center gap-1.5 text-sm"
+                        >
+                          <UsersRoundIcon className="size-3.5 shrink-0 text-neutral-400" />
+                          <span className="truncate">[{tag}]</span>
+                        </Link>
+                        <button
+                          onClick={() => toggleClubFavorite(tag)}
+                          className="shrink-0 text-neutral-400 hover:text-red-500"
+                          title="Remove"
+                        >
+                          <XIcon className="size-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                  </>
+                )}
+                <div className="mt-1 border-t border-neutral-200 pt-1 dark:border-neutral-700">
+                  <Link
+                    to="/favorites"
+                    className="flex items-center gap-1.5 rounded px-2 py-1.5 text-sm font-medium text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
                   >
-                    <Link
-                      to="/players/$playerName"
-                      params={{ playerName: name }}
-                      className="flex min-w-0 flex-1 items-center gap-1.5 text-sm"
-                    >
-                      <UserRoundIcon className="size-3.5 shrink-0 text-neutral-400" />
-                      <span className="truncate">{name}</span>
-                    </Link>
-                    <button
-                      onClick={() => toggleFavorite(name)}
-                      className="shrink-0 text-neutral-400 hover:text-red-500"
-                      title="Remove"
-                    >
-                      <XIcon className="size-3.5" />
-                    </button>
-                  </div>
-                ))}
+                    <ExternalLinkIcon className="size-3.5" />
+                    View dashboard
+                  </Link>
+                </div>
               </div>
             )}
           </PopoverContent>
@@ -541,6 +588,17 @@ function RouteComponent() {
                 <HomeIcon className="mr-2 inline size-5" />
                 Clubs
               </TabsTrigger>
+
+              <TabsTrigger
+                value={panels.MOVERS}
+                disabled={
+                  loadingOrRefetching ||
+                  !leaderboard.features.includes("moversPanel")
+                }
+              >
+                <ChevronsUpDownIcon className="mr-2 inline size-5" />
+                Movers
+              </TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -580,6 +638,14 @@ function RouteComponent() {
               isRefetching={isRefetching}
             />
           )}
+
+          {panelParam === panels.MOVERS && (
+            <TopMoversPanel
+              leaderboardVersion={lbParam}
+              platform={platformParam}
+              users={data ?? []}
+            />
+          )}
         </div>
       )}
 
@@ -617,6 +683,7 @@ function RouteComponent() {
 const panelToFeatureMap: Record<string, LeaderboardFeature> = {
   stats: "statsPanel",
   clubs: "clubsPanel",
+  movers: "moversPanel",
 };
 
 /** Returns true if the given panel is supported in the given leaderboard. */

@@ -9,6 +9,12 @@ import { SponsorImage } from "../SponsorImage";
 import { Separator } from "../ui/separator";
 import { useMemo } from "react";
 
+type LeagueThreshold = {
+  league: string;
+  topRank: number;
+  minScore: number;
+};
+
 const allSponsors = {
   OSPUZE: {
     name: "OSPUZE",
@@ -96,53 +102,70 @@ export const LeaderboardStatsPanel = ({
 }: LeaderboardStatsPanelProps) => {
   const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);
-
-  if (leaderboard.id in leaderboardToSponsors) {
-    const leaderboardSponsors =
-      leaderboardToSponsors[
+  const isSponsored = leaderboard.id in leaderboardToSponsors;
+  const leaderboardSponsors = isSponsored
+    ? leaderboardToSponsors[
         leaderboard.id as keyof typeof leaderboardToSponsors
-      ];
+      ]
+    : [];
 
-    const sortedSponsorsByAvgFans = useMemo(() => {
-      return [...leaderboardSponsors].sort((a, b) => {
-        const aUsers = users.filter((user) => user.sponsor === a.name);
-        const bUsers = users.filter((user) => user.sponsor === b.name);
-        const aAvg =
-          aUsers.reduce((sum, u) => sum + u.fans!, 0) / aUsers.length;
-        const bAvg =
-          bUsers.reduce((sum, u) => sum + u.fans!, 0) / bUsers.length;
-        return bAvg - aAvg;
-      });
-    }, [leaderboardSponsors, users]);
+  // All hooks called unconditionally at top level
+  const sortedSponsorsByAvgFans = useMemo(() => {
+    return [...leaderboardSponsors].sort((a, b) => {
+      const aUsers = users.filter((user) => user.sponsor === a.name);
+      const bUsers = users.filter((user) => user.sponsor === b.name);
+      const aAvg = aUsers.reduce((sum, u) => sum + u.fans!, 0) / aUsers.length;
+      const bAvg = bUsers.reduce((sum, u) => sum + u.fans!, 0) / bUsers.length;
+      return bAvg - aAvg;
+    });
+  }, [leaderboardSponsors, users]);
 
-    const sortedSponsorsByPlayerCount = useMemo(() => {
-      return [...leaderboardSponsors].sort((a, b) => {
-        const aCount = users.filter((user) => user.sponsor === a.name).length;
-        const bCount = users.filter((user) => user.sponsor === b.name).length;
-        return bCount - aCount;
-      });
-    }, [leaderboardSponsors, users]);
+  const sortedSponsorsByPlayerCount = useMemo(() => {
+    return [...leaderboardSponsors].sort((a, b) => {
+      const aCount = users.filter((user) => user.sponsor === a.name).length;
+      const bCount = users.filter((user) => user.sponsor === b.name).length;
+      return bCount - aCount;
+    });
+  }, [leaderboardSponsors, users]);
 
-    const sortedSponsorsByTotalFans = useMemo(() => {
-      return [...leaderboardSponsors].sort((a, b) => {
-        const aTotal = users
-          .filter((user) => user.sponsor === a.name)
-          .reduce((sum, u) => sum + u.fans!, 0);
-        const bTotal = users
-          .filter((user) => user.sponsor === b.name)
-          .reduce((sum, u) => sum + u.fans!, 0);
-        return bTotal - aTotal;
-      });
-    }, [leaderboardSponsors, users]);
+  const sortedSponsorsByTotalFans = useMemo(() => {
+    return [...leaderboardSponsors].sort((a, b) => {
+      const aTotal = users
+        .filter((user) => user.sponsor === a.name)
+        .reduce((sum, u) => sum + u.fans!, 0);
+      const bTotal = users
+        .filter((user) => user.sponsor === b.name)
+        .reduce((sum, u) => sum + u.fans!, 0);
+      return bTotal - aTotal;
+    });
+  }, [leaderboardSponsors, users]);
 
-    const sponsorColorsArrayByPlayerCount = sortedSponsorsByPlayerCount.map(
-      (sponsor) => sponsor.color,
-    );
+  const leagueThresholds = useMemo<LeagueThreshold[]>(() => {
+    if (!(leaderboardVersion in leagues) || users.length === 0) return [];
+    const leagueList =
+      leagues[leaderboardVersion as keyof typeof leagues] ?? [];
+    return leagueList
+      .map((league) => {
+        const playersInLeague = users.filter((u) => u.league === league);
+        if (playersInLeague.length === 0) return null;
+        const topPlayer = playersInLeague[0];
+        const minScore = topPlayer.fame ?? topPlayer.rankScore ?? 0;
+        return { league, topRank: topPlayer.rank, minScore };
+      })
+      .filter((t): t is LeagueThreshold => t !== null);
+  }, [leaderboardVersion, users]);
 
-    const sponsorColorsArrayByTotalFans = sortedSponsorsByTotalFans.map(
-      (sponsor) => sponsor.color,
-    );
+  const scoreLabel =
+    users.length > 0 && "rankScore" in users[0] ? "Rank Score" : "Fame";
 
+  const sponsorColorsArrayByPlayerCount = sortedSponsorsByPlayerCount.map(
+    (sponsor) => sponsor.color,
+  );
+  const sponsorColorsArrayByTotalFans = sortedSponsorsByTotalFans.map(
+    (sponsor) => sponsor.color,
+  );
+
+  if (isSponsored) {
     return (
       <div className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900/50">
         <h2 className="mb-1 text-xl font-medium">
@@ -463,6 +486,59 @@ export const LeaderboardStatsPanel = ({
               );
             }}
           />
+
+          {/* LEAGUE THRESHOLDS */}
+          {leagueThresholds.length > 0 && leaderboardVersion !== "season2" && (
+            <>
+              <Separator className="my-3" />
+              <div className="mb-2 text-lg font-medium">League Thresholds</div>
+              <p className="mb-3 text-neutral-500">
+                The rank and minimum {scoreLabel.toLowerCase()} required to
+                reach each league in the top {users.length.toLocaleString("en")}
+                .
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead>
+                    <tr className="border-b border-neutral-200 dark:border-neutral-700">
+                      <th className="pb-2 pr-4 font-semibold text-neutral-500">
+                        League
+                      </th>
+                      <th className="pb-2 pr-4 font-semibold text-neutral-500">
+                        Top Rank
+                      </th>
+                      <th className="pb-2 font-semibold text-neutral-500">
+                        Min {scoreLabel}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...leagueThresholds]
+                      .reverse()
+                      .map(({ league, topRank, minScore }) => (
+                        <tr
+                          key={league}
+                          className="border-b border-neutral-200 last:border-0 dark:border-neutral-700"
+                        >
+                          <td className="py-1.5 pr-4">
+                            <div className="flex items-center gap-2">
+                              <LeagueImage league={league} size={24} />
+                              <span>{league}</span>
+                            </div>
+                          </td>
+                          <td className="py-1.5 pr-4 tabular-nums">
+                            #{topRank.toLocaleString("en")}
+                          </td>
+                          <td className="py-1.5 tabular-nums">
+                            {minScore.toLocaleString("en")}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
         </>
       )}
     </div>

@@ -8,9 +8,10 @@ import {
 } from "@/utils/leaderboards";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SearchNavLinks } from "@/components/SearchNavLinks";
-import { AlertCircleIcon, ArrowLeftIcon } from "lucide-react";
-import { ReactNode, useEffect } from "react";
+import { PageWrapper } from "@/components/PageWrapper";
+import { useClubFavorites } from "@/hooks/useClubFavorites";
+import { AlertCircleIcon, ArrowLeftIcon, StarIcon } from "lucide-react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/clubs/$clubTag")({
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/clubs/$clubTag")({
 
 function RouteComponent() {
   const { clubTag } = Route.useParams();
+  const { isClubFavorite, toggleClubFavorite } = useClubFavorites();
 
   useEffect(() => {
     document.title = `[${clubTag}] · Enhanced Leaderboard – THE FINALS`;
@@ -29,13 +31,25 @@ function RouteComponent() {
 
   const query = useQuery(clubsQueryOptions);
 
+  const backLink = (
+    <Link
+      to="/"
+      search={(prev) => ({ ...prev, panel: panels.CLUBS })}
+      className="flex w-fit items-center gap-1 font-medium hover:underline"
+    >
+      <ArrowLeftIcon size={20} /> Back to leaderboards
+    </Link>
+  );
+
   if (query.isLoading) {
-    return <PageWrapper>Loading a lot of data...</PageWrapper>;
+    return (
+      <PageWrapper backLink={backLink}>Loading a lot of data...</PageWrapper>
+    );
   }
 
   if (query.isError || !query.data) {
     return (
-      <PageWrapper>
+      <PageWrapper backLink={backLink}>
         <div className="flex flex-col items-start gap-3">
           <div className="flex items-center gap-2 text-red-500">
             <AlertCircleIcon className="size-5" />
@@ -58,25 +72,42 @@ function RouteComponent() {
 
   if (!club) {
     return (
-      <PageWrapper>
+      <PageWrapper backLink={backLink}>
         Club not found. This means that there are no players in the top 10K in
         this club. Try again later.
       </PageWrapper>
     );
   }
 
+  const favorited = isClubFavorite(clubTag);
+
   return (
-    <PageWrapper>
-      <div className="flex flex-col gap-4">
-        <div>
-          Club Page
-          <div className="text-4xl font-medium">{club.clubTag}</div>
+    <PageWrapper backLink={backLink}>
+      <div className="flex flex-col gap-6">
+        <div className="flex items-start justify-between gap-4">
           <div>
-            <span className="font-medium">{club.clubTag}</span> has{" "}
-            {club.members.length.toLocaleString("en")}{" "}
-            {club.members.length === 1 ? "member" : "members"} in the top 10K of
-            any leaderboard.
+            <div className="text-4xl font-medium">{club.clubTag}</div>
+            <div className="mt-1 text-sm">
+              <span className="font-medium">{club.clubTag}</span> has{" "}
+              {club.members.length.toLocaleString("en")}{" "}
+              {club.members.length === 1 ? "member" : "members"} in the top 10K
+              of any leaderboard.
+            </div>
           </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => toggleClubFavorite(clubTag)}
+            className="shrink-0 gap-1.5"
+            title={favorited ? "Remove from favorites" : "Add to favorites"}
+          >
+            <StarIcon
+              className={`size-4 transition-colors ${favorited ? "fill-yellow-400 text-yellow-400" : ""}`}
+            />
+            <span className="hidden sm:inline">
+              {favorited ? "Saved" : "Favorite"}
+            </span>
+          </Button>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -187,19 +218,3 @@ function RouteComponent() {
     </PageWrapper>
   );
 }
-
-const PageWrapper = ({ children }: { children: ReactNode }) => (
-  <div className="my-4">
-    <div className="mb-4 flex items-center gap-4">
-      <Link
-        to="/"
-        search={(prev) => ({ ...prev, panel: panels.CLUBS })}
-        className="flex w-fit items-center gap-1 font-medium hover:underline"
-      >
-        <ArrowLeftIcon size={20} /> Back to leaderboards
-      </Link>
-      <SearchNavLinks />
-    </div>
-    {children}
-  </div>
-);

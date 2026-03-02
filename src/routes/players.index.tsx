@@ -1,7 +1,9 @@
-import { panels } from "@/types";
-import type { BaseUserWithExtras } from "@/types";
 import { SearchInput } from "@/components/SearchInput";
-import { SearchNavLinks } from "@/components/SearchNavLinks";
+import { PageWrapper } from "@/components/PageWrapper";
+import {
+  PlayerResultCard,
+  type PlayerResult,
+} from "@/components/PlayerResultCard";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +15,6 @@ import {
   defaultLeaderboardId,
   getSeasonGroup,
   Leaderboard,
-  LeaderboardId,
   leaderboardIdsToPrefetch,
   leaderboards,
   seasonOrder,
@@ -25,11 +26,12 @@ import {
   ChevronDownIcon,
   ListFilterIcon,
   SearchIcon,
-  UserRoundIcon,
 } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { z } from "zod";
 import { SearchSkeletons } from "@/components/SearchSkeletons";
+import { useFavorites } from "@/hooks/useFavorites";
+import type { BaseUserWithExtras } from "@/types";
 
 const searchSchema = z.object({
   q: z.string().optional(),
@@ -69,21 +71,6 @@ const namePlatformOptions = [
 ] as const;
 
 const allPlatformIds = namePlatformOptions.map((f) => f.id as string);
-
-type PlayerAppearance = {
-  lb: Leaderboard;
-  user: BaseUserWithExtras;
-};
-
-type PlayerResult = {
-  name: string;
-  clubTag: string | undefined;
-  steamName: string;
-  psnName: string;
-  xboxName: string;
-  appearances: PlayerAppearance[];
-  bestRank: number;
-};
 
 const buildResults = (
   lbsToSearch: Leaderboard[],
@@ -149,6 +136,7 @@ function RouteComponent() {
     platforms: platformsParam,
   } = Route.useSearch();
   const navigate = useNavigate();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const isAllSelected = Boolean(all);
   const isDefault = !lbsParam && !all;
@@ -277,18 +265,17 @@ function RouteComponent() {
         "1 platform")
       : `${selectedPlatforms.size} platforms`;
 
-  return (
-    <div className="my-4 flex flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Link
-          to="/"
-          className="flex w-fit items-center gap-1 font-medium hover:underline"
-        >
-          <ArrowLeftIcon size={20} /> Back to leaderboards
-        </Link>
-        <SearchNavLinks exclude="players" />
-      </div>
+  const backLink = (
+    <Link
+      to="/"
+      className="flex w-fit items-center gap-1 font-medium hover:underline"
+    >
+      <ArrowLeftIcon size={20} /> Back to leaderboards
+    </Link>
+  );
 
+  return (
+    <PageWrapper backLink={backLink} excludeSearchLink="players">
       <div className="flex flex-col gap-4">
         <div className="text-2xl font-medium">Player Search</div>
 
@@ -413,84 +400,18 @@ function RouteComponent() {
               : `${results.length} player${results.length === 1 ? "" : "s"} found`}
           </div>
           {results.map((player) => (
-            <PlayerResultCard key={player.name.toLowerCase()} player={player} />
+            <PlayerResultCard
+              key={player.name.toLowerCase()}
+              player={player}
+              isFavorited={isFavorite(player.name)}
+              onToggleFavorite={() => toggleFavorite(player.name)}
+            />
           ))}
         </div>
       )}
-    </div>
+    </PageWrapper>
   );
 }
-
-const PlayerResultCard = ({ player }: { player: PlayerResult }) => {
-  const hashIndex = player.name.lastIndexOf("#");
-  const base = hashIndex !== -1 ? player.name.slice(0, hashIndex) : player.name;
-  const tag = hashIndex !== -1 ? player.name.slice(hashIndex + 1) : null;
-
-  return (
-    <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
-      <div className="flex items-center justify-between gap-2">
-        <Link
-          to="/players/$playerName"
-          params={{ playerName: player.name }}
-          className="flex min-w-0 items-center gap-1.5 font-medium hover:underline"
-        >
-          <UserRoundIcon className="size-4 shrink-0 text-neutral-400" />
-          <span className="truncate">
-            {base}
-            {tag && <span className="text-neutral-400">#{tag}</span>}
-          </span>
-        </Link>
-
-        {player.clubTag && (
-          <Link
-            to="/clubs/$clubTag"
-            params={{ clubTag: player.clubTag }}
-            className="shrink-0 rounded bg-neutral-200 px-1.5 py-0.5 text-xs font-medium transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-          >
-            [{player.clubTag}]
-          </Link>
-        )}
-      </div>
-
-      {(player.steamName || player.psnName || player.xboxName) && (
-        <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-sm text-neutral-500">
-          {player.steamName && <span>Steam: {player.steamName}</span>}
-          {player.xboxName && <span>Xbox: {player.xboxName}</span>}
-          {player.psnName && <span>PSN: {player.psnName}</span>}
-        </div>
-      )}
-
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {player.appearances.map(({ lb, user }) => (
-          <AppearanceBadge key={lb.id} lb={lb} user={user} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const AppearanceBadge = ({
-  lb,
-  user,
-}: {
-  lb: Leaderboard;
-  user: BaseUserWithExtras;
-}) => {
-  return (
-    <Link
-      to="/"
-      search={{
-        lb: lb.id as LeaderboardId,
-        name: user.name,
-        panel: panels.LEADERBOARD,
-      }}
-      className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs transition-colors hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
-    >
-      <span className="text-neutral-500">{lb.name}</span>
-      <span className="font-semibold">#{user.rank.toLocaleString("en")}</span>
-    </Link>
-  );
-};
 
 const EmptyState = () => {
   return (

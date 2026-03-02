@@ -1,24 +1,16 @@
 import { clubsQueryOptions } from "@/queries";
-import { ClubsAPIData, panels } from "@/types";
+import type { ClubsAPIData } from "@/types";
 import { SearchInput } from "@/components/SearchInput";
-import { SearchNavLinks } from "@/components/SearchNavLinks";
+import { PageWrapper } from "@/components/PageWrapper";
+import { ClubResultCard, type ClubResult } from "@/components/ClubResultCard";
 import { Button } from "@/components/ui/button";
-import {
-  apiIdToWebId,
-  LeaderboardId,
-  leaderboards,
-} from "@/utils/leaderboards";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import {
-  AlertCircleIcon,
-  ArrowLeftIcon,
-  SearchIcon,
-  UsersRoundIcon,
-} from "lucide-react";
+import { AlertCircleIcon, ArrowLeftIcon, SearchIcon } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { z } from "zod";
 import { SearchSkeletons } from "@/components/SearchSkeletons";
+import { useClubFavorites } from "@/hooks/useClubFavorites";
 
 const searchSchema = z.object({
   q: z.string().optional(),
@@ -28,8 +20,6 @@ export const Route = createFileRoute("/clubs/")({
   validateSearch: (search) => searchSchema.parse(search),
   component: RouteComponent,
 });
-
-type ClubResult = ClubsAPIData & { bestRank: number };
 
 const buildResults = (data: ClubsAPIData[], q: string): ClubResult[] => {
   const normalizedQ = q.trim().toLowerCase();
@@ -50,6 +40,7 @@ const buildResults = (data: ClubsAPIData[], q: string): ClubResult[] => {
 function RouteComponent() {
   const { q } = Route.useSearch();
   const navigate = useNavigate();
+  const { isClubFavorite, toggleClubFavorite } = useClubFavorites();
   const query = useQuery(clubsQueryOptions);
 
   useEffect(() => {
@@ -75,18 +66,17 @@ function RouteComponent() {
 
   const isCapped = results.length === 50;
 
-  return (
-    <div className="my-4 flex flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Link
-          to="/"
-          className="flex w-fit items-center gap-1 font-medium hover:underline"
-        >
-          <ArrowLeftIcon size={20} /> Back to leaderboards
-        </Link>
-        <SearchNavLinks exclude="clubs" />
-      </div>
+  const backLink = (
+    <Link
+      to="/"
+      className="flex w-fit items-center gap-1 font-medium hover:underline"
+    >
+      <ArrowLeftIcon size={20} /> Back to leaderboards
+    </Link>
+  );
 
+  return (
+    <PageWrapper backLink={backLink} excludeSearchLink="clubs">
       <div className="flex flex-col gap-4">
         <div className="text-2xl font-medium">Club Search</div>
         <SearchInput
@@ -111,70 +101,18 @@ function RouteComponent() {
               : `${results.length} club${results.length === 1 ? "" : "s"} found`}
           </div>
           {results.map((club) => (
-            <ClubResultCard key={club.clubTag.toLowerCase()} club={club} />
+            <ClubResultCard
+              key={club.clubTag.toLowerCase()}
+              club={club}
+              isFavorited={isClubFavorite(club.clubTag)}
+              onToggleFavorite={() => toggleClubFavorite(club.clubTag)}
+            />
           ))}
         </div>
       )}
-    </div>
+    </PageWrapper>
   );
 }
-
-const ClubResultCard = ({ club }: { club: ClubResult }) => {
-  return (
-    <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
-      <div className="flex items-center justify-between gap-2">
-        <Link
-          to="/clubs/$clubTag"
-          params={{ clubTag: club.clubTag }}
-          className="flex min-w-0 items-center gap-1.5 font-medium hover:underline"
-        >
-          <UsersRoundIcon className="size-4 shrink-0 text-neutral-400" />
-          <span>[{club.clubTag}]</span>
-        </Link>
-        <span className="shrink-0 text-sm text-neutral-500">
-          {club.members.length.toLocaleString("en")}{" "}
-          {club.members.length === 1 ? "member" : "members"} in top 10K
-        </span>
-      </div>
-
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {club.leaderboards.map((lb) => (
-          <LeaderboardBadge
-            key={lb.leaderboard}
-            lb={lb}
-            clubTag={club.clubTag}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const LeaderboardBadge = ({
-  lb,
-  clubTag,
-}: {
-  lb: { leaderboard: string; rank: number; totalValue: number };
-  clubTag: string;
-}) => {
-  const webId = apiIdToWebId(lb.leaderboard);
-  const lbName = leaderboards[webId as LeaderboardId]?.name ?? lb.leaderboard;
-
-  return (
-    <Link
-      to="/"
-      search={{
-        lb: webId as LeaderboardId,
-        panel: panels.CLUBS,
-        clubTag: `exactCt:${clubTag}`,
-      }}
-      className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs transition-colors hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
-    >
-      <span className="text-neutral-500">{lbName}</span>
-      <span className="font-semibold">#{lb.rank.toLocaleString("en")}</span>
-    </Link>
-  );
-};
 
 const EmptyState = () => {
   return (
