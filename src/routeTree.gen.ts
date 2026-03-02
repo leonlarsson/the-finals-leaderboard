@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as FavoritesImport } from './routes/favorites'
 import { Route as CompareImport } from './routes/compare'
 import { Route as IndexImport } from './routes/index'
 import { Route as PlayersIndexImport } from './routes/players.index'
@@ -19,6 +20,12 @@ import { Route as PlayersPlayerNameImport } from './routes/players.$playerName'
 import { Route as ClubsClubTagImport } from './routes/clubs.$clubTag'
 
 // Create/Update Routes
+
+const FavoritesRoute = FavoritesImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const CompareRoute = CompareImport.update({
   id: '/compare',
@@ -74,6 +81,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompareImport
       parentRoute: typeof rootRoute
     }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesImport
+      parentRoute: typeof rootRoute
+    }
     '/clubs/$clubTag': {
       id: '/clubs/$clubTag'
       path: '/clubs/$clubTag'
@@ -110,6 +124,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/favorites': typeof FavoritesRoute
   '/clubs/$clubTag': typeof ClubsClubTagRoute
   '/players/$playerName': typeof PlayersPlayerNameRoute
   '/clubs': typeof ClubsIndexRoute
@@ -119,6 +134,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/favorites': typeof FavoritesRoute
   '/clubs/$clubTag': typeof ClubsClubTagRoute
   '/players/$playerName': typeof PlayersPlayerNameRoute
   '/clubs': typeof ClubsIndexRoute
@@ -129,6 +145,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/favorites': typeof FavoritesRoute
   '/clubs/$clubTag': typeof ClubsClubTagRoute
   '/players/$playerName': typeof PlayersPlayerNameRoute
   '/clubs/': typeof ClubsIndexRoute
@@ -140,6 +157,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/compare'
+    | '/favorites'
     | '/clubs/$clubTag'
     | '/players/$playerName'
     | '/clubs'
@@ -148,6 +166,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/compare'
+    | '/favorites'
     | '/clubs/$clubTag'
     | '/players/$playerName'
     | '/clubs'
@@ -156,6 +175,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/compare'
+    | '/favorites'
     | '/clubs/$clubTag'
     | '/players/$playerName'
     | '/clubs/'
@@ -166,6 +186,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompareRoute: typeof CompareRoute
+  FavoritesRoute: typeof FavoritesRoute
   ClubsClubTagRoute: typeof ClubsClubTagRoute
   PlayersPlayerNameRoute: typeof PlayersPlayerNameRoute
   ClubsIndexRoute: typeof ClubsIndexRoute
@@ -175,6 +196,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompareRoute: CompareRoute,
+  FavoritesRoute: FavoritesRoute,
   ClubsClubTagRoute: ClubsClubTagRoute,
   PlayersPlayerNameRoute: PlayersPlayerNameRoute,
   ClubsIndexRoute: ClubsIndexRoute,
@@ -193,6 +215,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/compare",
+        "/favorites",
         "/clubs/$clubTag",
         "/players/$playerName",
         "/clubs/",
@@ -204,6 +227,9 @@ export const routeTree = rootRoute
     },
     "/compare": {
       "filePath": "compare.tsx"
+    },
+    "/favorites": {
+      "filePath": "favorites.tsx"
     },
     "/clubs/$clubTag": {
       "filePath": "clubs.$clubTag.tsx"

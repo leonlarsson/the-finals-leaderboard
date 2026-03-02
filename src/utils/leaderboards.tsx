@@ -13,6 +13,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
+      "moversPanel",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -154,6 +155,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
+      "moversPanel",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -329,6 +331,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
+      "moversPanel",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -487,6 +490,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
+      "moversPanel",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -628,6 +632,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
+      "moversPanel",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -748,7 +753,11 @@ export const leaderboards = {
     enabled: true,
     name: "Season 4",
     nameShort: "S4",
-    features: ["statsPanel", "leagueFilter"] as LeaderboardFeature[],
+    features: [
+      "statsPanel",
+      "leagueFilter",
+      "moversPanel",
+    ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s4/crossplay",
@@ -800,7 +809,11 @@ export const leaderboards = {
     enabled: true,
     name: "Season 3",
     nameShort: "S3",
-    features: ["statsPanel", "leagueFilter"] as LeaderboardFeature[],
+    features: [
+      "statsPanel",
+      "leagueFilter",
+      "moversPanel",
+    ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s3/crossplay",
@@ -817,7 +830,11 @@ export const leaderboards = {
     enabled: true,
     name: "Season 3 - Original",
     nameShort: "S3OR",
-    features: ["statsPanel", "leagueFilter"] as LeaderboardFeature[],
+    features: [
+      "statsPanel",
+      "leagueFilter",
+      "moversPanel",
+    ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/s3original/crossplay",
@@ -873,6 +890,7 @@ export const leaderboards = {
       "platformSelection",
       "statsPanel",
       "leagueFilter",
+      "moversPanel",
     ] as LeaderboardFeature[],
     fetchData: async (platform) => {
       const res = await fetch(
@@ -895,6 +913,7 @@ export const leaderboards = {
       "platformSelection",
       "statsPanel",
       "leagueFilter",
+      "moversPanel",
     ] as LeaderboardFeature[],
     fetchData: async (platform) => {
       const res = await fetch(
@@ -917,6 +936,7 @@ export const leaderboards = {
       "platformSelection",
       "statsPanel",
       "leagueFilter",
+      "moversPanel",
     ] as LeaderboardFeature[],
     fetchData: async (platform) => {
       const res = await fetch(
@@ -935,7 +955,11 @@ export const leaderboards = {
     id: "closedBeta2",
     name: "Closed Beta 2",
     nameShort: "CB2",
-    features: ["statsPanel", "leagueFilter"] as LeaderboardFeature[],
+    features: [
+      "statsPanel",
+      "leagueFilter",
+      "moversPanel",
+    ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/cb2",
@@ -953,7 +977,11 @@ export const leaderboards = {
     id: "closedBeta1",
     name: "Closed Beta 1",
     nameShort: "CB1",
-    features: ["statsPanel", "leagueFilter"] as LeaderboardFeature[],
+    features: [
+      "statsPanel",
+      "leagueFilter",
+      "moversPanel",
+    ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
         "https://api.the-finals-leaderboard.com/v1/leaderboard/cb1",

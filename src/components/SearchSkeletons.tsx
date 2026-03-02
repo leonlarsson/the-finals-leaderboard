@@ -1,7 +1,9 @@
-export const SearchSkeletons = () => {
+export const SearchSkeletons = ({ hideTop }: { hideTop?: boolean }) => {
   return (
     <div className="flex flex-col gap-3">
-      <div className="h-5 w-40 rounded bg-neutral-200 dark:bg-neutral-700" />
+      {!hideTop && (
+        <div className="h-5 w-40 rounded bg-neutral-200 dark:bg-neutral-700" />
+      )}
       <div className="flex flex-col gap-3">
         {Array.from({ length: 5 }).map((_, i) => (
           <div
