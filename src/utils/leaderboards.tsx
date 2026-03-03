@@ -144,6 +144,23 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "points"],
   },
 
+  season9BankIt: {
+    group: "select1",
+    id: "season9BankIt",
+    enabled: true,
+    name: "Season 9 Bank It",
+    nameShort: "S9BI",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s9bankit/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   // Season 8
   season8: {
     group: "select2",
@@ -1072,6 +1089,7 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season9QuickCash",
   "season9TeamDeathmatch",
   "season9PointBreak",
+  "season9BankIt",
 ];
 
 // Maps short API leaderboard IDs (e.g. "s9") to web IDs (e.g. "season9").
@@ -1087,6 +1105,7 @@ export const apiIdToWebId = (id: string): string =>
       s9quickcash: "season9QuickCash",
       s9teamdeathmatch: "season9TeamDeathmatch",
       s9pointbreak: "season9PointBreak",
+      s9bankit: "season9BankIt",
       s8: "season8",
       s8sponsor: "season8Sponsor",
       s8worldtour: "season8WorldTour",
