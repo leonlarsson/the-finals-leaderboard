@@ -8,6 +8,8 @@ import LeagueImage from "../LeagueImage";
 import { SponsorImage } from "../SponsorImage";
 import { Separator } from "../ui/separator";
 import { useMemo } from "react";
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 type LeagueThreshold = {
   league: string;
@@ -154,6 +156,17 @@ export const LeaderboardStatsPanel = ({
       })
       .filter((t): t is LeagueThreshold => t !== null);
   }, [leaderboardVersion, users]);
+
+  const { gainers, decliners } = useMemo(() => {
+    const movers = users.filter((u) => u.change !== 0);
+    const gainers = [...movers]
+      .sort((a, b) => b.change - a.change)
+      .slice(0, 20);
+    const decliners = [...movers]
+      .sort((a, b) => a.change - b.change)
+      .slice(0, 20);
+    return { gainers, decliners };
+  }, [users]);
 
   const scoreLabel =
     users.length > 0 && "rankScore" in users[0] ? "Rank Score" : "Fame";
@@ -491,7 +504,7 @@ export const LeaderboardStatsPanel = ({
           {leagueThresholds.length > 0 && leaderboardVersion !== "season2" && (
             <>
               <Separator className="my-3" />
-              <div className="mb-2 text-lg font-medium">League Thresholds</div>
+              <div className="mb-1 text-lg font-medium">League Thresholds</div>
               <p className="mb-3 text-neutral-500">
                 The rank and minimum {scoreLabel.toLowerCase()} required to
                 reach each league in the top {users.length.toLocaleString("en")}
@@ -539,8 +552,98 @@ export const LeaderboardStatsPanel = ({
               </div>
             </>
           )}
+
+          {/* TOP MOVERS */}
+          {leaderboard.features.includes("statsPanelMovers") &&
+            (() => {
+              const noMovers = gainers.length === 0 && decliners.length === 0;
+              return (
+                <>
+                  <Separator className="my-3" />
+                  <div className="mb-1 text-lg font-medium">Top Movers</div>
+                  <p className="mb-3 text-neutral-500">
+                    The biggest rank changes in the last 24 hours.
+                  </p>
+
+                  {noMovers ? (
+                    <p className="text-neutral-500">
+                      No rank changes recorded yet for this leaderboard.
+                    </p>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-6 max-[600px]:grid-cols-1">
+                      <MoversList
+                        title="Top Gainers"
+                        movers={gainers}
+                        type="gainer"
+                      />
+                      <MoversList
+                        title="Top Declines"
+                        movers={decliners}
+                        type="decliner"
+                      />
+                    </div>
+                  )}
+                </>
+              );
+            })()}
         </>
       )}
     </div>
   );
 };
+
+const MoversList = ({
+  title,
+  movers,
+  type,
+}: {
+  title: string;
+  movers: BaseUser[];
+  type: "gainer" | "decliner";
+}) => (
+  <div>
+    <div className="mb-2 flex items-center gap-2 font-semibold">
+      {type === "gainer" ? (
+        <ChevronUpIcon className="size-4 text-indigo-400" />
+      ) : (
+        <ChevronDownIcon className="size-4 text-red-500" />
+      )}
+      {title}
+    </div>
+    <div className="flex flex-col gap-1">
+      {movers.map((user) => (
+        <div
+          key={user.name}
+          className="flex items-center justify-between gap-2 rounded px-2 py-1.5 hover:bg-neutral-200 dark:hover:bg-neutral-800"
+        >
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="w-12 shrink-0 tabular-nums text-neutral-500">
+              #{user.rank.toLocaleString("en")}
+            </span>
+            <Link
+              to="/players/$playerName"
+              params={{ playerName: user.name }}
+              className="truncate font-medium hover:underline"
+            >
+              {user.name.split("#")[0]}
+              <span className="text-neutral-400">
+                #{user.name.split("#")[1]}
+              </span>
+            </Link>
+          </div>
+          {type === "gainer" ? (
+            <span className="inline-flex shrink-0 items-center text-indigo-400 dark:text-indigo-300">
+              <ChevronUpIcon className="size-3.5" />
+              {user.change.toLocaleString("en")}
+            </span>
+          ) : (
+            <span className="inline-flex shrink-0 items-center text-red-500">
+              <ChevronDownIcon className="size-3.5" />
+              {Math.abs(user.change).toLocaleString("en")}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+);

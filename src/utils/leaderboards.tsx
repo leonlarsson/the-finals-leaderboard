@@ -13,7 +13,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -155,7 +155,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -331,7 +331,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -490,7 +490,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -632,7 +632,7 @@ export const leaderboards = {
       "statsPanel",
       "clubsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -756,7 +756,7 @@ export const leaderboards = {
     features: [
       "statsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -812,7 +812,7 @@ export const leaderboards = {
     features: [
       "statsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -833,7 +833,7 @@ export const leaderboards = {
     features: [
       "statsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -890,7 +890,7 @@ export const leaderboards = {
       "platformSelection",
       "statsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async (platform) => {
       const res = await fetch(
@@ -913,7 +913,7 @@ export const leaderboards = {
       "platformSelection",
       "statsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async (platform) => {
       const res = await fetch(
@@ -936,7 +936,7 @@ export const leaderboards = {
       "platformSelection",
       "statsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async (platform) => {
       const res = await fetch(
@@ -958,7 +958,7 @@ export const leaderboards = {
     features: [
       "statsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(
@@ -980,7 +980,7 @@ export const leaderboards = {
     features: [
       "statsPanel",
       "leagueFilter",
-      "moversPanel",
+      "statsPanelMovers",
     ] as LeaderboardFeature[],
     fetchData: async () => {
       const res = await fetch(

@@ -48,13 +48,12 @@ export type LeaderboardFeature =
   | "statsPanel"
   | "clubsPanel"
   | "leagueFilter"
-  | "moversPanel";
+  | "statsPanelMovers";
 
 export const panels = {
   LEADERBOARD: "leaderboard",
   STATS: "stats",
   CLUBS: "clubs",
-  MOVERS: "movers",
 };
 
 export const platforms = {

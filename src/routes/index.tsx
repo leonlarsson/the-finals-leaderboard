@@ -2,7 +2,6 @@ import { CrossplayIcon, PlayStationIcon, SteamIcon } from "@/components/icons";
 import BasicLink from "@/components/Link";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
-import { TopMoversPanel } from "@/components/panels/TopMoversPanel";
 import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
 import { leaderboardDataTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
 import { Button } from "@/components/ui/button";
@@ -44,7 +43,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   BarChartIcon,
-  ChevronsUpDownIcon,
   ExternalLinkIcon,
   HomeIcon,
   Loader2Icon,
@@ -588,17 +586,6 @@ function RouteComponent() {
                 <HomeIcon className="mr-2 inline size-5" />
                 Clubs
               </TabsTrigger>
-
-              <TabsTrigger
-                value={panels.MOVERS}
-                disabled={
-                  loadingOrRefetching ||
-                  !leaderboard.features.includes("moversPanel")
-                }
-              >
-                <ChevronsUpDownIcon className="mr-2 inline size-5" />
-                Movers
-              </TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -638,14 +625,6 @@ function RouteComponent() {
               isRefetching={isRefetching}
             />
           )}
-
-          {panelParam === panels.MOVERS && (
-            <TopMoversPanel
-              leaderboardVersion={lbParam}
-              platform={platformParam}
-              users={data ?? []}
-            />
-          )}
         </div>
       )}
 
@@ -683,7 +662,6 @@ function RouteComponent() {
 const panelToFeatureMap: Record<string, LeaderboardFeature> = {
   stats: "statsPanel",
   clubs: "clubsPanel",
-  movers: "moversPanel",
 };
 
 /** Returns true if the given panel is supported in the given leaderboard. */
