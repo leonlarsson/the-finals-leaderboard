@@ -22,10 +22,10 @@ interface DataTablePaginationProps<TData> {
   type: "players" | "clubs";
 }
 
-export function DataTablePagination<TData>({
+export const DataTablePagination = <TData,>({
   table,
   type,
-}: DataTablePaginationProps<TData>) {
+}: DataTablePaginationProps<TData>) => {
   useHotkeys(
     "ArrowLeft",
     () => {
@@ -42,26 +42,28 @@ export function DataTablePagination<TData>({
     { enableOnFormTags: false },
   );
 
+  const skeletonCount = type === "players" ? 10_000 : 5_000;
+  const totalRows = table.getCoreRowModel().rows.length || skeletonCount;
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-1">
-      {table.getCoreRowModel().rows.length > 0 && (
-        <div className="text-sm text-neutral-500">
-          {table.getFilteredRowModel().rows.length <
-          table.getCoreRowModel().rows.length ? (
-            <>
-              <span className="font-medium text-foreground">
-                {table.getFilteredRowModel().rows.length.toLocaleString("en")}
-              </span>
-              {" of "}
-              {table.getCoreRowModel().rows.length.toLocaleString("en")} {type}
-            </>
-          ) : (
-            <>
-              {table.getCoreRowModel().rows.length.toLocaleString("en")} {type}
-            </>
-          )}
-        </div>
-      )}
+      <div className="text-sm text-neutral-500">
+        {table.getFilteredRowModel().rows.length <
+        table.getCoreRowModel().rows.length ? (
+          <>
+            <span className="font-medium text-foreground">
+              {table.getFilteredRowModel().rows.length.toLocaleString("en")}
+            </span>
+            {" of "}
+            {totalRows.toLocaleString("en")} {type}
+          </>
+        ) : (
+          <>
+            {totalRows.toLocaleString("en")} {type}
+          </>
+        )}
+      </div>
+
       <div className="flex items-center space-x-2">
         <p className="text-sm font-medium">Rows per page</p>
         <Select
@@ -87,7 +89,9 @@ export function DataTablePagination<TData>({
       <div className="flex items-center space-x-2">
         <div className="flex items-center justify-center text-sm font-medium">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+          {table.getCoreRowModel().rows.length
+            ? table.getPageCount()
+            : Math.ceil(skeletonCount / table.getState().pagination.pageSize)}
         </div>
 
         <Button
@@ -136,4 +140,4 @@ export function DataTablePagination<TData>({
       </div>
     </div>
   );
-}
+};
