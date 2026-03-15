@@ -1,4 +1,4 @@
-import { BarChart } from "@tremor/react";
+import { AppBarChart } from "@/components/AppBarChart";
 import { BaseUser } from "@/types";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
@@ -176,8 +176,8 @@ export const ClubsStatsPanel = ({
                 <label htmlFor="topXToDisplay">Show top 300</label>
               </div>
 
-              <BarChart
-                className="my-2"
+              <AppBarChart
+                orientation="columns"
                 data={topClubsByRankScoreOrPointsOrFansOrCashouts
                   .slice(0, topXToDisplay)
                   .toReversed()
@@ -185,20 +185,16 @@ export const ClubsStatsPanel = ({
                     name: clubTag,
                     [leaderboardMetadata.barChartLabel]: int,
                   }))}
-                index="name"
-                categories={[leaderboardMetadata.barChartLabel]}
-                colors={["#d31f3c"]}
-                valueFormatter={(v) => v.toLocaleString("en")}
-                showAnimation
+                dataKey={leaderboardMetadata.barChartLabel}
+                yAxisFormatter={(v) => v.toLocaleString("en")}
                 yAxisWidth={100}
-                animationDuration={400}
-                customTooltip={({ label, payload }) => {
-                  const clubTag = label;
+                tooltip={({ label, payload }) => {
+                  const clubTag = label as string;
                   const clubPosition =
                     topClubsByRankScoreOrPointsOrFansOrCashouts.findIndex(
                       ([tag]) => tag === clubTag,
                     ) + 1;
-                  const amount = payload?.[0]?.value;
+                  const amount = payload?.[0]?.value as number | undefined;
                   const playersInClub = users.filter(
                     (user) => user.clubTag === clubTag,
                   ).length;
@@ -211,16 +207,13 @@ export const ClubsStatsPanel = ({
                           #{clubPosition.toLocaleString("en")} | {clubTag}
                         </span>
                       </div>
-
                       <span>
                         {playersInClub.toLocaleString("en")} players in club
                       </span>
-
                       <Separator />
-
                       {typeof amount === "number" && (
                         <span>
-                          {amount.toLocaleString("en") ?? 0}{" "}
+                          {amount.toLocaleString("en")}{" "}
                           {leaderboardMetadata.barChartLabel.toLowerCase()}
                         </span>
                       )}
