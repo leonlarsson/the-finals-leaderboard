@@ -51,14 +51,15 @@ export const ClubsStatsPanel = ({
 
   const leaderboardMetadata = getLeaderboardMetadata(leaderboardVersion);
 
-  const amountOfUniqueClubTags = new Set(users.map((user) => user.clubTag))
-    .size;
+  const amountOfUniqueClubTags = new Set(
+    users.filter((user) => user.clubTag).map((user) => user.clubTag),
+  ).size;
 
   const amountOfPlayersWithoutClub = users.filter(
     (user) => !user.clubTag,
   ).length;
 
-  const topClubsByRankScoreOrPointsOrFansOrCashouts = useMemo(() => {
+  const topClubsByMetric = useMemo(() => {
     return Object.entries(
       users.reduce(
         (acc, user) => {
@@ -81,22 +82,18 @@ export const ClubsStatsPanel = ({
       }
     }
 
-    return topClubsByRankScoreOrPointsOrFansOrCashouts.map(
-      ([clubTag, int], index) => ({
-        rank: index + 1,
-        clubTag,
-        members: memberCounts[clubTag] || 0,
-        totalValue: int ?? 0,
-      }),
-    );
-  }, [topClubsByRankScoreOrPointsOrFansOrCashouts, users]);
+    return topClubsByMetric.map(([clubTag, int], index) => ({
+      rank: index + 1,
+      clubTag,
+      members: memberCounts[clubTag] || 0,
+      totalValue: int ?? 0,
+    }));
+  }, [topClubsByMetric, users]);
 
-  const averageClubRankScoreOrPointsOrFansOrCashouts =
-    topClubsByRankScoreOrPointsOrFansOrCashouts.reduce(
-      (acc, [, amount]) =>
-        acc + amount / topClubsByRankScoreOrPointsOrFansOrCashouts.length,
-      0,
-    );
+  const averageClubMetrics = topClubsByMetric.reduce(
+    (acc, [, amount]) => acc + amount / topClubsByMetric.length,
+    0,
+  );
 
   return (
     <>
@@ -152,10 +149,9 @@ export const ClubsStatsPanel = ({
               <div>
                 Average club {leaderboardMetadata.barChartLabel.toLowerCase()}:{" "}
                 <span className="rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-                  {averageClubRankScoreOrPointsOrFansOrCashouts.toLocaleString(
-                    "en",
-                    { maximumFractionDigits: 0 },
-                  )}
+                  {averageClubMetrics.toLocaleString("en", {
+                    maximumFractionDigits: 0,
+                  })}
                 </span>
               </div>
             </div>
@@ -197,7 +193,7 @@ export const ClubsStatsPanel = ({
 
               <AppBarChart
                 orientation="columns"
-                data={topClubsByRankScoreOrPointsOrFansOrCashouts
+                data={topClubsByMetric
                   .slice(0, topXToDisplay === "all" ? undefined : topXToDisplay)
                   .toReversed()
                   .map(([clubTag, int]) => ({
@@ -210,9 +206,7 @@ export const ClubsStatsPanel = ({
                 tooltip={({ label, payload }) => {
                   const clubTag = label as string;
                   const clubPosition =
-                    topClubsByRankScoreOrPointsOrFansOrCashouts.findIndex(
-                      ([tag]) => tag === clubTag,
-                    ) + 1;
+                    topClubsByMetric.findIndex(([tag]) => tag === clubTag) + 1;
                   const amount = payload?.[0]?.value as number | undefined;
                   const playersInClub = users.filter(
                     (user) => user.clubTag === clubTag,
