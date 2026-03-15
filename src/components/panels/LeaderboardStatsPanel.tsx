@@ -549,10 +549,10 @@ export const LeaderboardStatsPanel = ({
                     )}
                   </span>
                   <div className="flex items-center gap-1">
-                    <span className="font-medium">{label}</span>
                     {leagues[leaderboardVersion].includes(label as string) && (
                       <LeagueImage league={label as string} size={30} />
                     )}
+                    <span className="font-medium">{label}</span>
                   </div>
                   <Separator />
                   {typeof amount === "number" && (
