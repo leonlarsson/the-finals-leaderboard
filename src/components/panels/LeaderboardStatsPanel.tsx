@@ -280,7 +280,6 @@ export const LeaderboardStatsPanel = ({
                           isAnimationActive
                           animationDuration={500}
                           label={({ name }) => name}
-                          // labelLine={false}
                         >
                           {sortedSponsorsByPlayerCount.map((sponsor, index) => (
                             <Cell key={index} fill={sponsor.color} />
@@ -367,7 +366,6 @@ export const LeaderboardStatsPanel = ({
                           isAnimationActive
                           animationDuration={500}
                           label={({ name }) => name}
-                          // labelLine={false}
                         >
                           {sortedSponsorsByTotalFans.map((sponsor, index) => (
                             <Cell key={index} fill={sponsor.color} />

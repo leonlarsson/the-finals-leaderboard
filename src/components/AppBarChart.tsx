@@ -25,7 +25,6 @@ type ColumnsProps = BaseProps & {
 type BarsProps = BaseProps & {
   orientation: "bars";
   xAxisFormatter?: (v: number) => string;
-  yAxisWidth?: number;
 };
 
 type AppBarChartProps = ColumnsProps | BarsProps;
@@ -81,7 +80,6 @@ export const AppBarChart = (props: AppBarChartProps) => {
           angle={-30}
           textAnchor="end"
           height={60}
-          // interval={0}
         />
         <YAxis
           tickCount={6}

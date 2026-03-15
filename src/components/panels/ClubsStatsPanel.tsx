@@ -20,6 +20,16 @@ const TOP_X_OPTIONS = [10, 20, 30, 50, 100, 200, 500, "all"] as const;
 type TopXOption = (typeof TOP_X_OPTIONS)[number];
 const DEFAULT_TOP_X: TopXOption = 30;
 
+const getLeaderboardMetadata = (leaderboardVersion: LeaderboardId) => {
+  const tableColumns = (leaderboards[leaderboardVersion]?.tableColumns ??
+    []) as string[];
+  if (tableColumns.includes("fame")) return { barChartLabel: "Rank Score" };
+  if (tableColumns.includes("fans")) return { barChartLabel: "Fans" };
+  if (tableColumns.includes("cashouts")) return { barChartLabel: "Cashouts" };
+  if (tableColumns.includes("points")) return { barChartLabel: "Points" };
+  return { barChartLabel: "Unknown" };
+};
+
 type ClubsStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
   platform: string;
@@ -38,16 +48,6 @@ export const ClubsStatsPanel = ({
   const [topXToDisplay, setTopXToDisplay] = useState<TopXOption>(DEFAULT_TOP_X);
   const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);
-
-  const getLeaderboardMetadata = (leaderboardVersion: LeaderboardId) => {
-    const tableColumns = (leaderboards[leaderboardVersion]?.tableColumns ??
-      []) as string[];
-    if (tableColumns.includes("fame")) return { barChartLabel: "Rank Score" };
-    if (tableColumns.includes("fans")) return { barChartLabel: "Fans" };
-    if (tableColumns.includes("cashouts")) return { barChartLabel: "Cashouts" };
-    if (tableColumns.includes("points")) return { barChartLabel: "Points" };
-    return { barChartLabel: "Unknown" };
-  };
 
   const leaderboardMetadata = getLeaderboardMetadata(leaderboardVersion);
 
@@ -89,7 +89,7 @@ export const ClubsStatsPanel = ({
         totalValue: int ?? 0,
       }),
     );
-  }, [topClubsByRankScoreOrPointsOrFansOrCashouts, users, leaderboardMetadata]);
+  }, [topClubsByRankScoreOrPointsOrFansOrCashouts, users]);
 
   const averageClubRankScoreOrPointsOrFansOrCashouts =
     topClubsByRankScoreOrPointsOrFansOrCashouts.reduce(
