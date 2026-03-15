@@ -92,7 +92,7 @@ export function ClubsDataTable<TData, TValue>({
       <ClubsDataTableToolbar table={table} />
 
       <div className="space-y-2">
-        <DataTablePagination table={table} />
+        <DataTablePagination table={table} type="clubs" />
 
         <div className="rounded-md border">
           <Table className="min-w-[800px] outline-none" tabIndex={-1} ref={ref}>
@@ -149,7 +149,7 @@ export function ClubsDataTable<TData, TValue>({
           </Table>
         </div>
 
-        <DataTablePagination table={table} />
+        <DataTablePagination table={table} type="clubs" />
       </div>
     </div>
   );

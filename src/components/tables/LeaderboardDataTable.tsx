@@ -100,7 +100,7 @@ export function LeaderboardDataTable<TData, TValue>({
       />
 
       <div className="space-y-2">
-        <DataTablePagination table={table} />
+        <DataTablePagination table={table} type="players" />
 
         <div className="rounded-md border">
           <Table className="min-w-[800px] outline-none" tabIndex={-1} ref={ref}>
@@ -173,7 +173,7 @@ export function LeaderboardDataTable<TData, TValue>({
           </Table>
         </div>
 
-        <DataTablePagination table={table} />
+        <DataTablePagination table={table} type="players" />
       </div>
     </div>
   );

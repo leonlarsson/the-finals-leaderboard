@@ -19,10 +19,12 @@ import { useHotkeys } from "react-hotkeys-hook";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
+  type: "players" | "clubs";
 }
 
 export function DataTablePagination<TData>({
   table,
+  type,
 }: DataTablePaginationProps<TData>) {
   useHotkeys(
     "ArrowLeft",
@@ -51,11 +53,11 @@ export function DataTablePagination<TData>({
                 {table.getFilteredRowModel().rows.length.toLocaleString("en")}
               </span>
               {" of "}
-              {table.getCoreRowModel().rows.length.toLocaleString("en")} players
+              {table.getCoreRowModel().rows.length.toLocaleString("en")} {type}
             </>
           ) : (
             <>
-              {table.getCoreRowModel().rows.length.toLocaleString("en")} players
+              {table.getCoreRowModel().rows.length.toLocaleString("en")} {type}
             </>
           )}
         </div>
