@@ -70,7 +70,6 @@ function RouteComponent() {
   const backLink = (
     <Link
       to="/"
-      search={{ name: playerName }}
       className="flex w-fit items-center gap-1 font-medium hover:underline"
     >
       <ArrowLeftIcon size={20} /> Back to leaderboards

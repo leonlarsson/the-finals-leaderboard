@@ -34,7 +34,6 @@ function RouteComponent() {
   const backLink = (
     <Link
       to="/"
-      search={(prev) => ({ ...prev, panel: panels.CLUBS })}
       className="flex w-fit items-center gap-1 font-medium hover:underline"
     >
       <ArrowLeftIcon size={20} /> Back to leaderboards
