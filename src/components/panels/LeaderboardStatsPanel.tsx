@@ -9,9 +9,23 @@ import Loading from "../Loading";
 import LeagueImage from "../LeagueImage";
 import { SponsorImage } from "../SponsorImage";
 import { Separator } from "../ui/separator";
-import { useMemo } from "react";
+import { FC, ReactElement, useMemo } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+
+const ChartContainerWrapper: FC<{
+  data: { name: string; color: string }[];
+  children: ReactElement;
+}> = ({ data, children }) => (
+  <ChartContainer
+    config={Object.fromEntries(
+      data.map((s) => [s.name, { label: s.name, color: s.color }]),
+    )}
+    className="aspect-square max-h-[250px] w-full"
+  >
+    {children}
+  </ChartContainer>
+);
 
 type LeagueThreshold = {
   league: string;
@@ -252,15 +266,7 @@ export const LeaderboardStatsPanel = ({
 
                 <div className="space-y-3">
                   <div className="flex flex-col items-center">
-                    <ChartContainer
-                      config={Object.fromEntries(
-                        sortedSponsorsByPlayerCount.map((s) => [
-                          s.name,
-                          { label: s.name, color: s.color },
-                        ]),
-                      )}
-                      className="aspect-square max-h-[250px] w-full"
-                    >
+                    <ChartContainerWrapper data={sortedSponsorsByPlayerCount}>
                       <PieChart>
                         <Pie
                           data={sortedSponsorsByPlayerCount.map((sponsor) => ({
@@ -306,7 +312,7 @@ export const LeaderboardStatsPanel = ({
                           }}
                         />
                       </PieChart>
-                    </ChartContainer>
+                    </ChartContainerWrapper>
                   </div>
 
                   <div className="space-y-1">
@@ -346,15 +352,7 @@ export const LeaderboardStatsPanel = ({
                 <div className="text-lg font-medium">Fans by sponsor</div>
                 <div className="space-y-3">
                   <div className="flex flex-col items-center">
-                    <ChartContainer
-                      config={Object.fromEntries(
-                        sortedSponsorsByTotalFans.map((s) => [
-                          s.name,
-                          { label: s.name, color: s.color },
-                        ]),
-                      )}
-                      className="aspect-square max-h-[250px] w-full"
-                    >
+                    <ChartContainerWrapper data={sortedSponsorsByTotalFans}>
                       <PieChart>
                         <Pie
                           data={sortedSponsorsByTotalFans.map((sponsor) => ({
@@ -401,7 +399,7 @@ export const LeaderboardStatsPanel = ({
                           }}
                         />
                       </PieChart>
-                    </ChartContainer>
+                    </ChartContainerWrapper>
                   </div>
 
                   <div className="space-y-1">
