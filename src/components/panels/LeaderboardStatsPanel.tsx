@@ -1,9 +1,5 @@
 import { Cell, Pie, PieChart } from "recharts";
-import {
-  ChartContainer,
-  ChartTooltip,
-  type ChartConfig,
-} from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { AppBarChart } from "@/components/AppBarChart";
 import { BaseUser } from "@/types";
 import leagues from "@/utils/leagues";
@@ -251,20 +247,18 @@ export const LeaderboardStatsPanel = ({
             </div>
 
             <div className="grid grid-cols-2 gap-4 text-center max-[850px]:grid-cols-1">
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center gap-3">
                 <div className="text-lg font-medium">Players by sponsor</div>
 
                 <div className="space-y-3">
                   <div className="flex flex-col items-center">
                     <ChartContainer
-                      config={
-                        Object.fromEntries(
-                          sortedSponsorsByPlayerCount.map((s) => [
-                            s.name,
-                            { label: s.name, color: s.color },
-                          ]),
-                        ) satisfies ChartConfig
-                      }
+                      config={Object.fromEntries(
+                        sortedSponsorsByPlayerCount.map((s) => [
+                          s.name,
+                          { label: s.name, color: s.color },
+                        ]),
+                      )}
                       className="aspect-square max-h-[250px] w-full"
                     >
                       <PieChart>
@@ -348,19 +342,17 @@ export const LeaderboardStatsPanel = ({
                 </div>
               </div>
 
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center gap-3">
                 <div className="text-lg font-medium">Fans by sponsor</div>
                 <div className="space-y-3">
                   <div className="flex flex-col items-center">
                     <ChartContainer
-                      config={
-                        Object.fromEntries(
-                          sortedSponsorsByTotalFans.map((s) => [
-                            s.name,
-                            { label: s.name, color: s.color },
-                          ]),
-                        ) satisfies ChartConfig
-                      }
+                      config={Object.fromEntries(
+                        sortedSponsorsByTotalFans.map((s) => [
+                          s.name,
+                          { label: s.name, color: s.color },
+                        ]),
+                      )}
                       className="aspect-square max-h-[250px] w-full"
                     >
                       <PieChart>
