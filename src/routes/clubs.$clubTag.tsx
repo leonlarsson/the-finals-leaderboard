@@ -1,4 +1,4 @@
-import { BarChart } from "@tremor/react";
+import { AppBarChart } from "@/components/AppBarChart";
 import { clubsQueryOptions } from "@/queries";
 import { panels } from "@/types";
 import {
@@ -34,7 +34,6 @@ function RouteComponent() {
   const backLink = (
     <Link
       to="/"
-      search={(prev) => ({ ...prev, panel: panels.CLUBS })}
       className="flex w-fit items-center gap-1 font-medium hover:underline"
     >
       <ArrowLeftIcon size={20} /> Back to leaderboards
@@ -117,7 +116,7 @@ function RouteComponent() {
                 Rank across leaderboards
               </div>
               <p className="mb-2 text-neutral-500">Lower rank is better.</p>
-              <BarChart
+              <AppBarChart
                 data={[...club.leaderboards]
                   .sort((a, b) => b.rank - a.rank)
                   .map((lb) => ({
@@ -127,14 +126,12 @@ function RouteComponent() {
                       ]?.nameShort ?? lb.leaderboard,
                     Rank: 10001 - lb.rank,
                   }))}
-                index="name"
-                categories={["Rank"]}
-                colors={["#d31f3c"]}
-                valueFormatter={(v) => `#${(10001 - v).toLocaleString("en")}`}
-                showAnimation
-                animationDuration={400}
-                customTooltip={({ label, payload }) => {
-                  const invertedRank = payload?.[0]?.value;
+                dataKey="Rank"
+                yAxisFormatter={(v) => `#${(10001 - v).toLocaleString("en")}`}
+                tooltip={({ label, payload }) => {
+                  const invertedRank = payload?.[0]?.value as
+                    | number
+                    | undefined;
                   const lb = club.leaderboards.find(
                     (l) =>
                       (leaderboards[

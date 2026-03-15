@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { ProgressBar } from "@tremor/react";
 import { CommunityEvent } from "@/utils/communityEvents";
 
 type Props = {
@@ -149,11 +148,12 @@ const CommunityProgress = ({ eventData }: Props) => {
         )}
       </span>
 
-      <ProgressBar
-        showAnimation
-        color="red"
-        value={(data.current / data.goal) * 100}
-      />
+      <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-800">
+        <div
+          className="h-full bg-red-600 transition-all duration-500"
+          style={{ width: `${(data.current / data.goal) * 100}%` }}
+        />
+      </div>
     </div>
   );
 };

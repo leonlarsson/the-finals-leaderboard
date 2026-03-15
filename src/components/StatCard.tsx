@@ -104,7 +104,7 @@ export const StatCard = ({
       {/* League badge */}
       {user.league && cols.includes("fame") && (
         <div className="flex items-center gap-2">
-          <LeagueImage league={user.league} size={32} />
+          <LeagueImage league={user.league} size={35} />
           <span className="text-sm">{user.league}</span>
         </div>
       )}

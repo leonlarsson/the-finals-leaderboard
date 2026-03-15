@@ -1,4 +1,6 @@
-import { BarChart, DonutChart, Legend } from "@tremor/react";
+import { Cell, Pie, PieChart } from "recharts";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import { AppBarChart } from "@/components/AppBarChart";
 import { BaseUser } from "@/types";
 import leagues from "@/utils/leagues";
 import getPlatformName from "@/utils/getPlatformName";
@@ -7,9 +9,23 @@ import Loading from "../Loading";
 import LeagueImage from "../LeagueImage";
 import { SponsorImage } from "../SponsorImage";
 import { Separator } from "../ui/separator";
-import { useMemo } from "react";
+import { FC, ReactElement, useMemo } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+
+const ChartContainerWrapper: FC<{
+  data: { name: string; color: string }[];
+  children: ReactElement;
+}> = ({ data, children }) => (
+  <ChartContainer
+    config={Object.fromEntries(
+      data.map((s) => [s.name, { label: s.name, color: s.color }]),
+    )}
+    className="aspect-square max-h-[250px] w-full"
+  >
+    {children}
+  </ChartContainer>
+);
 
 type LeagueThreshold = {
   league: string;
@@ -171,13 +187,6 @@ export const LeaderboardStatsPanel = ({
   const scoreLabel =
     users.length > 0 && "rankScore" in users[0] ? "Rank Score" : "Fame";
 
-  const sponsorColorsArrayByPlayerCount = sortedSponsorsByPlayerCount.map(
-    (sponsor) => sponsor.color,
-  );
-  const sponsorColorsArrayByTotalFans = sortedSponsorsByTotalFans.map(
-    (sponsor) => sponsor.color,
-  );
-
   if (isSponsored) {
     return (
       <div className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900/50">
@@ -239,37 +248,70 @@ export const LeaderboardStatsPanel = ({
               players...
             </div>
 
-            <div className="grid grid-cols-2 gap-4 text-center max-[850px]:grid-cols-1">
-              <div className="flex flex-col items-center">
-                <div className="mb-1 text-lg font-medium">
-                  Players by sponsor
+            <div className="my-4 flex flex-wrap justify-center gap-x-5 gap-y-1 px-2">
+              {sortedSponsorsByPlayerCount.map((sponsor) => (
+                <div key={sponsor.name} className="flex items-center gap-1">
+                  <div
+                    className="h-2.5 w-2.5 shrink-0 rounded-sm"
+                    style={{ backgroundColor: sponsor.color }}
+                  />
+                  <span>{sponsor.name}</span>
                 </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-center max-[850px]:grid-cols-1">
+              <div className="flex flex-col items-center gap-3">
+                <div className="text-lg font-medium">Players by sponsor</div>
 
                 <div className="space-y-3">
                   <div className="flex flex-col items-center">
-                    <DonutChart
-                      className="my-2"
-                      variant="pie"
-                      showLabel
-                      data={sortedSponsorsByPlayerCount.map((sponsor) => ({
-                        name: sponsor.name,
-                        value: users.filter(
-                          (user) => user.sponsor === sponsor.name,
-                        ).length,
-                      }))}
-                      colors={sponsorColorsArrayByPlayerCount}
-                      valueFormatter={(v) =>
-                        `${v.toLocaleString("en")} players`
-                      }
-                      showAnimation
-                      animationDuration={500}
-                    />
-                    <Legend
-                      categories={sortedSponsorsByPlayerCount.map(
-                        (sponsor) => sponsor.name,
-                      )}
-                      colors={sponsorColorsArrayByPlayerCount}
-                    />
+                    <ChartContainerWrapper data={sortedSponsorsByPlayerCount}>
+                      <PieChart>
+                        <Pie
+                          data={sortedSponsorsByPlayerCount.map((sponsor) => ({
+                            name: sponsor.name,
+                            value: users.filter(
+                              (user) => user.sponsor === sponsor.name,
+                            ).length,
+                          }))}
+                          dataKey="value"
+                          nameKey="name"
+                          isAnimationActive
+                          animationDuration={500}
+                          label={({ name }) => name}
+                        >
+                          {sortedSponsorsByPlayerCount.map((sponsor, index) => (
+                            <Cell key={index} fill={sponsor.color} />
+                          ))}
+                        </Pie>
+
+                        <ChartTooltip
+                          content={({ payload }) => {
+                            const item = payload?.[0];
+                            if (!item) return null;
+                            return (
+                              <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-left text-sm dark:bg-black">
+                                <div className="inline-flex items-center gap-2">
+                                  <SponsorImage
+                                    sponsor={item.name as string}
+                                    useIcon
+                                    size={20}
+                                  />
+                                  <span className="font-medium">
+                                    {item.name}
+                                  </span>
+                                </div>
+                                <span>
+                                  {(item.value as number).toLocaleString("en")}{" "}
+                                  players
+                                </span>
+                              </div>
+                            );
+                          }}
+                        />
+                      </PieChart>
+                    </ChartContainerWrapper>
                   </div>
 
                   <div className="space-y-1">
@@ -305,34 +347,57 @@ export const LeaderboardStatsPanel = ({
                 </div>
               </div>
 
-              <div className="flex flex-col items-center">
-                <div className="mb-1 text-lg font-medium">Fans by sponsor</div>
+              <div className="flex flex-col items-center gap-3">
+                <div className="text-lg font-medium">Fans by sponsor</div>
                 <div className="space-y-3">
                   <div className="flex flex-col items-center">
-                    <DonutChart
-                      className="my-2"
-                      variant="pie"
-                      showLabel
-                      data={sortedSponsorsByTotalFans.map((sponsor) => ({
-                        name: sponsor.name,
-                        value: users
-                          .filter((user) => user.sponsor === sponsor.name)
-                          .map((user) => user.fans!)
-                          .reduce((a, b) => a + b, 0),
-                      }))}
-                      colors={sponsorColorsArrayByTotalFans}
-                      valueFormatter={(v) =>
-                        `${v.toLocaleString("en")} total fans`
-                      }
-                      showAnimation
-                      animationDuration={500}
-                    />
-                    <Legend
-                      categories={sortedSponsorsByTotalFans.map(
-                        (sponsor) => sponsor.name,
-                      )}
-                      colors={sponsorColorsArrayByTotalFans}
-                    />
+                    <ChartContainerWrapper data={sortedSponsorsByTotalFans}>
+                      <PieChart>
+                        <Pie
+                          data={sortedSponsorsByTotalFans.map((sponsor) => ({
+                            name: sponsor.name,
+                            value: users
+                              .filter((user) => user.sponsor === sponsor.name)
+                              .map((user) => user.fans!)
+                              .reduce((a, b) => a + b, 0),
+                          }))}
+                          dataKey="value"
+                          nameKey="name"
+                          isAnimationActive
+                          animationDuration={500}
+                          label={({ name }) => name}
+                        >
+                          {sortedSponsorsByTotalFans.map((sponsor, index) => (
+                            <Cell key={index} fill={sponsor.color} />
+                          ))}
+                        </Pie>
+
+                        <ChartTooltip
+                          content={({ payload }) => {
+                            const item = payload?.[0];
+                            if (!item) return null;
+                            return (
+                              <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-left text-sm dark:bg-black">
+                                <div className="inline-flex items-center gap-2">
+                                  <SponsorImage
+                                    sponsor={item.name as string}
+                                    useIcon
+                                    size={20}
+                                  />
+                                  <span className="font-medium">
+                                    {item.name}
+                                  </span>
+                                </div>
+                                <span>
+                                  {(item.value as number).toLocaleString("en")}{" "}
+                                  total fans
+                                </span>
+                              </div>
+                            );
+                          }}
+                        />
+                      </PieChart>
+                    </ChartContainerWrapper>
                   </div>
 
                   <div className="space-y-1">
@@ -454,20 +519,15 @@ export const LeaderboardStatsPanel = ({
           </span>
 
           {/* LEAGUES BAR CHART */}
-          <BarChart
-            className="my-2"
+          <AppBarChart
             data={leagues[leaderboardVersion].map((league) => ({
               Players: users.filter((user) => league === user.league).length,
               name: league,
             }))}
-            index="name"
-            categories={["Players"]}
-            colors={["#d31f3c"]}
-            valueFormatter={(v) => v.toLocaleString("en")}
-            showAnimation
-            animationDuration={400}
-            customTooltip={({ label, payload }) => {
-              const amount = payload?.[0]?.value;
+            dataKey="Players"
+            yAxisFormatter={(v) => v.toLocaleString("en")}
+            tooltip={({ label, payload }) => {
+              const amount = payload?.[0]?.value as number | undefined;
               return (
                 <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
                   <span>
@@ -477,17 +537,15 @@ export const LeaderboardStatsPanel = ({
                     )}
                   </span>
                   <div className="flex items-center gap-1">
-                    <span className="font-medium">{label}</span>
                     {leagues[leaderboardVersion].includes(label as string) && (
                       <LeagueImage league={label as string} size={30} />
                     )}
+                    <span className="font-medium">{label}</span>
                   </div>
-
                   <Separator />
-
                   {typeof amount === "number" && (
                     <span>
-                      {amount.toLocaleString("en") ?? 0} players (
+                      {amount.toLocaleString("en")} players (
                       {(amount / users.length).toLocaleString("en", {
                         style: "percent",
                         maximumFractionDigits: 1,

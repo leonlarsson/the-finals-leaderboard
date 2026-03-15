@@ -26,7 +26,6 @@
     "@tanstack/react-query": "^5.62.8",
     "@tanstack/react-router": "^1.92.1",
     "@tanstack/react-table": "^8.20.6",
-    "@tremor/react": "^3.12.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
@@ -34,6 +33,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-hotkeys-hook": "^4.6.1",
+    "recharts": "^2.15.4",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"

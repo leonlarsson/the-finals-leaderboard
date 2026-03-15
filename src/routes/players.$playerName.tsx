@@ -1,4 +1,4 @@
-import { BarChart } from "@tremor/react";
+import { AppBarChart } from "@/components/AppBarChart";
 import type { BaseUserWithExtras } from "@/types";
 import { PageWrapper } from "@/components/PageWrapper";
 import { SeasonSection, SkeletonCard } from "@/components/StatCard";
@@ -70,7 +70,6 @@ function RouteComponent() {
   const backLink = (
     <Link
       to="/"
-      search={{ name: playerName }}
       className="flex w-fit items-center gap-1 font-medium hover:underline"
     >
       <ArrowLeftIcon size={20} /> Back to leaderboards
@@ -281,21 +280,17 @@ function RouteComponent() {
               Rank across leaderboards
             </div>
             <p className="mb-2 text-neutral-500">Lower rank is better.</p>
-            <BarChart
+            <AppBarChart
               data={[...playerEntries]
                 .sort((a, b) => b.user.rank - a.user.rank)
                 .map(({ lb, user }) => ({
                   name: lb.nameShort,
                   Rank: 10001 - user.rank,
                 }))}
-              index="name"
-              categories={["Rank"]}
-              colors={["#d31f3c"]}
-              valueFormatter={(v) => `#${(10001 - v).toLocaleString("en")}`}
-              showAnimation
-              animationDuration={400}
-              customTooltip={({ label, payload }) => {
-                const invertedRank = payload?.[0]?.value;
+              dataKey="Rank"
+              yAxisFormatter={(v) => `#${(10001 - v).toLocaleString("en")}`}
+              tooltip={({ label, payload }) => {
+                const invertedRank = payload?.[0]?.value as number | undefined;
                 const entry = playerEntries.find(
                   ({ lb }) => lb.nameShort === label,
                 );
