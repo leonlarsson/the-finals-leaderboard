@@ -4,11 +4,21 @@ import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import Loading from "../Loading";
 import { useMemo, useState } from "react";
-import { Checkbox } from "../ui/checkbox";
 import { ClubsDataTable } from "../tables/ClubsDataTable";
 import { clubsDataTableColumns } from "../tables/ClubsDataTableColumns";
 import { ColumnDef } from "@tanstack/react-table";
 import { Separator } from "../ui/separator";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+
+const TOP_X_OPTIONS = [10, 20, 30, 50, 100, 200, 500, "all"] as const;
+type TopXOption = (typeof TOP_X_OPTIONS)[number];
+const DEFAULT_TOP_X: TopXOption = 30;
 
 type ClubsStatsPanelProps = {
   leaderboardVersion: LeaderboardId;
@@ -25,7 +35,7 @@ export const ClubsStatsPanel = ({
   isLoading,
   isRefetching,
 }: ClubsStatsPanelProps) => {
-  const [topXToDisplay, setTopXToDisplay] = useState(30);
+  const [topXToDisplay, setTopXToDisplay] = useState<TopXOption>(DEFAULT_TOP_X);
   const leaderboard = leaderboards[leaderboardVersion];
   const platformName = getPlatformName(platform);
 
@@ -153,33 +163,42 @@ export const ClubsStatsPanel = ({
             <Separator className="my-3" />
 
             <div>
-              <div>
+              <div className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1">
+                <Select
+                  value={String(topXToDisplay)}
+                  onValueChange={(v) =>
+                    setTopXToDisplay(
+                      v === "all" ? "all" : (Number(v) as TopXOption),
+                    )
+                  }
+                >
+                  <SelectTrigger className="h-8 w-fit text-lg font-medium">
+                    <SelectValue />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {TOP_X_OPTIONS.map((opt) => (
+                      <SelectItem key={opt} value={String(opt)}>
+                        {opt === "all" ? "All" : `Top ${opt}`}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 <span className="text-lg font-medium">
-                  Top {topXToDisplay} clubs by{" "}
-                  {leaderboardMetadata.barChartLabel}:
+                  clubs by {leaderboardMetadata.barChartLabel}
                 </span>
 
-                <br />
-
-                <span>
-                  Data limited to top {users.length.toLocaleString("en")}{" "}
+                <span className="text-sm text-neutral-500">
+                  — data limited to top {users.length.toLocaleString("en")}{" "}
                   players.
                 </span>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="topXToDisplay"
-                  checked={topXToDisplay === 300}
-                  onCheckedChange={(e) => setTopXToDisplay(e ? 300 : 30)}
-                />
-                <label htmlFor="topXToDisplay">Show top 300</label>
               </div>
 
               <AppBarChart
                 orientation="columns"
                 data={topClubsByRankScoreOrPointsOrFansOrCashouts
-                  .slice(0, topXToDisplay)
+                  .slice(0, topXToDisplay === "all" ? undefined : topXToDisplay)
                   .toReversed()
                   .map(([clubTag, int]) => ({
                     name: clubTag,
