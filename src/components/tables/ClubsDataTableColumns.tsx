@@ -6,10 +6,11 @@ import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { Club, panels } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { HomeIcon } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { clubsQueryOptions } from "@/queries";
+import { ClickableClubTag } from "./LeaderboardDataTableColumns";
 
 const columnHelper = createColumnHelper<Club>();
 
@@ -45,12 +46,7 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Club Tag" />
       ),
-      cell: ({ getValue }) => (
-        <span className="mr-1 rounded bg-neutral-200 px-1 dark:bg-neutral-800">
-          {" "}
-          {getValue()}
-        </span>
-      ),
+      cell: ({ getValue }) => <ClickableClubTag clubTag={getValue()} />,
     }),
 
     // Members
@@ -100,22 +96,18 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
   columns.push(
     // @ts-ignore It's just because the array have previously been just accessor columns
     columnHelper.display({
-      header: "Links",
+      header: "Club page",
       cell: ({ row }) => (
-        <Link
-          to="/clubs/$clubTag"
-          params={{ clubTag: row.original.clubTag }}
-          // Remove the panel search param
-          search={(prev) => ({ ...prev, panel: undefined })}
-        >
+        <Link to="/clubs/$clubTag" params={{ clubTag: row.original.clubTag }}>
           <Button
             variant="outline"
-            size="icon"
+            className="size-8"
+            size="sm"
             onPointerEnter={() => {
               queryClient.prefetchQuery(clubsQueryOptions);
             }}
           >
-            <HomeIcon className="!size-5" />
+            <ExternalLinkIcon className="!size-4" />
           </Button>
         </Link>
       ),

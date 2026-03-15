@@ -410,7 +410,7 @@ const namePopoverContent = (user: BaseUser) => {
   );
 };
 
-const ClickableClubTag = ({ clubTag }: { clubTag: string }) => {
+export const ClickableClubTag = ({ clubTag }: { clubTag: string }) => {
   return (
     <Link
       className="cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
