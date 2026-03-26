@@ -2,9 +2,185 @@ import type { BaseUser, BaseUserWithExtras, LeaderboardFeature } from "@/types";
 import { ReactNode } from "react";
 
 export const leaderboards = {
+  // Season 10
+  season10: {
+    group: "select1",
+    id: "season10",
+    enabled: true,
+    name: "Season 10",
+    nameShort: "S10",
+    features: [
+      "statsPanel",
+      "clubsPanel",
+      "leagueFilter",
+      "statsPanelMovers",
+    ] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "change", "name", "fame"],
+  },
+
+  season10Sponsor: {
+    group: "select1",
+    id: "season10Sponsor",
+    enabled: true,
+    name: "Season 10 Sponsor",
+    nameShort: "S10S",
+    features: ["statsPanel", "clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10sponsor/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "sponsor", "fans"],
+  },
+
+  season10WorldTour: {
+    group: "select1",
+    id: "season10WorldTour",
+    enabled: true,
+    name: "Season 10 World Tour",
+    nameShort: "S10WT",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10worldtour/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "cashouts"],
+  },
+
+  season10PowerShift: {
+    group: "select1",
+    id: "season10PowerShift",
+    enabled: true,
+    name: "Season 10 PowerShift",
+    nameShort: "S10PS",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10powershift/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season10QuickCash: {
+    group: "select1",
+    id: "season10QuickCash",
+    enabled: true,
+    name: "Season 10 Quick Cash",
+    nameShort: "S10QC",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10quickcash/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season10TeamDeathmatch: {
+    group: "select1",
+    id: "season10TeamDeathmatch",
+    enabled: true,
+    name: "Season 10 Team Deathmatch",
+    nameShort: "S10TDM",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10teamdeathmatch/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season10PointBreak: {
+    group: "select1",
+    id: "season10PointBreak",
+    enabled: true,
+    name: "Season 10 Point Break",
+    nameShort: "S10PB",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10pointbreak/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season10StarlightHollow: {
+    group: "select1",
+    id: "season10StarlightHollow",
+    enabled: true,
+    name: "Season 10 Starlight Hollow",
+    nameShort: "S10SH",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10starlighthollow/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season10The24HourGauntlet: {
+    group: "select1",
+    id: "season10The24HourGauntlet",
+    enabled: true,
+    name: "Season 10 The 24 Hour Gauntlet",
+    nameShort: "S1024HG",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10the24hourgauntlet/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
+  season10CreatorGauntlet: {
+    group: "select1",
+    id: "season10CreatorGauntlet",
+    enabled: true,
+    name: "Season 10 Creator Gauntlet",
+    nameShort: "S10CG",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s10creatorgauntlet/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   // Season 9
   season9: {
-    group: "select1",
+    group: "select2",
     id: "season9",
     enabled: true,
     name: "Season 9",
@@ -26,7 +202,7 @@ export const leaderboards = {
   },
 
   season9Sponsor: {
-    group: "select1",
+    group: "select2",
     id: "season9Sponsor",
     enabled: true,
     name: "Season 9 Sponsor",
@@ -43,7 +219,7 @@ export const leaderboards = {
   },
 
   season9WorldTour: {
-    group: "select1",
+    group: "select2",
     id: "season9WorldTour",
     enabled: true,
     name: "Season 9 World Tour",
@@ -60,7 +236,7 @@ export const leaderboards = {
   },
 
   season9Head2Head: {
-    group: "select1",
+    group: "select2",
     id: "season9Head2Head",
     enabled: true,
     name: "Season 9 Head2Head",
@@ -77,7 +253,7 @@ export const leaderboards = {
   },
 
   season9PowerShift: {
-    group: "select1",
+    group: "select2",
     id: "season9PowerShift",
     enabled: true,
     name: "Season 9 PowerShift",
@@ -94,7 +270,7 @@ export const leaderboards = {
   },
 
   season9QuickCash: {
-    group: "select1",
+    group: "select2",
     id: "season9QuickCash",
     enabled: true,
     name: "Season 9 Quick Cash",
@@ -111,7 +287,7 @@ export const leaderboards = {
   },
 
   season9TeamDeathmatch: {
-    group: "select1",
+    group: "select2",
     id: "season9TeamDeathmatch",
     enabled: true,
     name: "Season 9 Team Deathmatch",
@@ -128,7 +304,7 @@ export const leaderboards = {
   },
 
   season9PointBreak: {
-    group: "select1",
+    group: "select2",
     id: "season9PointBreak",
     enabled: true,
     name: "Season 9 Point Break",
@@ -145,7 +321,7 @@ export const leaderboards = {
   },
 
   season9BankIt: {
-    group: "select1",
+    group: "select2",
     id: "season9BankIt",
     enabled: true,
     name: "Season 9 Bank It",
@@ -1078,18 +1254,19 @@ export type Leaderboard = {
 
 export type LeaderboardId = keyof typeof leaderboards;
 
-export const defaultLeaderboardId: LeaderboardId = "season9";
+export const defaultLeaderboardId: LeaderboardId = "season10";
 export const defaultLeaderboard = leaderboards[defaultLeaderboardId];
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
-  "season9",
-  "season9Sponsor",
-  "season9WorldTour",
-  "season9Head2Head",
-  "season9PowerShift",
-  "season9QuickCash",
-  "season9TeamDeathmatch",
-  "season9PointBreak",
-  "season9BankIt",
+  "season10",
+  "season10Sponsor",
+  "season10WorldTour",
+  "season10PowerShift",
+  "season10QuickCash",
+  "season10TeamDeathmatch",
+  "season10PointBreak",
+  "season10StarlightHollow",
+  "season10The24HourGauntlet",
+  "season10CreatorGauntlet",
 ];
 
 // Maps short API leaderboard IDs (e.g. "s9") to web IDs (e.g. "season9").
@@ -1097,6 +1274,16 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
 export const apiIdToWebId = (id: string): string =>
   (
     ({
+      s10: "season10",
+      s10sponsor: "season10Sponsor",
+      s10worldtour: "season10WorldTour",
+      s10powershift: "season10PowerShift",
+      s10quickcash: "season10QuickCash",
+      s10teamdeathmatch: "season10TeamDeathmatch",
+      s10pointbreak: "season10PointBreak",
+      s10starlighthollow: "season10StarlightHollow",
+      s10the24hourgauntlet: "season10The24HourGauntlet",
+      s10creatorgauntlet: "season10CreatorGauntlet",
       s9: "season9",
       s9sponsor: "season9Sponsor",
       s9worldtour: "season9WorldTour",
@@ -1144,6 +1331,7 @@ export const apiIdToWebId = (id: string): string =>
   )[id] ?? id;
 
 export const getSeasonGroup = (id: string): string => {
+  if (id.startsWith("season10")) return "Season 10";
   if (id.startsWith("season9")) return "Season 9";
   if (id.startsWith("season8")) return "Season 8";
   if (id.startsWith("season7")) return "Season 7";
@@ -1159,6 +1347,7 @@ export const getSeasonGroup = (id: string): string => {
 };
 
 export const seasonOrder = [
+  "Season 10",
   "Season 9",
   "Season 8",
   "Season 7",

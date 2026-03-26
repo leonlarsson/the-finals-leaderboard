@@ -286,6 +286,35 @@ const SEASON_9_LEAGUES = [
   "Ruby",
 ];
 
+const SEASON_10_LEAGUES = [
+  "Bronze 4",
+  "Bronze 3",
+  "Bronze 2",
+  "Bronze 1",
+
+  "Silver 4",
+  "Silver 3",
+  "Silver 2",
+  "Silver 1",
+
+  "Gold 4",
+  "Gold 3",
+  "Gold 2",
+  "Gold 1",
+
+  "Platinum 4",
+  "Platinum 3",
+  "Platinum 2",
+  "Platinum 1",
+
+  "Diamond 4",
+  "Diamond 3",
+  "Diamond 2",
+  "Diamond 1",
+
+  "Ruby",
+];
+
 export default {
   [leaderboards.closedBeta1.id]: CLOSED_BETA_ONE_LEAGUES,
   [leaderboards.closedBeta2.id]: CLOSED_BETA_TWO_LEAGUES,
@@ -300,5 +329,6 @@ export default {
   [leaderboards.season7.id]: SEASON_7_LEAGUES,
   [leaderboards.season8.id]: SEASON_8_LEAGUES,
   [leaderboards.season9.id]: SEASON_9_LEAGUES,
+  [leaderboards.season10.id]: SEASON_10_LEAGUES,
   // @ts-ignore Some leaderboards do not have leagues
 } satisfies Record<LeaderboardId, string[]>;
