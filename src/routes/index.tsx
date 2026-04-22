@@ -32,6 +32,7 @@ import { LeaderboardFeature, panels, platforms } from "@/types";
 import { fetchData } from "@/utils/fetchData";
 import {
   defaultLeaderboardId,
+  defaultSeason,
   Leaderboard,
   LeaderboardId,
   leaderboardIdsToPrefetch,
@@ -248,7 +249,7 @@ function RouteComponent() {
               <SelectTrigger className="h-9 w-max select-none">
                 {leaderboard.group !== group ? (
                   group === "select1" ? (
-                    `Season ${defaultLeaderboardId.match(/(\d{1})/)?.[0] ?? "7"} Leaderboards`
+                    `Season ${defaultSeason} Leaderboards`
                   ) : (
                     "Older Leaderboards"
                   )

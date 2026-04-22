@@ -1254,6 +1254,7 @@ export type Leaderboard = {
 
 export type LeaderboardId = keyof typeof leaderboards;
 
+export const defaultSeason = 10;
 export const defaultLeaderboardId: LeaderboardId = "season10";
 export const defaultLeaderboard = leaderboards[defaultLeaderboardId];
 export const leaderboardIdsToPrefetch: LeaderboardId[] = [
