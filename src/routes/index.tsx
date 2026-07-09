@@ -1,18 +1,11 @@
 import { CrossplayIcon, PlayStationIcon, SteamIcon } from "@/components/icons";
 import BasicLink from "@/components/Link";
+import { LeaderboardCombobox } from "@/components/LeaderboardCombobox";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
 import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
 import { leaderboardDataTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Tooltip,
@@ -32,7 +25,6 @@ import { LeaderboardFeature, panels, platforms } from "@/types";
 import { fetchData } from "@/utils/fetchData";
 import {
   defaultLeaderboardId,
-  defaultSeason,
   Leaderboard,
   LeaderboardId,
   leaderboardIdsToPrefetch,
@@ -241,46 +233,13 @@ function RouteComponent() {
           }
 
           return (
-            <Select
+            <LeaderboardCombobox
               key={group}
-              value={lbParam}
-              onValueChange={(e) => setLeaderboard(e as LeaderboardId)}
-            >
-              <SelectTrigger className="h-9 w-max select-none">
-                {leaderboard.group !== group ? (
-                  group === "select1" ? (
-                    `Season ${defaultSeason} Leaderboards`
-                  ) : (
-                    "Older Leaderboards"
-                  )
-                ) : (
-                  <span className="font-medium">
-                    <SelectValue />
-                  </span>
-                )}
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {Object.values(leaderboards)
-                    .filter((x) => x.group === group)
-                    .filter((x) => x.enabled)
-                    .map((leaderboard) => (
-                      <SelectItem
-                        key={leaderboard.id}
-                        value={leaderboard.id}
-                        disabled={!leaderboard.enabled}
-                        onPointerEnter={() =>
-                          prefetchData({
-                            leaderboardId: leaderboard.id as LeaderboardId,
-                          })
-                        }
-                      >
-                        {leaderboard.name}
-                      </SelectItem>
-                    ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+              group={group}
+              currentLeaderboard={leaderboard}
+              onSelect={setLeaderboard}
+              onHoverItem={(leaderboardId) => prefetchData({ leaderboardId })}
+            />
           );
         })}
 
