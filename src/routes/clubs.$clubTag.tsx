@@ -11,8 +11,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageWrapper } from "@/components/PageWrapper";
 import { useClubFavorites } from "@/hooks/useClubFavorites";
 import { AlertCircleIcon, ArrowLeftIcon, StarIcon } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/clubs/$clubTag")({
   component: RouteComponent,
@@ -21,6 +22,8 @@ export const Route = createFileRoute("/clubs/$clubTag")({
 function RouteComponent() {
   const { clubTag } = Route.useParams();
   const { isClubFavorite, toggleClubFavorite } = useClubFavorites();
+  const [standingsFilter, setStandingsFilter] = useState("");
+  const [playersFilter, setPlayersFilter] = useState("");
 
   useEffect(() => {
     document.title = `[${clubTag}] · Enhanced Leaderboard – THE FINALS`;
@@ -79,6 +82,19 @@ function RouteComponent() {
   }
 
   const favorited = isClubFavorite(clubTag);
+
+  const filteredStandings = club.leaderboards.filter((lb) => {
+    const name =
+      leaderboards[apiIdToWebId(lb.leaderboard) as LeaderboardId]?.name ??
+      lb.leaderboard;
+    return name.toLowerCase().includes(standingsFilter.trim().toLowerCase());
+  });
+
+  const filteredMembers = club.members
+    .filter((member) =>
+      member.name.toLowerCase().includes(playersFilter.trim().toLowerCase()),
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <PageWrapper backLink={backLink}>
@@ -159,13 +175,22 @@ function RouteComponent() {
 
           <div>
             <span className="font-medium">Club Standings:</span>
+            {club.leaderboards.length > 0 && (
+              <Input
+                type="search"
+                placeholder="Filter leaderboards..."
+                className="mb-2 mt-1 max-w-xs"
+                value={standingsFilter}
+                onChange={(e) => setStandingsFilter(e.target.value)}
+              />
+            )}
             <div className="flex flex-col gap-1">
-              {club.leaderboards.map(
-                (leaderboard: {
-                  leaderboard: string;
-                  rank: number;
-                  totalValue: number;
-                }) => (
+              {filteredStandings.length === 0 ? (
+                <p className="text-sm text-neutral-500">
+                  No leaderboards match &ldquo;{standingsFilter}&rdquo;.
+                </p>
+              ) : (
+                filteredStandings.map((leaderboard) => (
                   <Link
                     key={leaderboard.leaderboard}
                     to="/"
@@ -188,7 +213,7 @@ function RouteComponent() {
                       {leaderboard.totalValue.toLocaleString("en")}
                     </span>
                   </Link>
-                ),
+                ))
               )}
             </div>
           </div>
@@ -196,10 +221,22 @@ function RouteComponent() {
 
         <div>
           <span className="font-medium">Club Players:</span>
+          {club.members.length > 0 && (
+            <Input
+              type="search"
+              placeholder="Filter players..."
+              className="mb-2 mt-1 max-w-xs"
+              value={playersFilter}
+              onChange={(e) => setPlayersFilter(e.target.value)}
+            />
+          )}
           <div className="flex flex-wrap gap-1">
-            {club.members
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((member) => (
+            {filteredMembers.length === 0 ? (
+              <p className="text-sm text-neutral-500">
+                No players match &ldquo;{playersFilter}&rdquo;.
+              </p>
+            ) : (
+              filteredMembers.map((member) => (
                 <Link
                   key={member.name}
                   to="/players/$playerName"
@@ -208,7 +245,8 @@ function RouteComponent() {
                 >
                   {member.name}
                 </Link>
-              ))}
+              ))
+            )}
           </div>
         </div>
       </div>
