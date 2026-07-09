@@ -26,5 +26,12 @@ export function useClubFavorites() {
     );
   };
 
-  return { clubFavorites, isClubFavorite, toggleClubFavorite };
+  const clearClubFavorites = () => setClubFavorites([]);
+
+  return {
+    clubFavorites,
+    isClubFavorite,
+    toggleClubFavorite,
+    clearClubFavorites,
+  };
 }

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { StarIcon, UserRoundIcon } from "lucide-react";
+import { UserRoundIcon } from "lucide-react";
+import { FavoriteStarButton } from "@/components/FavoriteStarButton";
 import { panels } from "@/types";
 import type { BaseUserWithExtras } from "@/types";
 import { Leaderboard, LeaderboardId } from "@/utils/leaderboards";
@@ -58,15 +59,10 @@ export const PlayerResultCard = ({
             </Link>
           )}
           {onToggleFavorite && (
-            <button
-              onClick={onToggleFavorite}
-              className={`transition-colors ${isFavorited ? "text-yellow-400" : "text-neutral-300 hover:text-yellow-400"}`}
-              title={isFavorited ? "Remove from favorites" : "Add to favorites"}
-            >
-              <StarIcon
-                className={`size-4 ${isFavorited ? "fill-yellow-400" : ""}`}
-              />
-            </button>
+            <FavoriteStarButton
+              favorited={!!isFavorited}
+              onToggle={onToggleFavorite}
+            />
           )}
         </div>
       </div>

@@ -6,9 +6,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { modKeyLabel } from "@/utils/platform";
 
 const shortcuts = [
-  { key: "⌘ K", description: "Open player search" },
+  { key: `${modKeyLabel()} K`, description: "Open command palette" },
   { key: "/", description: "Focus name filter" },
   { key: "← →", description: "Navigate pages" },
   { key: "Esc", description: "Clear / close" },

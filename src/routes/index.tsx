@@ -1,5 +1,6 @@
 import { CrossplayIcon, PlayStationIcon, SteamIcon } from "@/components/icons";
 import BasicLink from "@/components/Link";
+import { FavoriteStarButton } from "@/components/FavoriteStarButton";
 import { LeaderboardCombobox } from "@/components/LeaderboardCombobox";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
@@ -44,7 +45,6 @@ import {
   TrophyIcon,
   UserRoundIcon,
   UsersRoundIcon,
-  XIcon,
 } from "lucide-react";
 import { useEffect } from "react";
 import { z } from "zod";
@@ -361,13 +361,11 @@ function RouteComponent() {
                           <UserRoundIcon className="size-3.5 shrink-0 text-neutral-400" />
                           <span className="truncate">{name}</span>
                         </Link>
-                        <button
-                          onClick={() => toggleFavorite(name)}
-                          className="shrink-0 text-neutral-400 hover:text-red-500"
-                          title="Remove"
-                        >
-                          <XIcon className="size-3.5" />
-                        </button>
+                        <FavoriteStarButton
+                          favorited
+                          onToggle={() => toggleFavorite(name)}
+                          size="size-3.5"
+                        />
                       </div>
                     ))}
                   </>
@@ -390,13 +388,11 @@ function RouteComponent() {
                           <UsersRoundIcon className="size-3.5 shrink-0 text-neutral-400" />
                           <span className="truncate">[{tag}]</span>
                         </Link>
-                        <button
-                          onClick={() => toggleClubFavorite(tag)}
-                          className="shrink-0 text-neutral-400 hover:text-red-500"
-                          title="Remove"
-                        >
-                          <XIcon className="size-3.5" />
-                        </button>
+                        <FavoriteStarButton
+                          favorited
+                          onToggle={() => toggleClubFavorite(tag)}
+                          size="size-3.5"
+                        />
                       </div>
                     ))}
                   </>

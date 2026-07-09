@@ -5,17 +5,26 @@ import {
   type PlayerResult,
 } from "@/components/PlayerResultCard";
 import { ClubResultCard, type ClubResult } from "@/components/ClubResultCard";
+import { FavoriteStarButton } from "@/components/FavoriteStarButton";
 import { SearchSkeletons } from "@/components/SearchSkeletons";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useClubFavorites } from "@/hooks/useClubFavorites";
+import { useLeaderboardFavorites } from "@/hooks/useLeaderboardFavorites";
 import { clubsQueryOptions } from "@/queries";
-import { Leaderboard, leaderboards } from "@/utils/leaderboards";
+import { modKeyLabel } from "@/utils/platform";
+import {
+  defaultLeaderboardId,
+  Leaderboard,
+  LeaderboardId,
+  leaderboards,
+} from "@/utils/leaderboards";
 import { useQueries, useQuery, UseQueryResult } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
   StarIcon,
+  TrophyIcon,
   UserRoundIcon,
   UsersRoundIcon,
 } from "lucide-react";
@@ -30,9 +39,19 @@ const allLeaderboards = Object.values(leaderboards).filter(
 ) as Leaderboard[];
 
 function RouteComponent() {
-  const { favorites, isFavorite, toggleFavorite } = useFavorites();
-  const { clubFavorites, isClubFavorite, toggleClubFavorite } =
-    useClubFavorites();
+  const { favorites, isFavorite, toggleFavorite, clearFavorites } =
+    useFavorites();
+  const {
+    clubFavorites,
+    isClubFavorite,
+    toggleClubFavorite,
+    clearClubFavorites,
+  } = useClubFavorites();
+  const {
+    leaderboardFavorites,
+    toggleLeaderboardFavorite,
+    clearLeaderboardFavorites,
+  } = useLeaderboardFavorites();
 
   useEffect(() => {
     document.title = "Favorites · Enhanced Leaderboard – THE FINALS";
@@ -83,6 +102,14 @@ function RouteComponent() {
     [favorites, queries],
   );
 
+  const leaderboardResults = useMemo(
+    () =>
+      leaderboardFavorites
+        .map((id) => leaderboards[id] as Leaderboard | undefined)
+        .filter((lb) => lb !== undefined),
+    [leaderboardFavorites],
+  );
+
   const clubResults = useMemo<ClubResult[]>(
     () =>
       clubFavorites
@@ -111,13 +138,17 @@ function RouteComponent() {
     </Link>
   );
 
-  if (favorites.length === 0 && clubFavorites.length === 0) {
+  if (
+    favorites.length === 0 &&
+    clubFavorites.length === 0 &&
+    leaderboardFavorites.length === 0
+  ) {
     return (
       <PageWrapper backLink={backLink}>
         <div className="flex flex-col gap-6">
           <div className="text-2xl font-medium">Favorites</div>
           <p className="text-neutral-500">
-            You haven't saved any players or clubs yet.
+            You haven't saved any players, clubs, or leaderboards yet.
           </p>
           <div className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
             <p className="mb-2 text-sm font-medium text-neutral-600 dark:text-neutral-400">
@@ -129,6 +160,14 @@ function RouteComponent() {
                 • Click the <StarIcon className="inline size-3" /> button on
                 their profile page, or the{" "}
                 <StarIcon className="inline size-3" /> in any search result
+              </li>
+              <li>
+                • Click the <StarIcon className="inline size-3" /> next to a
+                leaderboard in the leaderboard dropdown or the{" "}
+                <kbd className="rounded border border-neutral-200 px-1 py-0.5 font-mono text-xs dark:border-neutral-700">
+                  {modKeyLabel()} K
+                </kbd>{" "}
+                search
               </li>
             </ul>
           </div>
@@ -145,6 +184,12 @@ function RouteComponent() {
                 Search for clubs
               </Link>
             </Button>
+            <Button variant="outline" size="sm" className="w-fit" asChild>
+              <Link to="/">
+                <TrophyIcon className="size-4" />
+                Browse leaderboards
+              </Link>
+            </Button>
           </div>
         </div>
       </PageWrapper>
@@ -158,7 +203,15 @@ function RouteComponent() {
 
         {favorites.length > 0 && (
           <div className="flex flex-col gap-1">
-            <div className="mb-0 text-xl">Players</div>
+            <div className="flex items-center justify-between">
+              <div className="mb-0 text-xl">Players</div>
+              <button
+                onClick={clearFavorites}
+                className="text-sm text-neutral-400 hover:text-red-500"
+              >
+                Clear all
+              </button>
+            </div>
             <div className="flex flex-col gap-3">
               {isAllLoading ? (
                 <SearchSkeletons hideTop />
@@ -178,7 +231,15 @@ function RouteComponent() {
 
         {clubFavorites.length > 0 && (
           <div className="flex flex-col gap-1">
-            <div className="mb-0 text-xl">Clubs</div>
+            <div className="flex items-center justify-between">
+              <div className="mb-0 text-xl">Clubs</div>
+              <button
+                onClick={clearClubFavorites}
+                className="text-sm text-neutral-400 hover:text-red-500"
+              >
+                Clear all
+              </button>
+            </div>
             <div className="flex flex-col gap-3">
               {clubsQuery.isLoading ? (
                 <SearchSkeletons hideTop />
@@ -192,6 +253,50 @@ function RouteComponent() {
                   />
                 ))
               )}
+            </div>
+          </div>
+        )}
+
+        {leaderboardResults.length > 0 && (
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between">
+              <div className="mb-0 text-xl">Leaderboards</div>
+              <button
+                onClick={clearLeaderboardFavorites}
+                className="text-sm text-neutral-400 hover:text-red-500"
+              >
+                Clear all
+              </button>
+            </div>
+            <div className="flex flex-col gap-3">
+              {leaderboardResults.map((lb) => (
+                <div
+                  key={lb.id}
+                  className="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <Link
+                      to="/"
+                      search={{
+                        lb:
+                          lb.id === defaultLeaderboardId
+                            ? undefined
+                            : (lb.id as LeaderboardId),
+                      }}
+                      className="flex min-w-0 items-center gap-1.5 font-medium hover:underline"
+                    >
+                      <TrophyIcon className="size-4 shrink-0 text-neutral-400" />
+                      <span>{lb.name}</span>
+                    </Link>
+                    <FavoriteStarButton
+                      favorited
+                      onToggle={() =>
+                        toggleLeaderboardFavorite(lb.id as LeaderboardId)
+                      }
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}

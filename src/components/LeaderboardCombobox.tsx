@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { FavoriteStarButton } from "@/components/FavoriteStarButton";
 import {
   Command,
   CommandEmpty,
@@ -6,12 +7,14 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useLeaderboardFavorites } from "@/hooks/useLeaderboardFavorites";
 import { cn } from "@/lib/utils";
 import {
   defaultSeason,
@@ -34,9 +37,15 @@ export const LeaderboardCombobox: FC<{
   onHoverItem: (id: LeaderboardId) => void;
 }> = ({ group, currentLeaderboard, onSelect, onHoverItem }) => {
   const [open, setOpen] = useState(false);
+  const { isLeaderboardFavorite, toggleLeaderboardFavorite } =
+    useLeaderboardFavorites();
 
   const items = Object.values(leaderboards).filter(
     (x) => x.group === group && x.enabled,
+  );
+
+  const favoriteItems = items.filter((x) =>
+    isLeaderboardFavorite(x.id as LeaderboardId),
   );
 
   const seasonGroups = seasonOrder
@@ -50,6 +59,38 @@ export const LeaderboardCombobox: FC<{
     group === "select1"
       ? `Season ${defaultSeason} Leaderboards`
       : "Older Leaderboards";
+
+  // `keyPrefix` keeps values unique when the same leaderboard is rendered
+  // twice (once under "Favorites", once under its season group), since cmdk
+  // uses `value` to track the highlighted/selected item.
+  const renderItem = (lb: Leaderboard, keyPrefix = "") => {
+    const favorited = isLeaderboardFavorite(lb.id as LeaderboardId);
+    return (
+      <CommandItem
+        key={`${keyPrefix}${lb.id}`}
+        value={`${keyPrefix}${lb.name}`}
+        onSelect={() => {
+          onSelect(lb.id as LeaderboardId);
+          setOpen(false);
+        }}
+        onPointerEnter={() => onHoverItem(lb.id as LeaderboardId)}
+      >
+        <CheckIcon
+          className={cn(
+            "size-4",
+            lb.id === currentLeaderboard.id ? "opacity-100" : "opacity-0",
+          )}
+        />
+        <span className="flex-1">{lb.name}</span>
+        <FavoriteStarButton
+          favorited={favorited}
+          onToggle={() => toggleLeaderboardFavorite(lb.id as LeaderboardId)}
+          size="size-3.5"
+          stopPropagation
+        />
+      </CommandItem>
+    );
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -73,32 +114,20 @@ export const LeaderboardCombobox: FC<{
           <CommandInput placeholder="Search leaderboards..." />
           <CommandList>
             <CommandEmpty>No leaderboard found.</CommandEmpty>
+            {favoriteItems.length > 0 && (
+              <>
+                <CommandGroup heading="Favorites">
+                  {favoriteItems.map((lb) => renderItem(lb, "favorite-"))}
+                </CommandGroup>
+                <CommandSeparator />
+              </>
+            )}
             {seasonGroups.map(({ season, items: seasonItems }) => (
               <CommandGroup
                 key={season}
                 heading={seasonGroups.length > 1 ? season : undefined}
               >
-                {seasonItems.map((lb) => (
-                  <CommandItem
-                    key={lb.id}
-                    value={lb.name}
-                    onSelect={() => {
-                      onSelect(lb.id as LeaderboardId);
-                      setOpen(false);
-                    }}
-                    onPointerEnter={() => onHoverItem(lb.id as LeaderboardId)}
-                  >
-                    <CheckIcon
-                      className={cn(
-                        "size-4",
-                        lb.id === currentLeaderboard.id
-                          ? "opacity-100"
-                          : "opacity-0",
-                      )}
-                    />
-                    {lb.name}
-                  </CommandItem>
-                ))}
+                {seasonItems.map((lb) => renderItem(lb))}
               </CommandGroup>
             ))}
           </CommandList>

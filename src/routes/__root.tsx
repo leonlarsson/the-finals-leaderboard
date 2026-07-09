@@ -14,23 +14,41 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { communityEvents } from "@/utils/communityEvents";
+import { modKeyLabel } from "@/utils/platform";
 import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import { SearchIcon } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createRootRoute({
   component: RootComponent,
 });
 
 function RootComponent() {
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
   return (
     <ThemeProvider defaultTheme="light" storageKey="ui-theme">
-      <CommandPalette />
+      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
       <div className="fixed bottom-4 right-4 z-40 font-saira">
         <KeyboardShortcutsDialog />
       </div>
       <div className="container mb-12 mt-2 font-saira max-sm:px-2">
-        <h1 className="text-2xl font-medium sm:text-3xl">
-          <Link to="/">Enhanced Leaderboard – THE FINALS</Link>
-        </h1>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h1 className="text-2xl font-medium sm:text-3xl">
+            <Link to="/">Enhanced Leaderboard – THE FINALS</Link>
+          </h1>
+
+          <button
+            onClick={() => setPaletteOpen(true)}
+            className="hidden select-none items-center gap-2 rounded-md border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-sm text-neutral-500 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800 min-[800px]:flex"
+          >
+            <SearchIcon className="size-3.5" />
+            Search
+            <kbd className="rounded border border-neutral-200 bg-white px-1.5 py-0.5 font-mono text-xs dark:border-neutral-700 dark:bg-neutral-950">
+              {modKeyLabel()} K
+            </kbd>
+          </button>
+        </div>
 
         <h5>
           Select a leaderboard and platform to view the current standings.{" "}

@@ -26,5 +26,7 @@ export function useFavorites() {
     );
   };
 
-  return { favorites, isFavorite, toggleFavorite };
+  const clearFavorites = () => setFavorites([]);
+
+  return { favorites, isFavorite, toggleFavorite, clearFavorites };
 }
