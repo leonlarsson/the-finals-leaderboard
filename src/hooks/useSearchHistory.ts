@@ -34,5 +34,10 @@ export function useSearchHistory() {
     });
   };
 
-  return { history, addToHistory, removeFromHistory };
+  const clearHistory = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setHistory([]);
+  };
+
+  return { history, addToHistory, removeFromHistory, clearHistory };
 }

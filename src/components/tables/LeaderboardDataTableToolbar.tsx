@@ -40,7 +40,8 @@ export function LeaderboardDataTableToolbar<TData>({
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const { history, addToHistory, removeFromHistory } = useSearchHistory();
+  const { history, addToHistory, removeFromHistory, clearHistory } =
+    useSearchHistory();
 
   useHotkeys(
     "/",
@@ -121,9 +122,20 @@ export function LeaderboardDataTableToolbar<TData>({
         {/* History dropdown */}
         {historyOpen && history.length > 0 && (
           <div className="absolute left-0 right-0 top-full z-50 mt-1 overflow-hidden rounded-md border border-neutral-200 bg-white shadow-md dark:border-neutral-700 dark:bg-neutral-900">
-            <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-400">
-              <ClockIcon className="size-3" />
-              Recent searches
+            <div className="flex items-center justify-between gap-1.5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-neutral-400">
+              <span className="flex items-center gap-1.5">
+                <ClockIcon className="size-3" />
+                Recent searches
+              </span>
+              <button
+                className="normal-case tracking-normal text-neutral-400 hover:text-red-500"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  clearHistory();
+                }}
+              >
+                Clear all
+              </button>
             </div>
             {history.map((historyName) => (
               <div

@@ -14,7 +14,13 @@ import {
   LeaderboardId,
 } from "@/utils/leaderboards";
 import { useNavigate } from "@tanstack/react-router";
-import { ClockIcon, SearchIcon, TrophyIcon, UserRoundIcon } from "lucide-react";
+import {
+  ClockIcon,
+  SearchIcon,
+  TrophyIcon,
+  UserRoundIcon,
+  XIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -24,7 +30,8 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
-  const { history, addToHistory } = useSearchHistory();
+  const { history, addToHistory, removeFromHistory, clearHistory } =
+    useSearchHistory();
 
   useHotkeys("mod+k", (e) => {
     e.preventDefault();
@@ -131,14 +138,36 @@ export function CommandPalette() {
         {history.length > 0 && (
           <>
             {query.trim() && <CommandSeparator />}
-            <CommandGroup heading="Recent searches">
+            <CommandGroup
+              heading={
+                <div className="flex items-center justify-between">
+                  <span>Recent searches</span>
+                  <button
+                    className="font-normal text-neutral-400 hover:text-red-500"
+                    onClick={() => clearHistory()}
+                  >
+                    Clear all
+                  </button>
+                </div>
+              }
+            >
               {history.map((name) => (
                 <CommandItem
                   key={name}
                   onSelect={() => handlePlayerSearch(name)}
                 >
                   <ClockIcon className="mr-2 size-4 text-neutral-400" />
-                  {name}
+                  <span className="flex-1">{name}</span>
+                  <button
+                    className="shrink-0 text-neutral-400 hover:text-red-500"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeFromHistory(name);
+                    }}
+                    title="Remove from history"
+                  >
+                    <XIcon className="size-3.5" />
+                  </button>
                 </CommandItem>
               ))}
             </CommandGroup>
