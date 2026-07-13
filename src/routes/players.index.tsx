@@ -1,5 +1,6 @@
 import { SearchInput } from "@/components/SearchInput";
 import { PageWrapper } from "@/components/PageWrapper";
+import { DataFreshnessNote } from "@/components/DataFreshnessNote";
 import {
   PlayerResultCard,
   type PlayerResult,
@@ -12,14 +13,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
+  apiIdToWebId,
   defaultLeaderboardId,
   getSeasonGroup,
   Leaderboard,
+  LeaderboardId,
   leaderboardIdsToPrefetch,
   leaderboards,
   seasonOrder,
+  webIdToApiId,
 } from "@/utils/leaderboards";
-import { useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
@@ -27,17 +31,19 @@ import {
   ListFilterIcon,
   SearchIcon,
 } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { SearchSkeletons } from "@/components/SearchSkeletons";
 import { useFavorites } from "@/hooks/useFavorites";
 import type { BaseUserWithExtras } from "@/types";
+import { type PlayerApiEntry, searchPlayers } from "@/utils/playerApi";
 
 const searchSchema = z.object({
   q: z.string().optional(),
   lbs: z.string().array().optional(),
   all: z.coerce.boolean().optional(),
   platforms: z.string().array().optional(),
+  exactMatch: z.coerce.boolean().optional(),
 });
 
 export const Route = createFileRoute("/players/")({
@@ -45,8 +51,9 @@ export const Route = createFileRoute("/players/")({
   component: RouteComponent,
 });
 
+// Community events aren't indexed by the player search API, so they're excluded here
 const allLeaderboards = Object.values(leaderboards).filter(
-  (lb) => lb.enabled,
+  (lb) => lb.enabled && !lb.id.startsWith("ce"),
 ) as Leaderboard[];
 
 const leaderboardsByGroup = (() => {
@@ -72,56 +79,39 @@ const namePlatformOptions = [
 
 const allPlatformIds = namePlatformOptions.map((f) => f.id as string);
 
-const buildResults = (
-  lbsToSearch: Leaderboard[],
-  queries: { data: unknown }[],
-  q: string,
-  platforms: string[],
-): PlayerResult[] => {
-  const normalizedQ = q.trim().toLowerCase();
-  if (!normalizedQ) return [];
-
-  const platformSet = new Set(platforms);
+// Leaderboard and platform scoping now both happen server-side via the API's
+// `leaderboards`/`platforms` params, so this only needs to group and rank results.
+const buildResults = (entries: PlayerApiEntry[]): PlayerResult[] => {
   const playerMap = new Map<string, PlayerResult>();
 
-  lbsToSearch.forEach((lb, i) => {
-    const data = queries[i].data as BaseUserWithExtras[] | undefined;
-    if (!data) return;
+  for (const apiEntry of entries) {
+    const webId = apiIdToWebId(apiEntry.leaderboardId);
+    const lb = leaderboards[webId as LeaderboardId] as Leaderboard | undefined;
+    if (!lb) continue;
 
-    for (const user of data) {
-      const matches =
-        (platformSet.has("name") &&
-          user.name.toLowerCase().includes(normalizedQ)) ||
-        (platformSet.has("steam") &&
-          user.steamName.toLowerCase().includes(normalizedQ)) ||
-        (platformSet.has("psn") &&
-          user.psnName.toLowerCase().includes(normalizedQ)) ||
-        (platformSet.has("xbox") &&
-          user.xboxName.toLowerCase().includes(normalizedQ));
-      if (!matches) continue;
+    const user = apiEntry as unknown as BaseUserWithExtras;
 
-      const key = user.name.toLowerCase();
-      let entry = playerMap.get(key);
-      if (!entry) {
-        entry = {
-          name: user.name,
-          clubTag: user.clubTag,
-          steamName: user.steamName,
-          psnName: user.psnName,
-          xboxName: user.xboxName,
-          appearances: [],
-          bestRank: user.rank,
-        };
-        playerMap.set(key, entry);
-      }
-      entry.appearances.push({ lb, user });
-      if (user.rank < entry.bestRank) entry.bestRank = user.rank;
-      if (!entry.clubTag && user.clubTag) entry.clubTag = user.clubTag;
-      if (!entry.steamName && user.steamName) entry.steamName = user.steamName;
-      if (!entry.psnName && user.psnName) entry.psnName = user.psnName;
-      if (!entry.xboxName && user.xboxName) entry.xboxName = user.xboxName;
+    const key = user.name.toLowerCase();
+    let entry = playerMap.get(key);
+    if (!entry) {
+      entry = {
+        name: user.name,
+        clubTag: user.clubTag,
+        steamName: user.steamName,
+        psnName: user.psnName,
+        xboxName: user.xboxName,
+        appearances: [],
+        bestRank: user.rank,
+      };
+      playerMap.set(key, entry);
     }
-  });
+    entry.appearances.push({ lb, user });
+    if (user.rank < entry.bestRank) entry.bestRank = user.rank;
+    if (!entry.clubTag && user.clubTag) entry.clubTag = user.clubTag;
+    if (!entry.steamName && user.steamName) entry.steamName = user.steamName;
+    if (!entry.psnName && user.psnName) entry.psnName = user.psnName;
+    if (!entry.xboxName && user.xboxName) entry.xboxName = user.xboxName;
+  }
 
   return Array.from(playerMap.values())
     .sort((a, b) => a.bestRank - b.bestRank)
@@ -134,6 +124,7 @@ function RouteComponent() {
     lbs: lbsParam,
     all,
     platforms: platformsParam,
+    exactMatch,
   } = Route.useSearch();
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -153,24 +144,50 @@ function RouteComponent() {
     };
   }, []);
 
-  const hasQuery = Boolean(q?.trim());
-
-  const lbsToSearch = useMemo(() => {
-    if (isAllSelected) return allLeaderboards;
-    const ids = new Set(lbsParam ?? defaultLbIds);
-    return allLeaderboards.filter((lb) => ids.has(lb.id));
-  }, [isAllSelected, lbsParam]);
-
-  const queries = useQueries({
-    queries: lbsToSearch.map((lb) => ({
-      queryKey: ["leaderboard", lb.id],
-      queryFn: () => lb.fetchData("crossplay") as Promise<BaseUserWithExtras[]>,
-      staleTime: Infinity,
-      enabled: hasQuery,
-    })),
-  });
-
+  const hasQuery = Boolean(q?.trim()) && q!.trim().length >= 2;
   const platformsToSearch = platformsParam ?? allPlatformIds;
+  const leaderboardIdsToSearch = [...selectedIds].map(webIdToApiId).sort();
+  const isExactMatch = Boolean(exactMatch);
+
+  // Debounce filter changes so rapid checkbox toggles don't each fire their own request
+  const filterKey = JSON.stringify({
+    leaderboardIdsToSearch,
+    platformsToSearch,
+    isExactMatch,
+  });
+  const [debouncedFilterKey, setDebouncedFilterKey] = useState(filterKey);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedFilterKey(filterKey), 400);
+    return () => clearTimeout(timer);
+  }, [filterKey]);
+  const debouncedFilters = useMemo(
+    () =>
+      JSON.parse(debouncedFilterKey) as {
+        leaderboardIdsToSearch: string[];
+        platformsToSearch: string[];
+        isExactMatch: boolean;
+      },
+    [debouncedFilterKey],
+  );
+
+  const query = useQuery({
+    queryKey: [
+      "playersSearch",
+      q,
+      debouncedFilters.leaderboardIdsToSearch,
+      debouncedFilters.platformsToSearch,
+      debouncedFilters.isExactMatch,
+    ],
+    queryFn: ({ signal }) =>
+      searchPlayers(q!.trim(), {
+        leaderboardIds: debouncedFilters.leaderboardIdsToSearch,
+        platforms: debouncedFilters.platformsToSearch,
+        exactMatch: debouncedFilters.isExactMatch,
+        signal,
+      }),
+    staleTime: Infinity,
+    enabled: hasQuery,
+  });
 
   const handleSubmit = (value: string) => {
     navigate({
@@ -180,6 +197,7 @@ function RouteComponent() {
         lbs: lbsParam,
         all: all || undefined,
         platforms: platformsParam,
+        exactMatch: exactMatch || undefined,
       },
     });
   };
@@ -199,6 +217,7 @@ function RouteComponent() {
         q: q || undefined,
         lbs: equalsDefault ? undefined : nextArr,
         platforms: platformsParam,
+        exactMatch: exactMatch || undefined,
       },
     });
   };
@@ -206,21 +225,35 @@ function RouteComponent() {
   const handleSelectAll = () => {
     navigate({
       to: "/players",
-      search: { q: q || undefined, all: true, platforms: platformsParam },
+      search: {
+        q: q || undefined,
+        all: true,
+        platforms: platformsParam,
+        exactMatch: exactMatch || undefined,
+      },
     });
   };
 
   const handleClearAll = () => {
     navigate({
       to: "/players",
-      search: { q: q || undefined, platforms: platformsParam },
+      search: {
+        q: q || undefined,
+        platforms: platformsParam,
+        exactMatch: exactMatch || undefined,
+      },
     });
   };
 
   const handleSelectAllPlatforms = () => {
     navigate({
       to: "/players",
-      search: { q: q || undefined, lbs: lbsParam, all: all || undefined },
+      search: {
+        q: q || undefined,
+        lbs: lbsParam,
+        all: all || undefined,
+        exactMatch: exactMatch || undefined,
+      },
     });
   };
 
@@ -238,17 +271,29 @@ function RouteComponent() {
         lbs: lbsParam,
         all: all || undefined,
         platforms: equalsAll ? undefined : nextArr,
+        exactMatch: exactMatch || undefined,
       },
     });
   };
 
-  const isLoading = hasQuery && queries.some((q) => q.isLoading);
+  const handleToggleExactMatch = (checked: boolean) => {
+    navigate({
+      to: "/players",
+      search: {
+        q: q || undefined,
+        lbs: lbsParam,
+        all: all || undefined,
+        platforms: platformsParam,
+        exactMatch: checked || undefined,
+      },
+    });
+  };
+
+  const isLoading = hasQuery && query.isLoading;
   const results = useMemo(
     () =>
-      hasQuery && !isLoading
-        ? buildResults(lbsToSearch, queries, q!, platformsToSearch)
-        : [],
-    [hasQuery, isLoading, lbsToSearch, queries, q, platformsToSearch],
+      hasQuery && !isLoading && query.data ? buildResults(query.data) : [],
+    [hasQuery, isLoading, query.data],
   );
   const isCapped = results.length === 50;
 
@@ -278,11 +323,16 @@ function RouteComponent() {
     <PageWrapper backLink={backLink} excludeSearchLink="players">
       <div className="flex flex-col gap-4">
         <div className="text-2xl font-medium">Player Search</div>
+        <DataFreshnessNote />
 
         <div className="flex flex-col gap-2">
           <SearchInput
             initialValue={q ?? ""}
-            placeholder="Search players... (partial match)"
+            placeholder={
+              isExactMatch
+                ? "Search players... (exact match)"
+                : "Search players... (partial match)"
+            }
             onSubmit={handleSubmit}
           />
 
@@ -383,6 +433,14 @@ function RouteComponent() {
                 </div>
               </PopoverContent>
             </Popover>
+
+            <label className="flex w-fit cursor-pointer items-center gap-1.5 rounded-md border border-neutral-200 px-2.5 py-1.5 text-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:hover:bg-neutral-900">
+              <Checkbox
+                checked={isExactMatch}
+                onCheckedChange={(v) => handleToggleExactMatch(Boolean(v))}
+              />
+              Exact match
+            </label>
           </div>
         </div>
       </div>

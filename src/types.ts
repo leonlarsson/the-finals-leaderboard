@@ -28,6 +28,8 @@ export type BaseUserWithExtras = BaseUser & {
   score?: number;
   damageDone?: number;
   tournamentWins?: number;
+  /** ISO timestamp of when this entry was last indexed. Only present on data from the player API. */
+  updatedAt?: string;
 };
 
 export type ClubsAPIData = {

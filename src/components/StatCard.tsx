@@ -3,6 +3,7 @@ import type { BaseUserWithExtras } from "@/types";
 import LeagueImage from "@/components/LeagueImage";
 import { SponsorImage } from "@/components/SponsorImage";
 import { type Leaderboard, LeaderboardId } from "@/utils/leaderboards";
+import { formatRelativeTime } from "@/utils/relativeTime";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, ChevronUp, Minus } from "lucide-react";
 
@@ -148,6 +149,12 @@ export const StatCard = ({
           <span>{user.distance.toFixed(2)} km</span>
         )}
       </div>
+
+      {user.updatedAt && (
+        <span className="text-xs text-neutral-400 dark:text-neutral-500">
+          Updated {formatRelativeTime(user.updatedAt)}
+        </span>
+      )}
     </Link>
   );
 };

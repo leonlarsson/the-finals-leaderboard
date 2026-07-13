@@ -1,5 +1,6 @@
 import { AppBarChart } from "@/components/AppBarChart";
 import type { BaseUserWithExtras } from "@/types";
+import { DataFreshnessNote } from "@/components/DataFreshnessNote";
 import { PageWrapper } from "@/components/PageWrapper";
 import { SeasonSection, SkeletonCard } from "@/components/StatCard";
 import {
@@ -11,13 +12,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/useFavorites";
 import {
+  apiIdToWebId,
   defaultLeaderboard,
   getSeasonGroup,
   Leaderboard,
+  LeaderboardId,
   leaderboards,
   seasonOrder,
 } from "@/utils/leaderboards";
-import { useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   AlertCircleIcon,
@@ -31,14 +34,11 @@ import {
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { fetchPlayer } from "@/utils/playerApi";
 
 export const Route = createFileRoute("/players/$playerName")({
   component: RouteComponent,
 });
-
-const allLeaderboards = Object.values(leaderboards).filter(
-  (lb) => lb.enabled,
-) as Leaderboard[];
 
 const defaultLeaderboardName = defaultLeaderboard.name;
 
@@ -55,17 +55,15 @@ function RouteComponent() {
     };
   }, [playerName]);
 
-  const queries = useQueries({
-    queries: allLeaderboards.map((lb) => ({
-      queryKey: ["leaderboard", lb.id],
-      queryFn: () => lb.fetchData("crossplay") as Promise<BaseUserWithExtras[]>,
-      staleTime: Infinity,
-    })),
+  const query = useQuery({
+    queryKey: ["player", playerName],
+    queryFn: () => fetchPlayer(playerName),
+    staleTime: 5 * 60 * 1000,
   });
 
-  const isAllLoading = queries.every((q) => q.isLoading);
-  const isAllError = queries.every((q) => q.isError);
-  const someLoading = queries.some((q) => q.isLoading);
+  const isAllLoading = query.isLoading;
+  const isAllError = query.isError;
+  const someLoading = query.isFetching;
 
   const backLink = (
     <Link
@@ -112,7 +110,7 @@ function RouteComponent() {
             variant="outline"
             size="sm"
             onClick={() =>
-              queryClient.invalidateQueries({ queryKey: ["leaderboard"] })
+              queryClient.invalidateQueries({ queryKey: ["player"] })
             }
           >
             Try again
@@ -122,16 +120,18 @@ function RouteComponent() {
     );
   }
 
-  const playerEntries = allLeaderboards
-    .map((lb, i) => ({
-      lb,
-      user: (queries[i].data as BaseUserWithExtras[] | undefined)?.find(
-        (u) => u.name.toLowerCase() === playerName.toLowerCase(),
-      ),
-    }))
+  const playerEntries = (query.data?.leaderboards ?? [])
+    .map((entry) => {
+      const lb = leaderboards[
+        apiIdToWebId(entry.leaderboardId) as LeaderboardId
+      ] as Leaderboard | undefined;
+      return lb
+        ? { lb, user: entry as unknown as BaseUserWithExtras }
+        : undefined;
+    })
     .filter(
       (e): e is { lb: Leaderboard; user: BaseUserWithExtras } =>
-        e.user !== undefined,
+        e !== undefined,
     );
 
   const baseUser = playerEntries[0]?.user;
@@ -227,6 +227,9 @@ function RouteComponent() {
                   PSN: {baseUser.psnName}
                 </span>
               )}
+            </div>
+            <div className="mt-2">
+              <DataFreshnessNote />
             </div>
           </div>
 
