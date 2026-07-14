@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { AlertCircleIcon, ArrowLeftIcon, StarIcon } from "lucide-react";
+import { ArrowLeftIcon, StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { AppBarChart } from "@/components/AppBarChart";
 import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import { ErrorState } from "@/components/ErrorState";
 import { PageWrapper } from "@/components/PageWrapper";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,7 +37,7 @@ function RouteComponent() {
   const query = useQuery({
     queryKey: ["club", clubTag],
     queryFn: ({ signal }) => fetchClub(clubTag, { withMembers: true, signal }),
-    staleTime: 5 * 60 * 1000,
+    staleTime: Infinity,
   });
 
   const backLink = (
@@ -55,18 +56,10 @@ function RouteComponent() {
   if (query.isError) {
     return (
       <PageWrapper backLink={backLink}>
-        <div className="flex flex-col items-start gap-3">
-          <div className="flex items-center gap-2 text-red-500">
-            <AlertCircleIcon className="size-5" />
-            <span className="font-medium">Failed to load club data</span>
-          </div>
-          <p className="text-sm text-neutral-500">
-            Something went wrong while fetching data. Please try again.
-          </p>
-          <Button variant="outline" size="sm" onClick={() => query.refetch()}>
-            Try again
-          </Button>
-        </div>
+        <ErrorState
+          title="Failed to load club data"
+          onRetry={() => query.refetch()}
+        />
       </PageWrapper>
     );
   }

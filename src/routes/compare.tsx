@@ -397,6 +397,7 @@ function RouteComponent() {
                 getKey={(item) => item.name}
                 getLabel={(item) => item.name}
                 renderItem={renderPlayerSuggestion}
+                maxLength={100}
               />
             </div>
 
@@ -423,6 +424,7 @@ function RouteComponent() {
                 getKey={(item) => item.name}
                 getLabel={(item) => item.name}
                 renderItem={renderPlayerSuggestion}
+                maxLength={100}
               />
             </div>
 
@@ -458,6 +460,7 @@ function RouteComponent() {
                     </span>
                   </span>
                 )}
+                maxLength={100}
               />
             </div>
 
@@ -493,6 +496,7 @@ function RouteComponent() {
                     </span>
                   </span>
                 )}
+                maxLength={100}
               />
             </div>
 

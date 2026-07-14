@@ -7,10 +7,12 @@ export const SearchInput = ({
   initialValue,
   placeholder,
   onSubmit,
+  maxLength,
 }: {
   initialValue: string;
   placeholder: string;
   onSubmit: (value: string) => void;
+  maxLength?: number;
 }) => {
   const [inputValue, setInputValue] = useState(initialValue);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -31,6 +33,7 @@ export const SearchInput = ({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+        maxLength={maxLength}
         autoFocus
       />
       <Button onClick={handleSubmit}>

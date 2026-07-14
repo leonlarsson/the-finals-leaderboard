@@ -17,6 +17,7 @@ export const AutocompleteInput = <T,>({
   getLabel,
   renderItem,
   minChars = 2,
+  maxLength,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -30,6 +31,7 @@ export const AutocompleteInput = <T,>({
   getLabel: (item: T) => string;
   renderItem: (item: T) => ReactNode;
   minChars?: number;
+  maxLength?: number;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -118,6 +120,7 @@ export const AutocompleteInput = <T,>({
         }}
         onFocus={() => setIsOpen(true)}
         onKeyDown={handleKeyDown}
+        maxLength={maxLength}
         autoComplete="off"
       />
 

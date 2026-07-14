@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  AlertCircleIcon,
   ArrowLeftIcon,
   CheckIcon,
   GitCompareArrowsIcon,
@@ -13,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { AppBarChart } from "@/components/AppBarChart";
 import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import { ErrorState } from "@/components/ErrorState";
 import { PageWrapper } from "@/components/PageWrapper";
 import { SeasonSection, SkeletonCard } from "@/components/StatCard";
 import {
@@ -57,7 +57,7 @@ function RouteComponent() {
   const query = useQuery({
     queryKey: ["player", playerName],
     queryFn: ({ signal }) => fetchPlayer(playerName, { signal }),
-    staleTime: 5 * 60 * 1000,
+    staleTime: Infinity,
   });
 
   const isAllLoading = query.isLoading;
@@ -96,25 +96,13 @@ function RouteComponent() {
   if (isAllError) {
     return (
       <PageWrapper backLink={backLink}>
-        <div className="flex flex-col items-start gap-3">
-          <div className="flex items-center gap-2 text-red-500">
-            <AlertCircleIcon className="size-5" />
-            <span className="font-medium">Failed to load player data</span>
-          </div>
-          <p className="text-sm text-neutral-500">
-            Something went wrong while fetching leaderboard data. Please try
-            again.
-          </p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              queryClient.invalidateQueries({ queryKey: ["player"] })
-            }
-          >
-            Try again
-          </Button>
-        </div>
+        <ErrorState
+          title="Failed to load player data"
+          message="Something went wrong while fetching leaderboard data. Please try again."
+          onRetry={() =>
+            queryClient.invalidateQueries({ queryKey: ["player"] })
+          }
+        />
       </PageWrapper>
     );
   }

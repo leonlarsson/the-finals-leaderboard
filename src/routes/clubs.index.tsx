@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
-  AlertCircleIcon,
   ArrowLeftIcon,
   ChevronDownIcon,
   ListFilterIcon,
@@ -11,6 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { type ClubResult, ClubResultCard } from "@/components/ClubResultCard";
 import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import { ErrorState } from "@/components/ErrorState";
 import { PageWrapper } from "@/components/PageWrapper";
 import { SearchInput } from "@/components/SearchInput";
 import { SearchSkeletons } from "@/components/SearchSkeletons";
@@ -232,6 +232,7 @@ function RouteComponent() {
                 : "Search clubs... (partial match)"
             }
             onSubmit={handleSubmit}
+            maxLength={100}
           />
 
           <div className="flex flex-wrap gap-2">
@@ -302,8 +303,15 @@ function RouteComponent() {
         </div>
       </div>
 
-      {query.isError && <ErrorState onRetry={() => query.refetch()} />}
-      {!query.isError && !hasQuery && <EmptyState />}
+      {query.isError && (
+        <ErrorState
+          title="Failed to load club data"
+          onRetry={() => query.refetch()}
+        />
+      )}
+      {!query.isError && !hasQuery && (
+        <EmptyState tooShort={Boolean(q?.trim())} />
+      )}
       {!query.isError && hasQuery && isLoading && <SearchSkeletons />}
       {!query.isError && hasQuery && !isLoading && results.length === 0 && (
         <NoResultsState query={q!} />
@@ -329,14 +337,17 @@ function RouteComponent() {
   );
 }
 
-const EmptyState = () => {
+const EmptyState = ({ tooShort }: { tooShort?: boolean }) => {
   return (
     <div className="flex flex-col items-center gap-3 py-12 text-center">
       <SearchIcon className="size-10 text-neutral-300 dark:text-neutral-600" />
-      <div className="font-medium text-neutral-500">Search for clubs</div>
+      <div className="font-medium text-neutral-500">
+        {tooShort ? "Keep typing..." : "Search for clubs"}
+      </div>
       <p className="max-w-sm text-sm text-neutral-400">
-        Enter a partial club tag above to find clubs in the top 10K of any
-        leaderboard.
+        {tooShort
+          ? "Enter at least 2 characters to search."
+          : "Enter a partial club tag above to find clubs in the top 10K of any leaderboard."}
       </p>
     </div>
   );
@@ -362,23 +373,6 @@ const NoResultsState = ({ query }: { query: string }) => {
           </li>
         </ul>
       </div>
-    </div>
-  );
-};
-
-const ErrorState = ({ onRetry }: { onRetry: () => void }) => {
-  return (
-    <div className="flex flex-col items-start gap-3">
-      <div className="flex items-center gap-2 text-red-500">
-        <AlertCircleIcon className="size-5" />
-        <span className="font-medium">Failed to load club data</span>
-      </div>
-      <p className="text-sm text-neutral-500">
-        Something went wrong while fetching data. Please try again.
-      </p>
-      <Button variant="outline" size="sm" onClick={onRetry}>
-        Try again
-      </Button>
     </div>
   );
 };

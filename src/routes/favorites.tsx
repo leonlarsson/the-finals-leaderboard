@@ -63,7 +63,7 @@ function RouteComponent() {
       queryKey: ["player", name],
       queryFn: ({ signal }: { signal: AbortSignal }) =>
         fetchPlayer(name, { signal }),
-      staleTime: 5 * 60 * 1000,
+      staleTime: Infinity,
     })),
   });
 
@@ -72,7 +72,7 @@ function RouteComponent() {
       queryKey: ["club", tag],
       queryFn: ({ signal }: { signal: AbortSignal }) =>
         fetchClub(tag, { withMembers: true, signal }),
-      staleTime: 5 * 60 * 1000,
+      staleTime: Infinity,
     })),
   });
 

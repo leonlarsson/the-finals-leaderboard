@@ -9,6 +9,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import { ErrorState } from "@/components/ErrorState";
 import { PageWrapper } from "@/components/PageWrapper";
 import {
   type PlayerResult,
@@ -334,6 +335,7 @@ function RouteComponent() {
                 : "Search players... (partial match)"
             }
             onSubmit={handleSubmit}
+            maxLength={100}
           />
 
           <div className="flex flex-wrap gap-2">
@@ -445,12 +447,20 @@ function RouteComponent() {
         </div>
       </div>
 
-      {!hasQuery && <EmptyState />}
-      {hasQuery && isLoading && <SearchSkeletons />}
-      {hasQuery && !isLoading && results.length === 0 && (
+      {query.isError && (
+        <ErrorState
+          title="Failed to load player data"
+          onRetry={() => query.refetch()}
+        />
+      )}
+      {!query.isError && !hasQuery && (
+        <EmptyState tooShort={Boolean(q?.trim())} />
+      )}
+      {!query.isError && hasQuery && isLoading && <SearchSkeletons />}
+      {!query.isError && hasQuery && !isLoading && results.length === 0 && (
         <NoResultsState query={q!} />
       )}
-      {hasQuery && !isLoading && results.length > 0 && (
+      {!query.isError && hasQuery && !isLoading && results.length > 0 && (
         <div className="flex flex-col gap-3">
           <div className="text-sm text-neutral-500">
             {isCapped
@@ -471,14 +481,17 @@ function RouteComponent() {
   );
 }
 
-const EmptyState = () => {
+const EmptyState = ({ tooShort }: { tooShort?: boolean }) => {
   return (
     <div className="flex flex-col items-center gap-3 py-12 text-center">
       <SearchIcon className="size-10 text-neutral-300 dark:text-neutral-600" />
-      <div className="font-medium text-neutral-500">Search for players</div>
+      <div className="font-medium text-neutral-500">
+        {tooShort ? "Keep typing..." : "Search for players"}
+      </div>
       <p className="max-w-sm text-sm text-neutral-400">
-        Enter a partial name above to find players. Use the filters to choose
-        which leaderboards and platform names to search.
+        {tooShort
+          ? "Enter at least 2 characters to search."
+          : "Enter a partial name above to find players. Use the filters to choose which leaderboards and platform names to search."}
       </p>
     </div>
   );
