@@ -104,11 +104,13 @@ function RootComponent() {
                   The developer currently works at Embark&nbsp;Studios, but this
                   website and the API are fully independent.
                 </TooltipContent>
-                <TooltipTrigger className="cursor-default">
-                  This site is not affiliated with{" "}
-                  <BasicLink href="https://www.embark-studios.com/">
-                    Embark&nbsp;Studios
-                  </BasicLink>
+                <TooltipTrigger asChild>
+                  <span className="cursor-default">
+                    This site is not affiliated with{" "}
+                    <BasicLink href="https://www.embark-studios.com/">
+                      Embark&nbsp;Studios
+                    </BasicLink>
+                  </span>
                 </TooltipTrigger>
               </Tooltip>
             </TooltipProvider>
