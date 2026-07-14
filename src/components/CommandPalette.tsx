@@ -34,13 +34,13 @@ import { useHotkeys } from "react-hotkeys-hook";
 
 const allLeaderboards = Object.values(leaderboards).filter((x) => x.enabled);
 
-export function CommandPalette({
+export const CommandPalette = ({
   open,
   onOpenChange,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-}) {
+}) => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const { selectedTheme, setSelectedTheme } = useTheme();
@@ -107,7 +107,7 @@ export function CommandPalette({
       onSelect: () => navigate({ to: "/favorites" }),
     },
     {
-      label: "Go to Player Compare",
+      label: "Go to Compare",
       icon: ScaleIcon,
       onSelect: () => navigate({ to: "/compare" }),
     },
@@ -288,4 +288,4 @@ export function CommandPalette({
       </CommandList>
     </CommandDialog>
   );
-}
+};
