@@ -1,8 +1,8 @@
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
-  type ChartConfig,
 } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
 

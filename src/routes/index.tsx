@@ -1,38 +1,4 @@
-import { CrossplayIcon, PlayStationIcon, SteamIcon } from "@/components/icons";
-import BasicLink from "@/components/Link";
-import { FavoriteStarButton } from "@/components/FavoriteStarButton";
-import { LeaderboardCombobox } from "@/components/LeaderboardCombobox";
-import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
-import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
-import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
-import { leaderboardDataTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { useFavorites } from "@/hooks/useFavorites";
-import { useClubFavorites } from "@/hooks/useClubFavorites";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { LeaderboardFeature, panels, platforms } from "@/types";
-import { fetchData } from "@/utils/fetchData";
-import {
-  defaultLeaderboardId,
-  Leaderboard,
-  LeaderboardId,
-  leaderboardIdsToPrefetch,
-  leaderboards,
-} from "@/utils/leaderboards";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { HOUR, MINUTE } from "@/utils/time";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -48,7 +14,45 @@ import {
 } from "lucide-react";
 import { useEffect } from "react";
 import { z } from "zod";
-import { XboxIcon } from "@/components/icons";
+import { FavoriteStarButton } from "@/components/FavoriteStarButton";
+import {
+  CrossplayIcon,
+  PlayStationIcon,
+  SteamIcon,
+  XboxIcon,
+} from "@/components/icons";
+import { LeaderboardCombobox } from "@/components/LeaderboardCombobox";
+import BasicLink from "@/components/Link";
+import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
+import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
+import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
+import { leaderboardDataTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useClubFavorites } from "@/hooks/useClubFavorites";
+import { useFavorites } from "@/hooks/useFavorites";
+import { cn } from "@/lib/utils";
+import { LeaderboardFeature, panels, platforms } from "@/types";
+import { fetchData } from "@/utils/fetchData";
+import {
+  defaultLeaderboardId,
+  Leaderboard,
+  LeaderboardId,
+  leaderboardIdsToPrefetch,
+  leaderboards,
+} from "@/utils/leaderboards";
+import { HOUR, MINUTE } from "@/utils/time";
 
 const searchParamsSchema = z.object({
   lb: z

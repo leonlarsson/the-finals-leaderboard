@@ -7,6 +7,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { Button } from "../ui/button";
 import {
   Select,
@@ -15,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useHotkeys } from "react-hotkeys-hook";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;

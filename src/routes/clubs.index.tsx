@@ -1,23 +1,3 @@
-import { SearchInput } from "@/components/SearchInput";
-import { PageWrapper } from "@/components/PageWrapper";
-import { DataFreshnessNote } from "@/components/DataFreshnessNote";
-import { ClubResultCard, type ClubResult } from "@/components/ClubResultCard";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  defaultLeaderboardId,
-  getSeasonGroup,
-  Leaderboard,
-  leaderboardIdsToPrefetch,
-  leaderboards,
-  seasonOrder,
-  webIdToApiId,
-} from "@/utils/leaderboards";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
@@ -29,9 +9,29 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { z } from "zod";
+import { type ClubResult, ClubResultCard } from "@/components/ClubResultCard";
+import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import { PageWrapper } from "@/components/PageWrapper";
+import { SearchInput } from "@/components/SearchInput";
 import { SearchSkeletons } from "@/components/SearchSkeletons";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useClubFavorites } from "@/hooks/useClubFavorites";
 import { type ClubApiClub, searchClubs } from "@/utils/clubApi";
+import {
+  defaultLeaderboardId,
+  getSeasonGroup,
+  Leaderboard,
+  leaderboardIdsToPrefetch,
+  leaderboards,
+  seasonOrder,
+  webIdToApiId,
+} from "@/utils/leaderboards";
 
 const searchSchema = z.object({
   q: z.string().optional(),

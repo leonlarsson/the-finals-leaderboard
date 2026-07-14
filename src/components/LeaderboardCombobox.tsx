@@ -1,5 +1,7 @@
-import { Button } from "@/components/ui/button";
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { FC, useState } from "react";
 import { FavoriteStarButton } from "@/components/FavoriteStarButton";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -20,12 +22,10 @@ import {
   defaultSeason,
   getSeasonGroup,
   Leaderboard,
-  leaderboards,
   LeaderboardId,
+  leaderboards,
   seasonOrder,
 } from "@/utils/leaderboards";
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { FC, useState } from "react";
 
 // Searchable replacement for a plain <Select> of leaderboards.
 // Groups items by season (via seasonOrder/getSeasonGroup) so the long

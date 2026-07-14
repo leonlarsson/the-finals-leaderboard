@@ -1,19 +1,19 @@
+import { Link } from "@tanstack/react-router";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp, ExternalLink, Minus } from "lucide-react";
+import { BaseUser, BaseUserWithExtras } from "@/types";
+import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import { PlayStationIcon, SteamIcon, XboxIcon } from "../icons";
+import LeagueImage from "../LeagueImage";
+import { SponsorImage } from "../SponsorImage";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { DataTableColumnHeader } from "./DataTableColumnHeader";
-import { BaseUser, BaseUserWithExtras } from "@/types";
-import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import { SponsorImage } from "../SponsorImage";
-import LeagueImage from "../LeagueImage";
-import { Link } from "@tanstack/react-router";
-import { PlayStationIcon, SteamIcon, XboxIcon } from "../icons";
 
 const columnHelper = createColumnHelper<BaseUserWithExtras>();
 

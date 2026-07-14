@@ -1,11 +1,11 @@
-import { panels } from "@/types";
-import type { BaseUserWithExtras } from "@/types";
-import LeagueImage from "@/components/LeagueImage";
-import { SponsorImage } from "@/components/SponsorImage";
-import { type Leaderboard, LeaderboardId } from "@/utils/leaderboards";
-import { formatRelativeTime } from "@/utils/relativeTime";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown, ChevronUp, Minus } from "lucide-react";
+import LeagueImage from "@/components/LeagueImage";
+import { SponsorImage } from "@/components/SponsorImage";
+import type { BaseUserWithExtras } from "@/types";
+import { panels } from "@/types";
+import { type Leaderboard, LeaderboardId } from "@/utils/leaderboards";
+import { formatRelativeTime } from "@/utils/relativeTime";
 
 export const SkeletonCard = () => {
   return (

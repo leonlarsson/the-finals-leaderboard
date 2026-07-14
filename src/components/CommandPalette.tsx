@@ -1,22 +1,3 @@
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
-import { FavoriteStarButton } from "@/components/FavoriteStarButton";
-import { useTheme } from "@/components/ThemeProvider";
-import { useLeaderboardFavorites } from "@/hooks/useLeaderboardFavorites";
-import { useSearchHistory } from "@/hooks/useSearchHistory";
-import {
-  defaultLeaderboardId,
-  leaderboards,
-  Leaderboard,
-  LeaderboardId,
-} from "@/utils/leaderboards";
 import { useNavigate } from "@tanstack/react-router";
 import {
   ClockIcon,
@@ -31,6 +12,25 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { FavoriteStarButton } from "@/components/FavoriteStarButton";
+import { useTheme } from "@/components/ThemeProvider";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "@/components/ui/command";
+import { useLeaderboardFavorites } from "@/hooks/useLeaderboardFavorites";
+import { useSearchHistory } from "@/hooks/useSearchHistory";
+import {
+  defaultLeaderboardId,
+  type Leaderboard,
+  type LeaderboardId,
+  leaderboards,
+} from "@/utils/leaderboards";
 
 const allLeaderboards = Object.values(leaderboards).filter((x) => x.enabled);
 

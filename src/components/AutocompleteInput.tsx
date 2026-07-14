@@ -1,7 +1,7 @@
-import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import type { KeyboardEvent, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
 
 // Debounced async-search dropdown for a text Input. Selecting fills the value via getLabel and fires onSelect.
 export const AutocompleteInput = <T,>({

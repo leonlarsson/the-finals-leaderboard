@@ -1,17 +1,30 @@
-import { SearchInput } from "@/components/SearchInput";
-import { PageWrapper } from "@/components/PageWrapper";
-import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
-  PlayerResultCard,
+  ArrowLeftIcon,
+  ChevronDownIcon,
+  ListFilterIcon,
+  SearchIcon,
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { z } from "zod";
+import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import { PageWrapper } from "@/components/PageWrapper";
+import {
   type PlayerResult,
+  PlayerResultCard,
 } from "@/components/PlayerResultCard";
-import { Checkbox } from "@/components/ui/checkbox";
+import { SearchInput } from "@/components/SearchInput";
+import { SearchSkeletons } from "@/components/SearchSkeletons";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useFavorites } from "@/hooks/useFavorites";
+import type { BaseUserWithExtras } from "@/types";
 import {
   apiIdToWebId,
   defaultLeaderboardId,
@@ -23,19 +36,6 @@ import {
   seasonOrder,
   webIdToApiId,
 } from "@/utils/leaderboards";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import {
-  ArrowLeftIcon,
-  ChevronDownIcon,
-  ListFilterIcon,
-  SearchIcon,
-} from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { z } from "zod";
-import { SearchSkeletons } from "@/components/SearchSkeletons";
-import { useFavorites } from "@/hooks/useFavorites";
-import type { BaseUserWithExtras } from "@/types";
 import { type PlayerApiEntry, searchPlayers } from "@/utils/playerApi";
 
 const searchSchema = z.object({

@@ -1,7 +1,10 @@
-import CommunityProgress from "@/components/CommunityProgress";
+import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { SearchIcon } from "lucide-react";
+import { useState } from "react";
 import { CommandPalette } from "@/components/CommandPalette";
-import { KeyboardShortcutsDialog } from "@/components/KeyboardShortcutsDialog";
+import CommunityProgress from "@/components/CommunityProgress";
 import { BlueskyIcon, GitHubIcon, XTwitterIcon } from "@/components/icons";
+import { KeyboardShortcutsDialog } from "@/components/KeyboardShortcutsDialog";
 import BasicLink from "@/components/Link";
 import { Notice } from "@/components/Notice";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -15,9 +18,6 @@ import {
 } from "@/components/ui/tooltip";
 import { communityEvents } from "@/utils/communityEvents";
 import { modKeyLabel } from "@/utils/platform";
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
-import { SearchIcon } from "lucide-react";
-import { useState } from "react";
 
 export const Route = createRootRoute({
   component: RootComponent,

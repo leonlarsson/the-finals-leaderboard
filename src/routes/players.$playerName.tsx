@@ -1,26 +1,4 @@
-import { AppBarChart } from "@/components/AppBarChart";
-import type { BaseUserWithExtras } from "@/types";
-import { DataFreshnessNote } from "@/components/DataFreshnessNote";
-import { PageWrapper } from "@/components/PageWrapper";
-import { SeasonSection, SkeletonCard } from "@/components/StatCard";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import { useFavorites } from "@/hooks/useFavorites";
-import {
-  apiIdToWebId,
-  defaultLeaderboard,
-  getSeasonGroup,
-  Leaderboard,
-  LeaderboardId,
-  leaderboards,
-  seasonOrder,
-} from "@/utils/leaderboards";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   AlertCircleIcon,
@@ -32,8 +10,29 @@ import {
   Loader2Icon,
   StarIcon,
 } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { AppBarChart } from "@/components/AppBarChart";
+import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import { PageWrapper } from "@/components/PageWrapper";
+import { SeasonSection, SkeletonCard } from "@/components/StatCard";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { useFavorites } from "@/hooks/useFavorites";
+import type { BaseUserWithExtras } from "@/types";
+import {
+  apiIdToWebId,
+  defaultLeaderboard,
+  getSeasonGroup,
+  Leaderboard,
+  LeaderboardId,
+  leaderboards,
+  seasonOrder,
+} from "@/utils/leaderboards";
 import { fetchPlayer } from "@/utils/playerApi";
 
 export const Route = createFileRoute("/players/$playerName")({

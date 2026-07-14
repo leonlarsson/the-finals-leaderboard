@@ -2,8 +2,8 @@
 
 import { Column } from "@tanstack/react-table";
 import { MenuIcon, SortAscIcon, SortDescIcon } from "lucide-react";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -48,8 +48,7 @@ export function DataTableColumnHeader<TData, TValue>({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            Click to{" "}
-            {(() => {
+            Click to {(() => {
               switch (column.getNextSortingOrder()) {
                 case "asc":
                   return "sort ascending";

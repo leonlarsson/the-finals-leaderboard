@@ -1,16 +1,18 @@
-import { Fragment, useState } from "react";
+import { useSearch } from "@tanstack/react-router";
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
   flexRender,
   getCoreRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { Fragment, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import {
   Table,
   TableBody,
@@ -19,11 +21,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "./DataTablePagination";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import { useHotkeys } from "react-hotkeys-hook";
+import { DataTablePagination } from "./DataTablePagination";
 import { LeaderboardDataTableToolbar } from "./LeaderboardDataTableToolbar";
-import { useSearch } from "@tanstack/react-router";
 
 interface LeaderboatdDataTableProps<TData, TValue> {
   leaderboardId: LeaderboardId;

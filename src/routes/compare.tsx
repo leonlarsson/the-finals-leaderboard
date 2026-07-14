@@ -1,29 +1,3 @@
-import { panels } from "@/types";
-import type { BaseUserWithExtras } from "@/types";
-import { AutocompleteInput } from "@/components/AutocompleteInput";
-import { DataFreshnessNote } from "@/components/DataFreshnessNote";
-import LeagueImage from "@/components/LeagueImage";
-import { SponsorImage } from "@/components/SponsorImage";
-import { Button } from "@/components/ui/button";
-import {
-  apiIdToWebId,
-  getSeasonGroup,
-  Leaderboard,
-  LeaderboardId,
-  leaderboards,
-  seasonOrder,
-} from "@/utils/leaderboards";
-import {
-  ClubApiClub,
-  ClubApiLeaderboardEntry,
-  fetchClub,
-  searchClubs,
-} from "@/utils/clubApi";
-import {
-  fetchPlayer,
-  PlayerApiResponse,
-  searchPlayers,
-} from "@/utils/playerApi";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
@@ -36,6 +10,32 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { z } from "zod";
+import { AutocompleteInput } from "@/components/AutocompleteInput";
+import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import LeagueImage from "@/components/LeagueImage";
+import { SponsorImage } from "@/components/SponsorImage";
+import { Button } from "@/components/ui/button";
+import type { BaseUserWithExtras } from "@/types";
+import { panels } from "@/types";
+import {
+  type ClubApiClub,
+  type ClubApiLeaderboardEntry,
+  fetchClub,
+  searchClubs,
+} from "@/utils/clubApi";
+import {
+  apiIdToWebId,
+  getSeasonGroup,
+  type Leaderboard,
+  type LeaderboardId,
+  leaderboards,
+  seasonOrder,
+} from "@/utils/leaderboards";
+import {
+  fetchPlayer,
+  type PlayerApiResponse,
+  searchPlayers,
+} from "@/utils/playerApi";
 
 enum CompareMode {
   Players = "players",

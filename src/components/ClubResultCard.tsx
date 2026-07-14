@@ -2,12 +2,12 @@ import { Link } from "@tanstack/react-router";
 import { UsersRoundIcon } from "lucide-react";
 import { FavoriteStarButton } from "@/components/FavoriteStarButton";
 import { panels } from "@/types";
+import type { ClubApiClub, ClubApiLeaderboardEntry } from "@/utils/clubApi";
 import {
   apiIdToWebId,
-  leaderboards,
   LeaderboardId,
+  leaderboards,
 } from "@/utils/leaderboards";
-import type { ClubApiClub, ClubApiLeaderboardEntry } from "@/utils/clubApi";
 
 export type ClubResult = ClubApiClub & { bestRank: number };
 

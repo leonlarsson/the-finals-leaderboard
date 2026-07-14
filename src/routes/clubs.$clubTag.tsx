@@ -1,20 +1,20 @@
-import { AppBarChart } from "@/components/AppBarChart";
-import { DataFreshnessNote } from "@/components/DataFreshnessNote";
-import { panels } from "@/types";
-import {
-  apiIdToWebId,
-  leaderboards,
-  LeaderboardId,
-} from "@/utils/leaderboards";
-import { fetchClub } from "@/utils/clubApi";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { PageWrapper } from "@/components/PageWrapper";
-import { useClubFavorites } from "@/hooks/useClubFavorites";
 import { AlertCircleIcon, ArrowLeftIcon, StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { AppBarChart } from "@/components/AppBarChart";
+import { DataFreshnessNote } from "@/components/DataFreshnessNote";
+import { PageWrapper } from "@/components/PageWrapper";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useClubFavorites } from "@/hooks/useClubFavorites";
+import { panels } from "@/types";
+import { fetchClub } from "@/utils/clubApi";
+import {
+  apiIdToWebId,
+  LeaderboardId,
+  leaderboards,
+} from "@/utils/leaderboards";
 
 export const Route = createFileRoute("/clubs/$clubTag")({
   component: RouteComponent,

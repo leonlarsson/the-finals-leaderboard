@@ -1,10 +1,13 @@
+import { getRouteApi } from "@tanstack/react-router";
 import { Table } from "@tanstack/react-table";
 import { CheckIcon, ClockIcon, PlusCircle, XIcon } from "lucide-react";
-import { useHotkeys } from "react-hotkeys-hook";
 import { useRef, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Button } from "../ui/button";
+import { useHotkeys } from "react-hotkeys-hook";
 import { useSearchHistory } from "@/hooks/useSearchHistory";
+import { cn } from "@/lib/utils";
+import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import {
   Command,
   CommandEmpty,
@@ -14,12 +17,9 @@ import {
   CommandList,
   CommandSeparator,
 } from "../ui/command";
-import { Separator } from "../ui/separator";
-import { Badge } from "../ui/badge";
-import { cn } from "@/lib/utils";
-import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import { getRouteApi } from "@tanstack/react-router";
 import { Input } from "../ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Separator } from "../ui/separator";
 
 type LeaderboardDataTableToolbarProps<TData> = {
   leaderboardId: LeaderboardId;

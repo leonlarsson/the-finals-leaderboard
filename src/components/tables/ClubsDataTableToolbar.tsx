@@ -1,6 +1,6 @@
+import { getRouteApi } from "@tanstack/react-router";
 import { Table } from "@tanstack/react-table";
 import { Input } from "../ui/input";
-import { getRouteApi } from "@tanstack/react-router";
 
 type Props<TData> = {
   table: Table<TData>;

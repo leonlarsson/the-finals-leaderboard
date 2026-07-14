@@ -1,7 +1,7 @@
-import { MegaphoneIcon, MessageSquareWarningIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { Linkify } from "./Linkify";
+import { MegaphoneIcon, MessageSquareWarningIcon } from "lucide-react";
 import { SECOND } from "@/utils/time";
+import { Linkify } from "./Linkify";
 
 export const Notice = () => {
   // Get initial data from localStorage to prevent flickering

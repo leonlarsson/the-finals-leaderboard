@@ -1,17 +1,17 @@
+import { Link } from "@tanstack/react-router";
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { FC, ReactElement, useMemo } from "react";
 import { Cell, Pie, PieChart } from "recharts";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { AppBarChart } from "@/components/AppBarChart";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { BaseUser } from "@/types";
-import leagues from "@/utils/leagues";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import Loading from "../Loading";
+import leagues from "@/utils/leagues";
 import LeagueImage from "../LeagueImage";
+import Loading from "../Loading";
 import { SponsorImage } from "../SponsorImage";
 import { Separator } from "../ui/separator";
-import { FC, ReactElement, useMemo } from "react";
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { Link } from "@tanstack/react-router";
 
 const ChartContainerWrapper: FC<{
   data: { name: string; color: string }[];

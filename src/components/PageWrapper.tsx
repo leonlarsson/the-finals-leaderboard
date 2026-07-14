@@ -1,5 +1,5 @@
-import { SearchNavLinks } from "./SearchNavLinks";
 import { ReactNode } from "react";
+import { SearchNavLinks } from "./SearchNavLinks";
 
 export const PageWrapper = ({
   children,

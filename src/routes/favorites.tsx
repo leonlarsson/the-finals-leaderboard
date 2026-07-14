@@ -1,26 +1,3 @@
-import type { BaseUserWithExtras } from "@/types";
-import { PageWrapper } from "@/components/PageWrapper";
-import {
-  PlayerResultCard,
-  type PlayerResult,
-} from "@/components/PlayerResultCard";
-import { ClubResultCard, type ClubResult } from "@/components/ClubResultCard";
-import { FavoriteStarButton } from "@/components/FavoriteStarButton";
-import { SearchSkeletons } from "@/components/SearchSkeletons";
-import { Button } from "@/components/ui/button";
-import { useFavorites } from "@/hooks/useFavorites";
-import { useClubFavorites } from "@/hooks/useClubFavorites";
-import { useLeaderboardFavorites } from "@/hooks/useLeaderboardFavorites";
-import { fetchClub } from "@/utils/clubApi";
-import { fetchPlayer } from "@/utils/playerApi";
-import { modKeyLabel } from "@/utils/platform";
-import {
-  apiIdToWebId,
-  defaultLeaderboardId,
-  Leaderboard,
-  LeaderboardId,
-  leaderboards,
-} from "@/utils/leaderboards";
 import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
@@ -31,6 +8,29 @@ import {
   UsersRoundIcon,
 } from "lucide-react";
 import { useEffect, useMemo } from "react";
+import { type ClubResult, ClubResultCard } from "@/components/ClubResultCard";
+import { FavoriteStarButton } from "@/components/FavoriteStarButton";
+import { PageWrapper } from "@/components/PageWrapper";
+import {
+  type PlayerResult,
+  PlayerResultCard,
+} from "@/components/PlayerResultCard";
+import { SearchSkeletons } from "@/components/SearchSkeletons";
+import { Button } from "@/components/ui/button";
+import { useClubFavorites } from "@/hooks/useClubFavorites";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useLeaderboardFavorites } from "@/hooks/useLeaderboardFavorites";
+import type { BaseUserWithExtras } from "@/types";
+import { fetchClub } from "@/utils/clubApi";
+import {
+  apiIdToWebId,
+  defaultLeaderboardId,
+  Leaderboard,
+  LeaderboardId,
+  leaderboards,
+} from "@/utils/leaderboards";
+import { modKeyLabel } from "@/utils/platform";
+import { fetchPlayer } from "@/utils/playerApi";
 
 export const Route = createFileRoute("/favorites")({
   component: RouteComponent,

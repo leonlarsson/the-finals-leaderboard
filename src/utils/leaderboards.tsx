@@ -1,5 +1,5 @@
-import type { BaseUser, BaseUserWithExtras, LeaderboardFeature } from "@/types";
 import { ReactNode } from "react";
+import type { BaseUser, BaseUserWithExtras, LeaderboardFeature } from "@/types";
 
 export const leaderboards = {
   // Season 11

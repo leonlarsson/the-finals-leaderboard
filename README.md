@@ -5,8 +5,8 @@ This is a leaderboard for THE FINALS, a game from Embark Studios. This project a
 To run locally:
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 ### Adding a new leaderboard

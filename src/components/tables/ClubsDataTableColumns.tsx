@@ -1,15 +1,15 @@
+import { useQueryClient } from "@tanstack/react-query";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   AccessorKeyColumnDef,
   createColumnHelper,
 } from "@tanstack/react-table";
-import { DataTableColumnHeader } from "./DataTableColumnHeader";
-import { Club, panels } from "@/types";
-import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
-import { Link, useNavigate } from "@tanstack/react-router";
 import { ExternalLinkIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import { useQueryClient } from "@tanstack/react-query";
+import { Club, panels } from "@/types";
 import { fetchClub } from "@/utils/clubApi";
+import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
+import { Button } from "../ui/button";
+import { DataTableColumnHeader } from "./DataTableColumnHeader";
 import { ClickableClubTag } from "./LeaderboardDataTableColumns";
 
 const columnHelper = createColumnHelper<Club>();

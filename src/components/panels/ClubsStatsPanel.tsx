@@ -1,13 +1,12 @@
+import { ColumnDef } from "@tanstack/react-table";
+import { useMemo, useState } from "react";
 import { AppBarChart } from "@/components/AppBarChart";
 import { BaseUser } from "@/types";
 import getPlatformName from "@/utils/getPlatformName";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import Loading from "../Loading";
-import { useMemo, useState } from "react";
 import { ClubsDataTable } from "../tables/ClubsDataTable";
 import { clubsDataTableColumns } from "../tables/ClubsDataTableColumns";
-import { ColumnDef } from "@tanstack/react-table";
-import { Separator } from "../ui/separator";
 import {
   Select,
   SelectContent,
@@ -15,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Separator } from "../ui/separator";
 
 const TOP_X_OPTIONS = [10, 20, 30, 50, 100, 200, 500, "all"] as const;
 type TopXOption = (typeof TOP_X_OPTIONS)[number];

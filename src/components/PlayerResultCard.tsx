@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { UserRoundIcon } from "lucide-react";
 import { FavoriteStarButton } from "@/components/FavoriteStarButton";
-import { panels } from "@/types";
 import type { BaseUserWithExtras } from "@/types";
+import { panels } from "@/types";
 import { Leaderboard, LeaderboardId } from "@/utils/leaderboards";
 
 export type PlayerAppearance = {

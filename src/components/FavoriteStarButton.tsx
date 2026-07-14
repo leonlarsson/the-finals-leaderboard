@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { StarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const FavoriteStarButton = ({
   favorited,
