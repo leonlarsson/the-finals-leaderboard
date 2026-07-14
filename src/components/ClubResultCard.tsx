@@ -1,14 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { UsersRoundIcon } from "lucide-react";
 import { FavoriteStarButton } from "@/components/FavoriteStarButton";
-import { panels, type ClubsAPIData } from "@/types";
+import { panels } from "@/types";
 import {
   apiIdToWebId,
   leaderboards,
   LeaderboardId,
 } from "@/utils/leaderboards";
+import type { ClubApiClub, ClubApiLeaderboardEntry } from "@/utils/clubApi";
 
-export type ClubResult = ClubsAPIData & { bestRank: number };
+export type ClubResult = ClubApiClub & { bestRank: number };
 
 export const ClubResultCard = ({
   club,
@@ -45,9 +46,13 @@ export const ClubResultCard = ({
     </div>
 
     <div className="mt-3 flex flex-wrap gap-1.5">
-      {/* Already sprted from API */}
+      {/* Already sorted from API */}
       {club.leaderboards.map((lb) => (
-        <LeaderboardBadge key={lb.leaderboard} lb={lb} clubTag={club.clubTag} />
+        <LeaderboardBadge
+          key={lb.leaderboardId}
+          lb={lb}
+          clubTag={club.clubTag}
+        />
       ))}
     </div>
   </div>
@@ -57,11 +62,11 @@ const LeaderboardBadge = ({
   lb,
   clubTag,
 }: {
-  lb: { leaderboard: string; rank: number; totalValue: number };
+  lb: ClubApiLeaderboardEntry;
   clubTag: string;
 }) => {
-  const webId = apiIdToWebId(lb.leaderboard);
-  const lbName = leaderboards[webId as LeaderboardId]?.name ?? lb.leaderboard;
+  const webId = apiIdToWebId(lb.leaderboardId);
+  const lbName = leaderboards[webId as LeaderboardId]?.name ?? lb.leaderboardId;
 
   return (
     <Link
@@ -74,7 +79,7 @@ const LeaderboardBadge = ({
       className="inline-flex items-center gap-1 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs transition-colors hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
     >
       <span className="text-neutral-500">{lbName}</span>
-      <span className="font-semibold">#{lb.rank.toLocaleString("en")}</span>
+      <span className="font-semibold">#{lb.clubRank.toLocaleString("en")}</span>
     </Link>
   );
 };

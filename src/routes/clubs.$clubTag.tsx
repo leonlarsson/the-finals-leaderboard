@@ -1,11 +1,12 @@
 import { AppBarChart } from "@/components/AppBarChart";
-import { clubsQueryOptions } from "@/queries";
+import { DataFreshnessNote } from "@/components/DataFreshnessNote";
 import { panels } from "@/types";
 import {
   apiIdToWebId,
   leaderboards,
   LeaderboardId,
 } from "@/utils/leaderboards";
+import { fetchClub } from "@/utils/clubApi";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageWrapper } from "@/components/PageWrapper";
@@ -32,7 +33,11 @@ function RouteComponent() {
     };
   }, [clubTag]);
 
-  const query = useQuery(clubsQueryOptions);
+  const query = useQuery({
+    queryKey: ["club", clubTag],
+    queryFn: ({ signal }) => fetchClub(clubTag, { withMembers: true, signal }),
+    staleTime: 5 * 60 * 1000,
+  });
 
   const backLink = (
     <Link
@@ -44,12 +49,10 @@ function RouteComponent() {
   );
 
   if (query.isLoading) {
-    return (
-      <PageWrapper backLink={backLink}>Loading a lot of data...</PageWrapper>
-    );
+    return <PageWrapper backLink={backLink}>Loading club data...</PageWrapper>;
   }
 
-  if (query.isError || !query.data) {
+  if (query.isError) {
     return (
       <PageWrapper backLink={backLink}>
         <div className="flex flex-col items-start gap-3">
@@ -68,9 +71,7 @@ function RouteComponent() {
     );
   }
 
-  const club = query.data.find(
-    (x) => x.clubTag.toLowerCase() === clubTag.toLowerCase(),
-  );
+  const club = query.data;
 
   if (!club) {
     return (
@@ -85,8 +86,8 @@ function RouteComponent() {
 
   const filteredStandings = club.leaderboards.filter((lb) => {
     const name =
-      leaderboards[apiIdToWebId(lb.leaderboard) as LeaderboardId]?.name ??
-      lb.leaderboard;
+      leaderboards[apiIdToWebId(lb.leaderboardId) as LeaderboardId]?.name ??
+      lb.leaderboardId;
     return name.toLowerCase().includes(standingsFilter.trim().toLowerCase());
   });
 
@@ -107,6 +108,9 @@ function RouteComponent() {
               {club.members.length.toLocaleString("en")}{" "}
               {club.members.length === 1 ? "member" : "members"} in the top 10K
               of any leaderboard.
+            </div>
+            <div className="mt-2">
+              <DataFreshnessNote />
             </div>
           </div>
           <Button
@@ -134,13 +138,13 @@ function RouteComponent() {
               <p className="mb-2 text-neutral-500">Lower rank is better.</p>
               <AppBarChart
                 data={[...club.leaderboards]
-                  .sort((a, b) => b.rank - a.rank)
+                  .sort((a, b) => b.clubRank - a.clubRank)
                   .map((lb) => ({
                     name:
                       leaderboards[
-                        apiIdToWebId(lb.leaderboard) as LeaderboardId
-                      ]?.nameShort ?? lb.leaderboard,
-                    Rank: 10001 - lb.rank,
+                        apiIdToWebId(lb.leaderboardId) as LeaderboardId
+                      ]?.nameShort ?? lb.leaderboardId,
+                    Rank: 10001 - lb.clubRank,
                   }))}
                 dataKey="Rank"
                 yAxisFormatter={(v) => `#${(10001 - v).toLocaleString("en")}`}
@@ -151,12 +155,12 @@ function RouteComponent() {
                   const lb = club.leaderboards.find(
                     (l) =>
                       (leaderboards[
-                        apiIdToWebId(l.leaderboard) as LeaderboardId
-                      ]?.nameShort ?? l.leaderboard) === label,
+                        apiIdToWebId(l.leaderboardId) as LeaderboardId
+                      ]?.nameShort ?? l.leaderboardId) === label,
                   );
                   const lbName =
                     leaderboards[
-                      apiIdToWebId(lb?.leaderboard ?? "") as LeaderboardId
+                      apiIdToWebId(lb?.leaderboardId ?? "") as LeaderboardId
                     ]?.name ?? label;
                   return (
                     <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
@@ -192,10 +196,10 @@ function RouteComponent() {
               ) : (
                 filteredStandings.map((leaderboard) => (
                   <Link
-                    key={leaderboard.leaderboard}
+                    key={leaderboard.leaderboardId}
                     to="/"
                     search={{
-                      lb: apiIdToWebId(leaderboard.leaderboard),
+                      lb: apiIdToWebId(leaderboard.leaderboardId),
                       panel: panels.CLUBS,
                       clubTag: `exactCt:${club.clubTag}`,
                     }}
@@ -203,11 +207,11 @@ function RouteComponent() {
                   >
                     <span className="text-lg font-medium">
                       {leaderboards[
-                        apiIdToWebId(leaderboard.leaderboard) as LeaderboardId
+                        apiIdToWebId(leaderboard.leaderboardId) as LeaderboardId
                       ]?.name ??
-                        `Unknown leaderboard (${leaderboard.leaderboard})`}
+                        `Unknown leaderboard (${leaderboard.leaderboardId})`}
                     </span>{" "}
-                    | <span>Rank #{leaderboard.rank}</span> |{" "}
+                    | <span>Rank #{leaderboard.clubRank}</span> |{" "}
                     <span>
                       Combined points:{" "}
                       {leaderboard.totalValue.toLocaleString("en")}

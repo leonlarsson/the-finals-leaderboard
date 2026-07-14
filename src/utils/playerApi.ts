@@ -15,8 +15,11 @@ export type PlayerApiResponse = {
 
 export const fetchPlayer = async (
   name: string,
+  options?: { signal?: AbortSignal },
 ): Promise<PlayerApiResponse | null> => {
-  const res = await fetch(`${API_BASE}/v1/player/${encodeURIComponent(name)}`);
+  const res = await fetch(`${API_BASE}/v1/player/${encodeURIComponent(name)}`, {
+    signal: options?.signal,
+  });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error("Failed to fetch player");
   return res.json();

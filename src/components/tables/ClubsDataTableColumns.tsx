@@ -9,7 +9,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { ExternalLinkIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useQueryClient } from "@tanstack/react-query";
-import { clubsQueryOptions } from "@/queries";
+import { fetchClub } from "@/utils/clubApi";
 import { ClickableClubTag } from "./LeaderboardDataTableColumns";
 
 const columnHelper = createColumnHelper<Club>();
@@ -104,7 +104,12 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
             className="size-8"
             size="sm"
             onPointerEnter={() => {
-              queryClient.prefetchQuery(clubsQueryOptions);
+              queryClient.prefetchQuery({
+                queryKey: ["club", row.original.clubTag],
+                queryFn: () =>
+                  fetchClub(row.original.clubTag, { withMembers: true }),
+                staleTime: 5 * 60 * 1000,
+              });
             }}
           >
             <ExternalLinkIcon className="!size-4" />

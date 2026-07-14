@@ -57,7 +57,7 @@ function RouteComponent() {
 
   const query = useQuery({
     queryKey: ["player", playerName],
-    queryFn: () => fetchPlayer(playerName),
+    queryFn: ({ signal }) => fetchPlayer(playerName, { signal }),
     staleTime: 5 * 60 * 1000,
   });
 

@@ -11,15 +11,17 @@ import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useClubFavorites } from "@/hooks/useClubFavorites";
 import { useLeaderboardFavorites } from "@/hooks/useLeaderboardFavorites";
-import { clubsQueryOptions } from "@/queries";
+import { fetchClub } from "@/utils/clubApi";
+import { fetchPlayer } from "@/utils/playerApi";
 import { modKeyLabel } from "@/utils/platform";
 import {
+  apiIdToWebId,
   defaultLeaderboardId,
   Leaderboard,
   LeaderboardId,
   leaderboards,
 } from "@/utils/leaderboards";
-import { useQueries, useQuery, UseQueryResult } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowLeftIcon,
@@ -33,10 +35,6 @@ import { useEffect, useMemo } from "react";
 export const Route = createFileRoute("/favorites")({
   component: RouteComponent,
 });
-
-const allLeaderboards = Object.values(leaderboards).filter(
-  (lb) => lb.enabled,
-) as Leaderboard[];
 
 function RouteComponent() {
   const { favorites, isFavorite, toggleFavorite, clearFavorites } =
@@ -60,31 +58,46 @@ function RouteComponent() {
     };
   }, []);
 
-  const queries = useQueries({
-    queries: allLeaderboards.map((lb) => ({
-      queryKey: ["leaderboard", lb.id],
-      queryFn: () => lb.fetchData("crossplay") as Promise<BaseUserWithExtras[]>,
-      staleTime: Infinity,
+  const playerQueries = useQueries({
+    queries: favorites.map((name) => ({
+      queryKey: ["player", name],
+      queryFn: ({ signal }: { signal: AbortSignal }) =>
+        fetchPlayer(name, { signal }),
+      staleTime: 5 * 60 * 1000,
     })),
-  }) as UseQueryResult<BaseUserWithExtras[]>[];
+  });
 
-  const clubsQuery = useQuery(clubsQueryOptions);
+  const clubQueries = useQueries({
+    queries: clubFavorites.map((tag) => ({
+      queryKey: ["club", tag],
+      queryFn: ({ signal }: { signal: AbortSignal }) =>
+        fetchClub(tag, { withMembers: true, signal }),
+      staleTime: 5 * 60 * 1000,
+    })),
+  });
 
-  const isAllLoading = queries.every((q) => q.isLoading);
+  const isAllLoading =
+    favorites.length > 0 && playerQueries.some((q) => q.isLoading);
+  const isClubsLoading =
+    clubFavorites.length > 0 && clubQueries.some((q) => q.isLoading);
 
   const playerResults = useMemo<PlayerResult[]>(
     () =>
-      favorites.map((name) => {
-        const appearances = allLeaderboards
-          .map((lb, i) => ({
-            lb,
-            user: queries[i].data?.find(
-              (u) => u.name.toLowerCase() === name.toLowerCase(),
-            ),
-          }))
+      favorites.map((name, i) => {
+        const data = playerQueries[i]?.data;
+        const appearances = (data?.leaderboards ?? [])
+          .map((entry) => {
+            const webId = apiIdToWebId(entry.leaderboardId);
+            const lb = leaderboards[webId as LeaderboardId] as
+              | Leaderboard
+              | undefined;
+            return lb
+              ? { lb, user: entry as unknown as BaseUserWithExtras }
+              : undefined;
+          })
           .filter(
             (e): e is { lb: Leaderboard; user: BaseUserWithExtras } =>
-              e.user !== undefined,
+              e !== undefined,
           );
         const firstUser = appearances[0]?.user;
         return {
@@ -99,7 +112,7 @@ function RouteComponent() {
             : Infinity,
         };
       }),
-    [favorites, queries],
+    [favorites, playerQueries],
   );
 
   const leaderboardResults = useMemo(
@@ -113,20 +126,18 @@ function RouteComponent() {
   const clubResults = useMemo<ClubResult[]>(
     () =>
       clubFavorites
-        .map((tag) => {
-          const club = clubsQuery.data?.find(
-            (c) => c.clubTag.toLowerCase() === tag.toLowerCase(),
-          );
+        .map((_, i) => {
+          const club = clubQueries[i]?.data;
           if (!club) return null;
           return {
             ...club,
             bestRank: club.leaderboards.length
-              ? Math.min(...club.leaderboards.map((lb) => lb.rank))
+              ? Math.min(...club.leaderboards.map((lb) => lb.clubRank))
               : Infinity,
           };
         })
         .filter((c): c is ClubResult => c !== null),
-    [clubFavorites, clubsQuery.data],
+    [clubFavorites, clubQueries],
   );
 
   const backLink = (
@@ -241,7 +252,7 @@ function RouteComponent() {
               </button>
             </div>
             <div className="flex flex-col gap-3">
-              {clubsQuery.isLoading ? (
+              {isClubsLoading ? (
                 <SearchSkeletons hideTop />
               ) : (
                 clubResults.map((club) => (

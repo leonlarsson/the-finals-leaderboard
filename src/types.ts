@@ -32,12 +32,6 @@ export type BaseUserWithExtras = BaseUser & {
   updatedAt?: string;
 };
 
-export type ClubsAPIData = {
-  clubTag: string;
-  members: { name: string }[];
-  leaderboards: { leaderboard: string; rank: number; totalValue: number }[];
-};
-
 export type Club = {
   rank: number;
   clubTag: string;
