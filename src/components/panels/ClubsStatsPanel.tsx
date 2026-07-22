@@ -76,15 +76,20 @@ export const ClubsStatsPanel = ({
 
   const tableData = useMemo(() => {
     const memberCounts: { [key: string]: number } = {};
+    const officialNames: { [key: string]: string } = {};
     for (const user of users) {
       if (user.clubTag) {
         memberCounts[user.clubTag] = (memberCounts[user.clubTag] || 0) + 1;
+        if (!officialNames[user.clubTag] && user.officialClubName) {
+          officialNames[user.clubTag] = user.officialClubName;
+        }
       }
     }
 
     return topClubsByMetric.map(([clubTag, int], index) => ({
       rank: index + 1,
       clubTag,
+      officialClubName: officialNames[clubTag],
       members: memberCounts[clubTag] || 0,
       totalValue: int ?? 0,
     }));

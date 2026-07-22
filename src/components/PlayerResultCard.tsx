@@ -3,6 +3,7 @@ import { UserRoundIcon } from "lucide-react";
 import { FavoriteStarButton } from "@/components/FavoriteStarButton";
 import type { BaseUserWithExtras } from "@/types";
 import { panels } from "@/types";
+import { clubBadgeClass } from "@/utils/clubBadge";
 import { Leaderboard, LeaderboardId } from "@/utils/leaderboards";
 
 export type PlayerAppearance = {
@@ -13,6 +14,7 @@ export type PlayerAppearance = {
 export type PlayerResult = {
   name: string;
   clubTag: string | undefined;
+  officialClubName?: string;
   steamName: string;
   psnName: string;
   xboxName: string;
@@ -49,11 +51,21 @@ export const PlayerResultCard = ({
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">
+          {player.officialClubName && (
+            <span className="hidden text-xs text-neutral-500 sm:inline">
+              {player.officialClubName}
+            </span>
+          )}
           {player.clubTag && (
             <Link
               to="/clubs/$clubTag"
               params={{ clubTag: player.clubTag }}
-              className="rounded bg-neutral-200 px-1.5 py-0.5 text-xs font-medium transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+              title={
+                player.officialClubName
+                  ? `${player.officialClubName} — view club page`
+                  : "View club page"
+              }
+              className={`${clubBadgeClass(!!player.officialClubName)} px-1.5 py-0.5 text-xs font-medium`}
             >
               [{player.clubTag}]
             </Link>

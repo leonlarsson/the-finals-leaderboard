@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { createColumnHelper } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp, ExternalLink, Minus } from "lucide-react";
 import { BaseUser, BaseUserWithExtras } from "@/types";
+import { clubBadgeClass } from "@/utils/clubBadge";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 import { PlayStationIcon, SteamIcon, XboxIcon } from "../icons";
 import LeagueImage from "../LeagueImage";
@@ -320,7 +321,12 @@ const platformNamesInline = (user: BaseUser) => {
     <div className="flex flex-col gap-1">
       <div>
         <div className="inline-flex gap-1">
-          {user.clubTag && <ClickableClubTag clubTag={user.clubTag} />}
+          {user.clubTag && (
+            <ClickableClubTag
+              clubTag={user.clubTag}
+              officialClubName={user.officialClubName}
+            />
+          )}
           <Link
             to="/players/$playerName"
             params={{ playerName: user.name }}
@@ -366,7 +372,14 @@ const namePopoverContent = (user: BaseUser) => {
     <div className="flex flex-col gap-2">
       {user.clubTag && (
         <span>
-          Club tag: <ClickableClubTag clubTag={user.clubTag} />
+          Club tag:{" "}
+          <ClickableClubTag
+            clubTag={user.clubTag}
+            officialClubName={user.officialClubName}
+          />
+          {user.officialClubName && (
+            <span className="text-neutral-500"> ({user.officialClubName})</span>
+          )}
         </span>
       )}
 
@@ -410,11 +423,21 @@ const namePopoverContent = (user: BaseUser) => {
   );
 };
 
-export const ClickableClubTag = ({ clubTag }: { clubTag: string }) => {
+export const ClickableClubTag = ({
+  clubTag,
+  officialClubName,
+}: {
+  clubTag: string;
+  officialClubName?: string;
+}) => {
   return (
     <Link
-      className="cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-      title="View club page"
+      className={`${clubBadgeClass(!!officialClubName)} px-1`}
+      title={
+        officialClubName
+          ? `${officialClubName} — view club page`
+          : "View club page"
+      }
       to="/clubs/$clubTag"
       params={{ clubTag }}
     >

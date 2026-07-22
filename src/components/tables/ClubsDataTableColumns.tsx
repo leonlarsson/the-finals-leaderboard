@@ -46,7 +46,12 @@ export const clubsDataTableColumns = (leaderboardId: LeaderboardId) => {
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Club Tag" />
       ),
-      cell: ({ getValue }) => <ClickableClubTag clubTag={getValue()} />,
+      cell: ({ getValue, row }) => (
+        <ClickableClubTag
+          clubTag={getValue()}
+          officialClubName={row.original.officialClubName}
+        />
+      ),
     }),
 
     // Members

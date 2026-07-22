@@ -98,6 +98,7 @@ const buildResults = (entries: PlayerApiEntry[]): PlayerResult[] => {
       entry = {
         name: user.name,
         clubTag: user.clubTag,
+        officialClubName: user.officialClubName,
         steamName: user.steamName,
         psnName: user.psnName,
         xboxName: user.xboxName,
@@ -109,6 +110,8 @@ const buildResults = (entries: PlayerApiEntry[]): PlayerResult[] => {
     entry.appearances.push({ lb, user });
     if (user.rank < entry.bestRank) entry.bestRank = user.rank;
     if (!entry.clubTag && user.clubTag) entry.clubTag = user.clubTag;
+    if (!entry.officialClubName && user.officialClubName)
+      entry.officialClubName = user.officialClubName;
     if (!entry.steamName && user.steamName) entry.steamName = user.steamName;
     if (!entry.psnName && user.psnName) entry.psnName = user.psnName;
     if (!entry.xboxName && user.xboxName) entry.xboxName = user.xboxName;

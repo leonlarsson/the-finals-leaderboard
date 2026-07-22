@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/hooks/useFavorites";
 import type { BaseUserWithExtras } from "@/types";
+import { clubBadgeClass } from "@/utils/clubBadge";
 import {
   apiIdToWebId,
   defaultLeaderboard,
@@ -188,32 +189,38 @@ function RouteComponent() {
                 <Loader2Icon className="inline size-5 animate-spin text-neutral-400" />
               )}
             </div>
-            <div className="mt-1 flex flex-wrap items-center gap-2 text-sm">
+            <div className="mt-1 flex flex-wrap items-center gap-1.5 text-sm">
               {baseUser?.clubTag && (
                 <Link
                   to="/clubs/$clubTag"
                   params={{ clubTag: baseUser.clubTag }}
-                  title="View club page"
-                  className="rounded bg-neutral-200 px-1.5 py-0.5 font-medium transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                  title={
+                    baseUser.officialClubName
+                      ? `${baseUser.officialClubName} — view club page`
+                      : "View club page"
+                  }
+                  className={`${clubBadgeClass(!!baseUser.officialClubName)} px-1.5 py-0.5 font-medium`}
                 >
                   [{baseUser.clubTag}]
                 </Link>
               )}
-              {baseUser?.steamName && (
-                <span className="text-neutral-500">
-                  Steam: {baseUser.steamName}
-                </span>
-              )}
-              {baseUser?.xboxName && (
-                <span className="text-neutral-500">
-                  Xbox: {baseUser.xboxName}
-                </span>
-              )}
-              {baseUser?.psnName && (
-                <span className="text-neutral-500">
-                  PSN: {baseUser.psnName}
-                </span>
-              )}
+              {[
+                baseUser?.officialClubName,
+                baseUser?.steamName && `Steam: ${baseUser.steamName}`,
+                baseUser?.xboxName && `Xbox: ${baseUser.xboxName}`,
+                baseUser?.psnName && `PSN: ${baseUser.psnName}`,
+              ]
+                .filter(Boolean)
+                .map((segment, i) => (
+                  <span key={segment} className="flex items-center gap-1.5">
+                    {i > 0 && (
+                      <span className="text-neutral-400 dark:text-neutral-500">
+                        ·
+                      </span>
+                    )}
+                    <span className="text-neutral-500">{segment}</span>
+                  </span>
+                ))}
             </div>
             <div className="mt-2">
               <DataFreshnessNote />

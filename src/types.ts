@@ -8,6 +8,8 @@ export type BaseUser = {
   xboxName: string;
   psnName: string;
   clubTag?: string;
+  clubUuid?: string;
+  officialClubName?: string;
   xp?: number;
   level?: number;
   cashouts?: number;
@@ -35,6 +37,7 @@ export type BaseUserWithExtras = BaseUser & {
 export type Club = {
   rank: number;
   clubTag: string;
+  officialClubName?: string;
   members: number;
   totalValue: number;
 };
