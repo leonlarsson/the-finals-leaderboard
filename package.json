@@ -52,5 +52,10 @@
     "vite": "^5.4.11",
     "vite-plugin-mkcert": "^1.17.5",
     "wrangler": "^4.107.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "glob": "11.1.0"
+    }
   }
 }
