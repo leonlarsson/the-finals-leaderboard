@@ -127,6 +127,23 @@ export const leaderboards = {
     tableColumns: ["rank", "name", "points"],
   },
 
+  season11OrbitalHitters: {
+    group: "select1",
+    id: "season11OrbitalHitters",
+    enabled: true,
+    name: "Season 11 Orbital Hitters",
+    nameShort: "S11OH",
+    features: ["clubsPanel"] as LeaderboardFeature[],
+    fetchData: async () => {
+      const res = await fetch(
+        "https://api.the-finals-leaderboard.com/v1/leaderboard/s11orbitalhitters/crossplay",
+      );
+      const data = await res.json();
+      return data.data as BaseUser[];
+    },
+    tableColumns: ["rank", "name", "points"],
+  },
+
   // Season 10
   season10: {
     group: "select2",
@@ -1390,6 +1407,7 @@ export const leaderboardIdsToPrefetch: LeaderboardId[] = [
   "season11QuickCash",
   "season11TeamDeathmatch",
   "season11PointBreak",
+  "season11OrbitalHitters",
 ];
 
 // Maps short API leaderboard IDs (e.g. "s9") to web IDs (e.g. "season9").
@@ -1401,6 +1419,7 @@ const apiIdToWebIdMap: Record<string, string> = {
   s11quickcash: "season11QuickCash",
   s11teamdeathmatch: "season11TeamDeathmatch",
   s11pointbreak: "season11PointBreak",
+  s11orbitalhitters: "season11OrbitalHitters",
   s10: "season10",
   s10sponsor: "season10Sponsor",
   s10worldtour: "season10WorldTour",
