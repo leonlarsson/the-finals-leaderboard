@@ -77,6 +77,11 @@ const allSponsors = {
 };
 
 const leaderboardToSponsors = {
+  season12Sponsor: [
+    allSponsors.OSPUZE,
+    allSponsors["ALFA ACTA"],
+    allSponsors["ISEUL-T"],
+  ],
   season11Sponsor: [
     allSponsors.OSPUZE,
     allSponsors.ENGIMO,
