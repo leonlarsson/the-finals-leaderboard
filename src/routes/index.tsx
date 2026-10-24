@@ -467,11 +467,7 @@ function RouteComponent() {
               </span>
               <p className="text-neutral-600 dark:text-neutral-400">
                 An error happened. Please contact the developer on{" "}
-                <BasicLink href="https://x.com/mozzyfx">Twitter</BasicLink>,{" "}
-                <BasicLink href="https://bsky.app/profile/leon.ms">
-                  Bluesky
-                </BasicLink>{" "}
-                or{" "}
+                <BasicLink href="https://x.com/mozzyfx">Twitter</BasicLink> or{" "}
                 <BasicLink href={githubLink.href}>
                   file an issue on GitHub
                 </BasicLink>{" "}

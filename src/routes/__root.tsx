@@ -3,7 +3,7 @@ import { SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { CommandPalette } from "@/components/CommandPalette";
 import CommunityProgress from "@/components/CommunityProgress";
-import { BlueskyIcon, GitHubIcon, XTwitterIcon } from "@/components/icons";
+import { GitHubIcon, XTwitterIcon } from "@/components/icons";
 import { KeyboardShortcutsDialog } from "@/components/KeyboardShortcutsDialog";
 import BasicLink from "@/components/Link";
 import { Notice } from "@/components/Notice";
@@ -132,12 +132,6 @@ function RootComponent() {
             <BasicLink href="https://x.com/mozzyfx">
               <Button variant="outline" size="icon">
                 <XTwitterIcon className="!size-5" />
-              </Button>
-            </BasicLink>
-
-            <BasicLink href="https://bsky.app/profile/leon.ms">
-              <Button variant="outline" size="icon">
-                <BlueskyIcon className="!size-5" />
               </Button>
             </BasicLink>
 
