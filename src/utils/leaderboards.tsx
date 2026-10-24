@@ -1561,7 +1561,7 @@ const apiIdToWebIdMap: Record<string, string> = {
   s12quickcash: "season12QuickCash",
   s12teamdeathmatch: "season12TeamDeathmatch",
   s12pointbreak: "season12PointBreak",
-  s12solowshowdown: "season12SoloShowdown",
+  s12soloshowdown: "season12SoloShowdown",
   s11: "season11",
   s11sponsor: "season11Sponsor",
   s11worldtour: "season11WorldTour",
