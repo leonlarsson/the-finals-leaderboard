@@ -47,5 +47,6 @@ export default {
   [leaderboards.season9.id]: STANDARD_LEAGUES_WITH_RUBY,
   [leaderboards.season10.id]: STANDARD_LEAGUES_WITH_RUBY,
   [leaderboards.season11.id]: STANDARD_LEAGUES_WITH_RUBY,
+  [leaderboards.season12.id]: STANDARD_LEAGUES_WITH_RUBY,
   // @ts-ignore Some leaderboards do not have leagues
 } satisfies Record<LeaderboardId, string[]>;
