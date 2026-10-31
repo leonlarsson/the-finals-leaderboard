@@ -1,6 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ColumnDef } from "@tanstack/react-table";
 import {
   BarChartIcon,
   ExternalLinkIcon,
@@ -12,7 +11,7 @@ import {
   UserRoundIcon,
   UsersRoundIcon,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { z } from "zod";
 import { FavoriteStarButton } from "@/components/FavoriteStarButton";
 import {
@@ -26,7 +25,7 @@ import BasicLink from "@/components/Link";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
 import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
-import { leaderboardDataTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
+import { getLeaderboardTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -77,13 +76,17 @@ function RouteComponent() {
     lb: lbParam,
     panel: panelParam,
     platform: platformParam,
+    name: nameParam,
+    leagues: leaguesParam,
   } = Route.useSearch({
-    select: ({ lb, panel, platform }) => ({
+    select: ({ lb, panel, platform, name, leagues }) => ({
       lb: (lb && lb in leaderboards
         ? lb
         : defaultLeaderboardId) as LeaderboardId,
       panel: panel ?? panels.LEADERBOARD,
       platform: platform ?? platforms.CROSSPLAY,
+      name,
+      leagues,
     }),
   });
   const navigate = Route.useNavigate();
@@ -196,6 +199,12 @@ function RouteComponent() {
       </TabsList>
     );
   };
+
+  // TanStack Table expects a stable columns reference
+  const columns = useMemo(
+    () => getLeaderboardTableColumns(lbParam, platformParam),
+    [lbParam, platformParam],
+  );
 
   const loadingOrRefetching = isLoading || isRefetching;
 
@@ -550,17 +559,10 @@ function RouteComponent() {
               key={lbParam}
               leaderboardId={lbParam}
               queryState={{ isLoading, isRefetching }}
-              // https://github.com/TanStack/table/issues/4382#issuecomment-2081153305
-              columns={(
-                leaderboardDataTableColumns(
-                  lbParam,
-                  platformParam,
-                ) as ColumnDef<unknown>[]
-              ).filter((col) =>
-                // @ts-ignore This does exist because I create it
-                leaderboard.tableColumns.includes(col.id),
-              )}
+              columns={columns}
               data={data ?? []}
+              initialNameFilter={nameParam}
+              initialLeagues={leaguesParam}
             />
           )}
 

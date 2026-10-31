@@ -1,4 +1,3 @@
-import { useSearch } from "@tanstack/react-router";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -33,6 +32,10 @@ interface LeaderboatdDataTableProps<TData, TValue> {
   };
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  initialNameFilter?: string;
+  initialLeagues?: string[];
+  /** The toolbar syncs filters with the main page's URL, so hide it on other routes. */
+  showToolbar?: boolean;
 }
 
 export function LeaderboardDataTable<TData, TValue>({
@@ -40,11 +43,10 @@ export function LeaderboardDataTable<TData, TValue>({
   queryState,
   columns,
   data,
+  initialNameFilter,
+  initialLeagues,
+  showToolbar = true,
 }: LeaderboatdDataTableProps<TData, TValue>) {
-  const { name: nameSearch, leagues } = useSearch({
-    from: "/",
-    select: ({ name, leagues }) => ({ name, leagues }),
-  });
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "rank",
@@ -52,9 +54,9 @@ export function LeaderboardDataTable<TData, TValue>({
     },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
-    { id: "name", value: nameSearch ?? "" },
+    { id: "name", value: initialNameFilter ?? "" },
     ...(leaderboards[leaderboardId].features.includes("leagueFilter")
-      ? [{ id: "fame", value: leagues ?? [] }]
+      ? [{ id: "fame", value: initialLeagues ?? [] }]
       : []),
   ]);
 
@@ -92,15 +94,20 @@ export function LeaderboardDataTable<TData, TValue>({
     }
   });
 
+  // Pagination falls back to a 10K row count while loading, so hide it when there's no data at all
+  const showPagination = queryState.isLoading || data.length > 0;
+
   return (
     <div className="space-y-3">
-      <LeaderboardDataTableToolbar
-        leaderboardId={leaderboardId}
-        table={table}
-      />
+      {showToolbar && (
+        <LeaderboardDataTableToolbar
+          leaderboardId={leaderboardId}
+          table={table}
+        />
+      )}
 
       <div className="space-y-2">
-        <DataTablePagination table={table} type="players" />
+        {showPagination && <DataTablePagination table={table} type="players" />}
 
         <div className="rounded-md border">
           <Table className="min-w-[800px] outline-none" tabIndex={-1} ref={ref}>
@@ -173,7 +180,7 @@ export function LeaderboardDataTable<TData, TValue>({
           </Table>
         </div>
 
-        <DataTablePagination table={table} type="players" />
+        {showPagination && <DataTablePagination table={table} type="players" />}
       </div>
     </div>
   );
