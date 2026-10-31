@@ -1,4 +1,3 @@
-import { useSearch } from "@tanstack/react-router";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -33,6 +32,8 @@ interface LeaderboatdDataTableProps<TData, TValue> {
   };
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  initialNameFilter?: string;
+  initialLeagues?: string[];
   /** The toolbar syncs filters with the main page's URL, so hide it on other routes. */
   showToolbar?: boolean;
 }
@@ -42,13 +43,10 @@ export function LeaderboardDataTable<TData, TValue>({
   queryState,
   columns,
   data,
+  initialNameFilter,
+  initialLeagues,
   showToolbar = true,
 }: LeaderboatdDataTableProps<TData, TValue>) {
-  // Non-strict so the table can also be used outside the main page (e.g. the club page)
-  const { name: nameSearch, leagues } = useSearch({
-    strict: false,
-    select: ({ name, leagues }) => ({ name, leagues }),
-  });
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "rank",
@@ -56,9 +54,9 @@ export function LeaderboardDataTable<TData, TValue>({
     },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
-    { id: "name", value: nameSearch ?? "" },
+    { id: "name", value: initialNameFilter ?? "" },
     ...(leaderboards[leaderboardId].features.includes("leagueFilter")
-      ? [{ id: "fame", value: leagues ?? [] }]
+      ? [{ id: "fame", value: initialLeagues ?? [] }]
       : []),
   ]);
 

@@ -36,7 +36,7 @@ export const LeaderboardCombobox: FC<{
   onSelect: (id: LeaderboardId) => void;
   onHoverItem?: (id: LeaderboardId) => void;
   /** If set, only these leaderboards are listed (e.g. the ones a club has data for). */
-  availableIds?: LeaderboardId[];
+  availableIds?: ReadonlySet<LeaderboardId>;
 }> = ({ group, currentLeaderboard, onSelect, onHoverItem, availableIds }) => {
   const [open, setOpen] = useState(false);
   const { isLeaderboardFavorite, toggleLeaderboardFavorite } =
@@ -46,7 +46,7 @@ export const LeaderboardCombobox: FC<{
     (x) =>
       x.group === group &&
       x.enabled &&
-      (!availableIds || availableIds.includes(x.id as LeaderboardId)),
+      (!availableIds || availableIds.has(x.id as LeaderboardId)),
   );
 
   const favoriteItems = items.filter((x) =>

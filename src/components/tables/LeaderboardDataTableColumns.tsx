@@ -328,7 +328,7 @@ export const getLeaderboardTableColumns = (
       selectedPlatform,
     ) as ColumnDef<unknown>[]
   ).filter((col) =>
-    // @ts-ignore This does exist because I create it
+    // @ts-expect-error This does exist because I create it
     leaderboards[leaderboardId].tableColumns.includes(col.id),
   );
 

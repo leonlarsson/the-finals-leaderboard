@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeftIcon, ExternalLinkIcon, StarIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -66,12 +66,29 @@ function RouteComponent() {
         ? defaultLeaderboardId
         : memberLbIds[0];
 
+  const memberLbIdSet = useMemo(() => new Set(memberLbIds), [memberLbIds]);
+
+  // Members of this club in the top 10K of the selected leaderboard, known before its data loads
+  const memberLbMemberCount = query.data?.leaderboards.find(
+    (lb) => apiIdToWebId(lb.leaderboardId) === memberLbId,
+  )?.memberCount;
+
   const memberLbQuery = useQuery({
     queryKey: ["leaderboard", memberLbId, platforms.CROSSPLAY],
-    queryFn: () => fetchData(memberLbId!, platforms.CROSSPLAY),
+    queryFn: memberLbId
+      ? () => fetchData(memberLbId, platforms.CROSSPLAY)
+      : skipToken,
     staleTime: Infinity,
-    enabled: !!memberLbId,
   });
+
+  // TanStack Table expects a stable columns reference
+  const memberColumns = useMemo(
+    () =>
+      memberLbId
+        ? getLeaderboardTableColumns(memberLbId, platforms.CROSSPLAY)
+        : [],
+    [memberLbId],
+  );
 
   const memberLbUsers = useMemo(
     () =>
@@ -271,7 +288,7 @@ function RouteComponent() {
                     group={group}
                     currentLeaderboard={leaderboards[memberLbId]}
                     onSelect={setSelectedMemberLb}
-                    availableIds={memberLbIds}
+                    availableIds={memberLbIdSet}
                   />
                 ))}
             </div>
@@ -285,20 +302,11 @@ function RouteComponent() {
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
                   <span>
-                    {memberLbQuery.isLoading ? (
-                      "Loading members..."
-                    ) : (
-                      <>
-                        <span className="font-medium">
-                          {memberLbUsers.length.toLocaleString("en")}
-                        </span>{" "}
-                        of {club.members.length.toLocaleString("en")}{" "}
-                        {club.members.length === 1
-                          ? "member is"
-                          : "members are"}{" "}
-                        in the top 10K of {leaderboards[memberLbId].name}.
-                      </>
-                    )}
+                    <span className="font-medium">
+                      {(memberLbMemberCount ?? 0).toLocaleString("en")}
+                    </span>{" "}
+                    {memberLbMemberCount === 1 ? "member is" : "members are"} in
+                    the top 10K of {leaderboards[memberLbId].name}.
                   </span>
                   <Link
                     to="/"
@@ -321,10 +329,7 @@ function RouteComponent() {
                     isLoading: memberLbQuery.isLoading,
                     isRefetching: memberLbQuery.isRefetching,
                   }}
-                  columns={getLeaderboardTableColumns(
-                    memberLbId,
-                    platforms.CROSSPLAY,
-                  )}
+                  columns={memberColumns}
                   data={memberLbUsers}
                 />
               </div>

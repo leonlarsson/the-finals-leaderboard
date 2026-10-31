@@ -11,7 +11,7 @@ import {
   UserRoundIcon,
   UsersRoundIcon,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { z } from "zod";
 import { FavoriteStarButton } from "@/components/FavoriteStarButton";
 import {
@@ -76,13 +76,17 @@ function RouteComponent() {
     lb: lbParam,
     panel: panelParam,
     platform: platformParam,
+    name: nameParam,
+    leagues: leaguesParam,
   } = Route.useSearch({
-    select: ({ lb, panel, platform }) => ({
+    select: ({ lb, panel, platform, name, leagues }) => ({
       lb: (lb && lb in leaderboards
         ? lb
         : defaultLeaderboardId) as LeaderboardId,
       panel: panel ?? panels.LEADERBOARD,
       platform: platform ?? platforms.CROSSPLAY,
+      name,
+      leagues,
     }),
   });
   const navigate = Route.useNavigate();
@@ -195,6 +199,12 @@ function RouteComponent() {
       </TabsList>
     );
   };
+
+  // TanStack Table expects a stable columns reference
+  const columns = useMemo(
+    () => getLeaderboardTableColumns(lbParam, platformParam),
+    [lbParam, platformParam],
+  );
 
   const loadingOrRefetching = isLoading || isRefetching;
 
@@ -549,8 +559,10 @@ function RouteComponent() {
               key={lbParam}
               leaderboardId={lbParam}
               queryState={{ isLoading, isRefetching }}
-              columns={getLeaderboardTableColumns(lbParam, platformParam)}
+              columns={columns}
               data={data ?? []}
+              initialNameFilter={nameParam}
+              initialLeagues={leaguesParam}
             />
           )}
 
