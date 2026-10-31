@@ -34,14 +34,19 @@ export const LeaderboardCombobox: FC<{
   group: "select1" | "select2";
   currentLeaderboard: Leaderboard;
   onSelect: (id: LeaderboardId) => void;
-  onHoverItem: (id: LeaderboardId) => void;
-}> = ({ group, currentLeaderboard, onSelect, onHoverItem }) => {
+  onHoverItem?: (id: LeaderboardId) => void;
+  /** If set, only these leaderboards are listed (e.g. the ones a club has data for). */
+  availableIds?: LeaderboardId[];
+}> = ({ group, currentLeaderboard, onSelect, onHoverItem, availableIds }) => {
   const [open, setOpen] = useState(false);
   const { isLeaderboardFavorite, toggleLeaderboardFavorite } =
     useLeaderboardFavorites();
 
   const items = Object.values(leaderboards).filter(
-    (x) => x.group === group && x.enabled,
+    (x) =>
+      x.group === group &&
+      x.enabled &&
+      (!availableIds || availableIds.includes(x.id as LeaderboardId)),
   );
 
   const favoriteItems = items.filter((x) =>
@@ -73,7 +78,7 @@ export const LeaderboardCombobox: FC<{
           onSelect(lb.id as LeaderboardId);
           setOpen(false);
         }}
-        onPointerEnter={() => onHoverItem(lb.id as LeaderboardId)}
+        onPointerEnter={() => onHoverItem?.(lb.id as LeaderboardId)}
       >
         <CheckIcon
           className={cn(

@@ -33,6 +33,8 @@ interface LeaderboatdDataTableProps<TData, TValue> {
   };
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  /** The toolbar syncs filters with the main page's URL, so hide it on other routes. */
+  showToolbar?: boolean;
 }
 
 export function LeaderboardDataTable<TData, TValue>({
@@ -40,9 +42,11 @@ export function LeaderboardDataTable<TData, TValue>({
   queryState,
   columns,
   data,
+  showToolbar = true,
 }: LeaderboatdDataTableProps<TData, TValue>) {
+  // Non-strict so the table can also be used outside the main page (e.g. the club page)
   const { name: nameSearch, leagues } = useSearch({
-    from: "/",
+    strict: false,
     select: ({ name, leagues }) => ({ name, leagues }),
   });
   const [sorting, setSorting] = useState<SortingState>([
@@ -92,15 +96,20 @@ export function LeaderboardDataTable<TData, TValue>({
     }
   });
 
+  // Pagination falls back to a 10K row count while loading, so hide it when there's no data at all
+  const showPagination = queryState.isLoading || data.length > 0;
+
   return (
     <div className="space-y-3">
-      <LeaderboardDataTableToolbar
-        leaderboardId={leaderboardId}
-        table={table}
-      />
+      {showToolbar && (
+        <LeaderboardDataTableToolbar
+          leaderboardId={leaderboardId}
+          table={table}
+        />
+      )}
 
       <div className="space-y-2">
-        <DataTablePagination table={table} type="players" />
+        {showPagination && <DataTablePagination table={table} type="players" />}
 
         <div className="rounded-md border">
           <Table className="min-w-[800px] outline-none" tabIndex={-1} ref={ref}>
@@ -173,7 +182,7 @@ export function LeaderboardDataTable<TData, TValue>({
           </Table>
         </div>
 
-        <DataTablePagination table={table} type="players" />
+        {showPagination && <DataTablePagination table={table} type="players" />}
       </div>
     </div>
   );

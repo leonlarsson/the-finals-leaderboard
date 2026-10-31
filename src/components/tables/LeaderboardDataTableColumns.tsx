@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { createColumnHelper } from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp, ExternalLink, Minus } from "lucide-react";
 import { BaseUser, BaseUserWithExtras } from "@/types";
 import { clubBadgeClass } from "@/utils/clubBadge";
@@ -315,6 +315,22 @@ export const leaderboardDataTableColumns = (
     }),
   ];
 };
+
+/** Columns for the given leaderboard, limited to the ones in its `tableColumns`. */
+export const getLeaderboardTableColumns = (
+  leaderboardId: LeaderboardId,
+  selectedPlatform: string | undefined,
+) =>
+  // https://github.com/TanStack/table/issues/4382#issuecomment-2081153305
+  (
+    leaderboardDataTableColumns(
+      leaderboardId,
+      selectedPlatform,
+    ) as ColumnDef<unknown>[]
+  ).filter((col) =>
+    // @ts-ignore This does exist because I create it
+    leaderboards[leaderboardId].tableColumns.includes(col.id),
+  );
 
 const platformNamesInline = (user: BaseUser) => {
   return (

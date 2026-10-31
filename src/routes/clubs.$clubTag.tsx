@@ -1,18 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeftIcon, StarIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeftIcon, ExternalLinkIcon, StarIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { AppBarChart } from "@/components/AppBarChart";
 import { DataFreshnessNote } from "@/components/DataFreshnessNote";
 import { ErrorState } from "@/components/ErrorState";
+import { LeaderboardCombobox } from "@/components/LeaderboardCombobox";
 import { PageWrapper } from "@/components/PageWrapper";
+import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
+import { getLeaderboardTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useClubFavorites } from "@/hooks/useClubFavorites";
-import { panels } from "@/types";
+import { BaseUserWithExtras, panels, platforms } from "@/types";
 import { fetchClub } from "@/utils/clubApi";
+import { fetchData } from "@/utils/fetchData";
 import {
   apiIdToWebId,
+  defaultLeaderboardId,
   LeaderboardId,
   leaderboards,
 } from "@/utils/leaderboards";
@@ -39,6 +44,42 @@ function RouteComponent() {
     queryFn: ({ signal }) => fetchClub(clubTag, { withMembers: true, signal }),
     staleTime: Infinity,
   });
+
+  // Member leaderboards: only leaderboards where the club has members in the top 10K
+  // Kept in the same order as `leaderboards` (newest first)
+  const memberLbIds = useMemo(() => {
+    const clubLbIds = new Set(
+      (query.data?.leaderboards ?? []).map((lb) =>
+        apiIdToWebId(lb.leaderboardId),
+      ),
+    );
+    return Object.values(leaderboards)
+      .filter((lb) => lb.enabled && clubLbIds.has(lb.id))
+      .map((lb) => lb.id as LeaderboardId);
+  }, [query.data?.leaderboards]);
+
+  const [selectedMemberLb, setSelectedMemberLb] = useState<LeaderboardId>();
+  const memberLbId =
+    selectedMemberLb && memberLbIds.includes(selectedMemberLb)
+      ? selectedMemberLb
+      : memberLbIds.includes(defaultLeaderboardId)
+        ? defaultLeaderboardId
+        : memberLbIds[0];
+
+  const memberLbQuery = useQuery({
+    queryKey: ["leaderboard", memberLbId, platforms.CROSSPLAY],
+    queryFn: () => fetchData(memberLbId!, platforms.CROSSPLAY),
+    staleTime: Infinity,
+    enabled: !!memberLbId,
+  });
+
+  const memberLbUsers = useMemo(
+    () =>
+      ((memberLbQuery.data ?? []) as BaseUserWithExtras[]).filter(
+        (user) => user.clubTag?.toLowerCase() === clubTag.toLowerCase(),
+      ),
+    [memberLbQuery.data, clubTag],
+  );
 
   const backLink = (
     <Link
@@ -215,6 +256,81 @@ function RouteComponent() {
             </div>
           </div>
         </div>
+
+        {memberLbId && (
+          <div>
+            <span className="font-medium">Member Leaderboards:</span>
+            <div className="mb-2 mt-1 flex flex-wrap gap-2">
+              {(["select1", "select2"] as const)
+                .filter((group) =>
+                  memberLbIds.some((id) => leaderboards[id].group === group),
+                )
+                .map((group) => (
+                  <LeaderboardCombobox
+                    key={group}
+                    group={group}
+                    currentLeaderboard={leaderboards[memberLbId]}
+                    onSelect={setSelectedMemberLb}
+                    availableIds={memberLbIds}
+                  />
+                ))}
+            </div>
+
+            {memberLbQuery.isError ? (
+              <ErrorState
+                title="Failed to load leaderboard data"
+                onRetry={() => memberLbQuery.refetch()}
+              />
+            ) : (
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+                  <span>
+                    {memberLbQuery.isLoading ? (
+                      "Loading members..."
+                    ) : (
+                      <>
+                        <span className="font-medium">
+                          {memberLbUsers.length.toLocaleString("en")}
+                        </span>{" "}
+                        of {club.members.length.toLocaleString("en")}{" "}
+                        {club.members.length === 1
+                          ? "member is"
+                          : "members are"}{" "}
+                        in the top 10K of {leaderboards[memberLbId].name}.
+                      </>
+                    )}
+                  </span>
+                  <Link
+                    to="/"
+                    search={{
+                      lb: memberLbId,
+                      name: `clubTag:${club.clubTag}`,
+                    }}
+                    className="flex items-center gap-1 font-medium hover:underline"
+                  >
+                    <ExternalLinkIcon className="size-3.5" />
+                    View on main leaderboard
+                  </Link>
+                </div>
+
+                <LeaderboardDataTable
+                  key={memberLbId}
+                  leaderboardId={memberLbId}
+                  showToolbar={false}
+                  queryState={{
+                    isLoading: memberLbQuery.isLoading,
+                    isRefetching: memberLbQuery.isRefetching,
+                  }}
+                  columns={getLeaderboardTableColumns(
+                    memberLbId,
+                    platforms.CROSSPLAY,
+                  )}
+                  data={memberLbUsers}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         <div>
           <span className="font-medium">Club Players:</span>

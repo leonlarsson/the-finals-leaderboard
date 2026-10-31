@@ -1,6 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ColumnDef } from "@tanstack/react-table";
 import {
   BarChartIcon,
   ExternalLinkIcon,
@@ -26,7 +25,7 @@ import BasicLink from "@/components/Link";
 import { ClubsStatsPanel } from "@/components/panels/ClubsStatsPanel";
 import { LeaderboardStatsPanel } from "@/components/panels/LeaderboardStatsPanel";
 import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
-import { leaderboardDataTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
+import { getLeaderboardTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -550,16 +549,7 @@ function RouteComponent() {
               key={lbParam}
               leaderboardId={lbParam}
               queryState={{ isLoading, isRefetching }}
-              // https://github.com/TanStack/table/issues/4382#issuecomment-2081153305
-              columns={(
-                leaderboardDataTableColumns(
-                  lbParam,
-                  platformParam,
-                ) as ColumnDef<unknown>[]
-              ).filter((col) =>
-                // @ts-ignore This does exist because I create it
-                leaderboard.tableColumns.includes(col.id),
-              )}
+              columns={getLeaderboardTableColumns(lbParam, platformParam)}
               data={data ?? []}
             />
           )}
