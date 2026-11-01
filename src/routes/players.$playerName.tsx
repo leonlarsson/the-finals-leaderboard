@@ -122,7 +122,13 @@ function RouteComponent() {
         e !== undefined,
     );
 
-  const baseUser = playerEntries[0]?.user;
+  // Newest leaderboard first, so the header shows the player's current club and platform names.
+  // The API order isn't by season (e.g. ORF can come first)
+  const baseUser = [...playerEntries].sort(
+    (a, b) =>
+      seasonOrder.indexOf(getSeasonGroup(a.lb.id)) -
+      seasonOrder.indexOf(getSeasonGroup(b.lb.id)),
+  )[0]?.user;
   const favorited = isFavorite(playerName);
 
   if (playerEntries.length === 0 && !someLoading) {
