@@ -1,36 +1,79 @@
-import { skipToken, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeftIcon, ExternalLinkIcon, StarIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  BarChartIcon,
+  CheckIcon,
+  GitCompareArrowsIcon,
+  Link2Icon,
+  PieChartIcon,
+  StarIcon,
+  TrophyIcon,
+  UsersRoundIcon,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { AppBarChart } from "@/components/AppBarChart";
+import { z } from "zod";
+import { ClubPageSkeleton } from "@/components/club/ClubPageSkeleton";
+import { ClubPlayerRanksTab } from "@/components/club/ClubPlayerRanksTab";
+import { ClubRankTab } from "@/components/club/ClubRankTab";
+import { ClubRosterTab } from "@/components/club/ClubRosterTab";
+import { ClubStatsTab } from "@/components/club/ClubStatsTab";
+import { ClubSummaryCards } from "@/components/club/ClubSummaryCards";
+import {
+  ClubTab,
+  clubTabs,
+  PlayerRanksView,
+  playerRanksViews,
+} from "@/components/club/clubSearch";
+import { currentSeason } from "@/components/club/clubSeason";
+import { useClubLeaderboards } from "@/components/club/useClubLeaderboard";
 import { DataFreshnessNote } from "@/components/DataFreshnessNote";
 import { ErrorState } from "@/components/ErrorState";
-import { LeaderboardCombobox } from "@/components/LeaderboardCombobox";
 import { PageWrapper } from "@/components/PageWrapper";
-import { LeaderboardDataTable } from "@/components/tables/LeaderboardDataTable";
-import { getLeaderboardTableColumns } from "@/components/tables/LeaderboardDataTableColumns";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useClubFavorites } from "@/hooks/useClubFavorites";
-import { BaseUserWithExtras, panels, platforms } from "@/types";
+import { CompareMode } from "@/types";
 import { fetchClub } from "@/utils/clubApi";
-import { fetchData } from "@/utils/fetchData";
 import {
   apiIdToWebId,
   defaultLeaderboardId,
+  getSeasonGroup,
   LeaderboardId,
   leaderboards,
 } from "@/utils/leaderboards";
 
+// Invalid values (e.g. removed leaderboards) fall back to the defaults instead of erroring
+const searchParamsSchema = z.object({
+  tab: z.enum(clubTabs).optional().catch(undefined),
+  view: z.enum(playerRanksViews).optional().catch(undefined),
+  lb: z
+    .enum(Object.values(leaderboards).map((x) => x.id) as [string, ...string[]])
+    .optional()
+    .catch(undefined),
+});
+
 export const Route = createFileRoute("/clubs/$clubTag")({
+  validateSearch: (search) => searchParamsSchema.parse(search),
   component: RouteComponent,
 });
 
 function RouteComponent() {
   const { clubTag } = Route.useParams();
+  const {
+    tab,
+    view: viewParam,
+    lb: selectedMemberLb,
+  } = Route.useSearch({
+    select: ({ tab, view, lb }) => ({
+      tab: tab ?? "club-rank",
+      view,
+      lb: lb as LeaderboardId | undefined,
+    }),
+  });
+  const navigate = Route.useNavigate();
   const { isClubFavorite, toggleClubFavorite } = useClubFavorites();
-  const [standingsFilter, setStandingsFilter] = useState("");
-  const [playersFilter, setPlayersFilter] = useState("");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     document.title = `[${clubTag}] · Enhanced Leaderboard – THE FINALS`;
@@ -58,7 +101,47 @@ function RouteComponent() {
       .map((lb) => lb.id as LeaderboardId);
   }, [query.data?.leaderboards]);
 
-  const [selectedMemberLb, setSelectedMemberLb] = useState<LeaderboardId>();
+  const setSelectedMemberLb = (id: LeaderboardId) =>
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        view: "leaderboard",
+        lb: id === defaultLeaderboardId ? undefined : id,
+      }),
+    });
+
+  // Current season leaderboards the club has members on, shared by the header and the tabs
+  const seasonLbIds = useMemo(
+    () => memberLbIds.filter((id) => getSeasonGroup(id) === currentSeason),
+    [memberLbIds],
+  );
+
+  // A selected leaderboard, or a club with nothing this season, opens the "By leaderboard" view
+  const defaultView = (lb: LeaderboardId | undefined): PlayerRanksView =>
+    lb || seasonLbIds.length === 0 ? "leaderboard" : "season";
+  const view = viewParam ?? defaultView(selectedMemberLb);
+  const setPlayerRanksView = (newView: PlayerRanksView) =>
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        view:
+          newView === defaultView(prev.lb as LeaderboardId | undefined)
+            ? undefined
+            : newView,
+      }),
+    });
+
+  // Members active this season, for the line under the club name.
+  // Same requests as the Player ranks and Stats tabs, so they're shared
+  const seasonQueries = useClubLeaderboards(seasonLbIds, clubTag);
+  // Only shown when every request worked, a partial count would be wrong
+  const activeMemberCount = seasonQueries.every((query) => query.isSuccess)
+    ? new Set(
+        seasonQueries.flatMap((query) =>
+          (query.data ?? []).map((user) => user.name.toLowerCase()),
+        ),
+      ).size
+    : undefined;
   const memberLbId =
     selectedMemberLb && memberLbIds.includes(selectedMemberLb)
       ? selectedMemberLb
@@ -66,37 +149,12 @@ function RouteComponent() {
         ? defaultLeaderboardId
         : memberLbIds[0];
 
-  const memberLbIdSet = useMemo(() => new Set(memberLbIds), [memberLbIds]);
-
-  // Members of this club in the top 10K of the selected leaderboard, known before its data loads
-  const memberLbMemberCount = query.data?.leaderboards.find(
-    (lb) => apiIdToWebId(lb.leaderboardId) === memberLbId,
-  )?.memberCount;
-
-  const memberLbQuery = useQuery({
-    queryKey: ["leaderboard", memberLbId, platforms.CROSSPLAY],
-    queryFn: memberLbId
-      ? () => fetchData(memberLbId, platforms.CROSSPLAY)
-      : skipToken,
-    staleTime: Infinity,
-  });
-
-  // TanStack Table expects a stable columns reference
-  const memberColumns = useMemo(
-    () =>
-      memberLbId
-        ? getLeaderboardTableColumns(memberLbId, platforms.CROSSPLAY)
-        : [],
-    [memberLbId],
-  );
-
-  const memberLbUsers = useMemo(
-    () =>
-      ((memberLbQuery.data ?? []) as BaseUserWithExtras[]).filter(
-        (user) => user.clubTag?.toLowerCase() === clubTag.toLowerCase(),
-      ),
-    [memberLbQuery.data, clubTag],
-  );
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   const backLink = (
     <Link
@@ -108,7 +166,11 @@ function RouteComponent() {
   );
 
   if (query.isLoading) {
-    return <PageWrapper backLink={backLink}>Loading club data...</PageWrapper>;
+    return (
+      <PageWrapper backLink={backLink}>
+        <ClubPageSkeleton />
+      </PageWrapper>
+    );
   }
 
   if (query.isError) {
@@ -127,245 +189,183 @@ function RouteComponent() {
   if (!club) {
     return (
       <PageWrapper backLink={backLink}>
-        Club not found. This means that there are no players in the top 10K in
-        this club. Try again later.
+        <div className="flex flex-col gap-4">
+          <div>
+            <div className="mb-1 break-all text-2xl font-medium">
+              [{clubTag}]
+            </div>
+            <p className="text-neutral-500">
+              Club not found. This means that there are no players in the top
+              10K in this club. Check the tag or search for the club.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/clubs">Search clubs</Link>
+            </Button>
+          </div>
+        </div>
       </PageWrapper>
     );
   }
 
   const favorited = isClubFavorite(clubTag);
 
-  const filteredStandings = club.leaderboards.filter((lb) => {
-    const name =
-      leaderboards[apiIdToWebId(lb.leaderboardId) as LeaderboardId]?.name ??
-      lb.leaderboardId;
-    return name.toLowerCase().includes(standingsFilter.trim().toLowerCase());
-  });
-
-  const filteredMembers = club.members
-    .filter((member) =>
-      member.name.toLowerCase().includes(playersFilter.trim().toLowerCase()),
-    )
-    .sort((a, b) => a.name.localeCompare(b.name));
-
   return (
     <PageWrapper backLink={backLink}>
       <div className="flex flex-col gap-6">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <div className="text-4xl font-medium">{club.clubTag}</div>
-            <div className="mt-1 text-sm">
-              <span className="font-medium">{club.clubTag}</span> has{" "}
-              {club.members.length.toLocaleString("en")}{" "}
-              {club.members.length === 1 ? "member" : "members"} in the top 10K
-              of any leaderboard.
+          <div className="min-w-0">
+            <div className="truncate text-3xl font-medium sm:text-4xl">
+              {club.clubTag}
+            </div>
+            <div className="mt-1 text-sm text-neutral-500">
+              <span className="font-medium text-foreground">
+                {club.members.length.toLocaleString("en")}
+              </span>{" "}
+              {club.members.length === 1 ? "member" : "members"} all-time
+              {activeMemberCount !== undefined &&
+                (activeMemberCount > 0 ? (
+                  <>
+                    {" · "}
+                    <span className="font-medium text-foreground">
+                      {activeMemberCount.toLocaleString("en")}
+                    </span>{" "}
+                    active in {currentSeason}
+                  </>
+                ) : (
+                  ` · not active in ${currentSeason}`
+                ))}
             </div>
             <div className="mt-2">
               <DataFreshnessNote />
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => toggleClubFavorite(clubTag)}
-            className="shrink-0 gap-1.5"
-            title={favorited ? "Remove from favorites" : "Add to favorites"}
-          >
-            <StarIcon
-              className={`size-4 transition-colors ${favorited ? "fill-yellow-400 text-yellow-400" : ""}`}
-            />
-            <span className="hidden sm:inline">
-              {favorited ? "Saved" : "Favorite"}
-            </span>
-          </Button>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          {club.leaderboards.length >= 2 && (
-            <div className="rounded-md bg-neutral-100 p-4 text-sm dark:bg-neutral-900/50">
-              <div className="mb-1 text-lg font-medium">
-                Rank across leaderboards
-              </div>
-              <p className="mb-2 text-neutral-500">Lower rank is better.</p>
-              <AppBarChart
-                data={[...club.leaderboards]
-                  .sort((a, b) => b.clubRank - a.clubRank)
-                  .map((lb) => ({
-                    name:
-                      leaderboards[
-                        apiIdToWebId(lb.leaderboardId) as LeaderboardId
-                      ]?.nameShort ?? lb.leaderboardId,
-                    Rank: 10001 - lb.clubRank,
-                  }))}
-                dataKey="Rank"
-                yAxisFormatter={(v) => `#${(10001 - v).toLocaleString("en")}`}
-                tooltip={({ label, payload }) => {
-                  const invertedRank = payload?.[0]?.value as
-                    | number
-                    | undefined;
-                  const lb = club.leaderboards.find(
-                    (l) =>
-                      (leaderboards[
-                        apiIdToWebId(l.leaderboardId) as LeaderboardId
-                      ]?.nameShort ?? l.leaderboardId) === label,
-                  );
-                  const lbName =
-                    leaderboards[
-                      apiIdToWebId(lb?.leaderboardId ?? "") as LeaderboardId
-                    ]?.name ?? label;
-                  return (
-                    <div className="flex flex-col gap-1 rounded-lg border bg-white p-2 text-sm dark:bg-black">
-                      <span className="font-medium">{lbName}</span>
-                      {typeof invertedRank === "number" && (
-                        <span>
-                          Rank #{(10001 - invertedRank).toLocaleString("en")}
-                        </span>
-                      )}
-                    </div>
-                  );
-                }}
-              />
-            </div>
-          )}
-
-          <div>
-            <span className="font-medium">Club Standings:</span>
-            {club.leaderboards.length > 0 && (
-              <Input
-                type="search"
-                placeholder="Filter leaderboards..."
-                className="mb-2 mt-1 max-w-xs"
-                value={standingsFilter}
-                onChange={(e) => setStandingsFilter(e.target.value)}
-              />
-            )}
-            <div className="flex flex-col gap-1">
-              {filteredStandings.length === 0 ? (
-                <p className="text-sm text-neutral-500">
-                  No leaderboards match &ldquo;{standingsFilter}&rdquo;.
-                </p>
+          {/* Action buttons */}
+          <div className="flex shrink-0 items-center gap-2">
+            <Button variant="outline" size="sm" className="gap-1.5" asChild>
+              <Link
+                to="/compare"
+                search={{ clubs: [club.clubTag], mode: CompareMode.Clubs }}
+              >
+                <GitCompareArrowsIcon className="size-4" />
+                <span className="sr-only sm:not-sr-only">Compare</span>
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleShare}
+              className="gap-1.5"
+            >
+              {copied ? (
+                <>
+                  <CheckIcon className="size-4 text-green-500" />
+                  <span className="sr-only sm:not-sr-only">Copied!</span>
+                </>
               ) : (
-                filteredStandings.map((leaderboard) => (
-                  <Link
-                    key={leaderboard.leaderboardId}
-                    to="/"
-                    search={{
-                      lb: apiIdToWebId(leaderboard.leaderboardId),
-                      panel: panels.CLUBS,
-                      clubTag: `exactCt:${club.clubTag}`,
-                    }}
-                    className="mr-1 w-fit rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                  >
-                    <span className="text-lg font-medium">
-                      {leaderboards[
-                        apiIdToWebId(leaderboard.leaderboardId) as LeaderboardId
-                      ]?.name ??
-                        `Unknown leaderboard (${leaderboard.leaderboardId})`}
-                    </span>{" "}
-                    | <span>Rank #{leaderboard.clubRank}</span> |{" "}
-                    <span>
-                      Combined points:{" "}
-                      {leaderboard.totalValue.toLocaleString("en")}
-                    </span>
-                  </Link>
-                ))
+                <>
+                  <Link2Icon className="size-4" />
+                  <span className="sr-only sm:not-sr-only">Share</span>
+                </>
               )}
-            </div>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => toggleClubFavorite(clubTag)}
+              className="gap-1.5"
+              title={favorited ? "Remove from favorites" : "Add to favorites"}
+            >
+              <StarIcon
+                className={`size-4 transition-colors ${favorited ? "fill-yellow-400 text-yellow-400" : ""}`}
+              />
+              <span className="sr-only sm:not-sr-only">
+                {favorited ? "Saved" : "Favorite"}
+              </span>
+            </Button>
           </div>
         </div>
 
-        {memberLbId && (
-          <div>
-            <span className="font-medium">Member Leaderboards:</span>
-            <div className="mb-2 mt-1 flex flex-wrap gap-2">
-              {(["select1", "select2"] as const)
-                .filter((group) =>
-                  memberLbIds.some((id) => leaderboards[id].group === group),
-                )
-                .map((group) => (
-                  <LeaderboardCombobox
-                    key={group}
-                    group={group}
-                    currentLeaderboard={leaderboards[memberLbId]}
-                    onSelect={setSelectedMemberLb}
-                    availableIds={memberLbIdSet}
-                  />
-                ))}
-            </div>
+        <ClubSummaryCards
+          club={club}
+          clubTag={clubTag}
+          memberLbIds={memberLbIds}
+        />
 
-            {memberLbQuery.isError ? (
-              <ErrorState
-                title="Failed to load leaderboard data"
-                onRetry={() => memberLbQuery.refetch()}
-              />
-            ) : (
-              <div className="space-y-2">
-                <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-                  <span>
-                    <span className="font-medium">
-                      {(memberLbMemberCount ?? 0).toLocaleString("en")}
-                    </span>{" "}
-                    {memberLbMemberCount === 1 ? "member is" : "members are"} in
-                    the top 10K of {leaderboards[memberLbId].name}.
-                  </span>
-                  <Link
-                    to="/"
-                    search={{
-                      lb: memberLbId,
-                      name: `clubTag:${club.clubTag}`,
-                    }}
-                    className="flex items-center gap-1 font-medium hover:underline"
-                  >
-                    <ExternalLinkIcon className="size-3.5" />
-                    View on main leaderboard
-                  </Link>
-                </div>
+        <div className="space-y-3">
+          <Tabs
+            className="select-none"
+            value={tab}
+            onValueChange={(value) =>
+              navigate({
+                search: (prev) => ({
+                  ...prev,
+                  tab: value === "club-rank" ? undefined : (value as ClubTab),
+                }),
+              })
+            }
+          >
+            <TabsList>
+              <TabsTrigger value="club-rank">
+                <BarChartIcon className="inline size-5 sm:mr-2" />
+                <span className="sr-only whitespace-nowrap sm:not-sr-only">
+                  Club rank
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="player-ranks">
+                <TrophyIcon className="inline size-5 sm:mr-2" />
+                <span className="sr-only whitespace-nowrap sm:not-sr-only">
+                  Player ranks
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="stats">
+                <PieChartIcon className="inline size-5 sm:mr-2" />
+                <span className="sr-only whitespace-nowrap sm:not-sr-only">
+                  Stats
+                </span>
+              </TabsTrigger>
+              <TabsTrigger value="roster">
+                <UsersRoundIcon className="inline size-5 sm:mr-2" />
+                <span className="sr-only whitespace-nowrap sm:not-sr-only">
+                  Roster
+                </span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
 
-                <LeaderboardDataTable
-                  key={memberLbId}
-                  leaderboardId={memberLbId}
-                  showToolbar={false}
-                  queryState={{
-                    isLoading: memberLbQuery.isLoading,
-                    isRefetching: memberLbQuery.isRefetching,
-                  }}
-                  columns={memberColumns}
-                  data={memberLbUsers}
-                />
-              </div>
-            )}
-          </div>
-        )}
-
-        <div>
-          <span className="font-medium">Club Players:</span>
-          {club.members.length > 0 && (
-            <Input
-              type="search"
-              placeholder="Filter players..."
-              className="mb-2 mt-1 max-w-xs"
-              value={playersFilter}
-              onChange={(e) => setPlayersFilter(e.target.value)}
+          {/* Keyed by club so filters and sorting reset when switching clubs */}
+          {tab === "club-rank" && (
+            <ClubRankTab
+              key={clubTag}
+              club={club}
+              clubTag={clubTag}
+              memberLbIds={memberLbIds}
             />
           )}
-          <div className="flex flex-wrap gap-1">
-            {filteredMembers.length === 0 ? (
-              <p className="text-sm text-neutral-500">
-                No players match &ldquo;{playersFilter}&rdquo;.
-              </p>
-            ) : (
-              filteredMembers.map((member) => (
-                <Link
-                  key={member.name}
-                  to="/players/$playerName"
-                  params={{ playerName: member.name }}
-                  className="mr-1 cursor-pointer rounded bg-neutral-200 px-1 transition-colors hover:bg-neutral-300 dark:bg-neutral-800 dark:hover:bg-neutral-700"
-                >
-                  {member.name}
-                </Link>
-              ))
-            )}
-          </div>
+          {tab === "player-ranks" && (
+            <ClubPlayerRanksTab
+              key={clubTag}
+              club={club}
+              clubTag={clubTag}
+              memberLbIds={memberLbIds}
+              seasonLbIds={seasonLbIds}
+              memberLbId={memberLbId}
+              view={view}
+              onSelectView={setPlayerRanksView}
+              onSelectLeaderboard={setSelectedMemberLb}
+            />
+          )}
+          {tab === "stats" && (
+            <ClubStatsTab
+              key={clubTag}
+              club={club}
+              clubTag={clubTag}
+              memberLbIds={memberLbIds}
+              seasonLbIds={seasonLbIds}
+            />
+          )}
+          {tab === "roster" && <ClubRosterTab key={clubTag} club={club} />}
         </div>
       </div>
     </PageWrapper>
