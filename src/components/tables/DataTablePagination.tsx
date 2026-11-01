@@ -19,12 +19,15 @@ import {
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
-  type: "players" | "clubs";
+  type: "players" | "clubs" | "members";
+  /** localStorage key the chosen page size is saved under */
+  pageSizeStorageKey?: string;
 }
 
 export const DataTablePagination = <TData,>({
   table,
   type,
+  pageSizeStorageKey = "tfl-table-page-size",
 }: DataTablePaginationProps<TData>) => {
   useHotkeys(
     "ArrowLeft",
@@ -42,7 +45,7 @@ export const DataTablePagination = <TData,>({
     { enableOnFormTags: false },
   );
 
-  const skeletonCount = type === "players" ? 10_000 : 5_000;
+  const skeletonCount = type === "clubs" ? 5_000 : 10_000;
   const totalRows = table.getCoreRowModel().rows.length || skeletonCount;
 
   return (
@@ -69,7 +72,7 @@ export const DataTablePagination = <TData,>({
         <Select
           value={`${table.getState().pagination.pageSize}`}
           onValueChange={(value) => {
-            localStorage.setItem("tfl-table-page-size", value);
+            localStorage.setItem(pageSizeStorageKey, value);
             table.setPageSize(Number(value));
           }}
         >

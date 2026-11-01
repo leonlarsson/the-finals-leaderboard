@@ -55,6 +55,11 @@ export const panels = {
   CLUBS: "clubs",
 };
 
+export enum CompareMode {
+  Players = "players",
+  Clubs = "clubs",
+}
+
 export const platforms = {
   CROSSPLAY: "crossplay",
   STEAM: "steam",
