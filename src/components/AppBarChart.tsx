@@ -15,6 +15,10 @@ type BaseProps = {
   tooltip: React.ComponentProps<typeof ChartTooltip>["content"];
   yAxisWidth?: number;
   className?: string;
+  /** Set to false for charts of whole numbers like member counts */
+  allowDecimals?: boolean;
+  /** Fixed range for the value axis, e.g. [0, 3]. Recharts picks a rounded range by default */
+  valueDomain?: [number, number];
 };
 
 type ColumnsProps = BaseProps & {
@@ -54,6 +58,9 @@ export const AppBarChart = (props: AppBarChartProps) => {
             axisLine={false}
             tickCount={6}
             tickFormatter={props.xAxisFormatter}
+            allowDecimals={props.allowDecimals}
+            domain={props.valueDomain}
+            allowDataOverflow={props.valueDomain !== undefined}
           />
           <YAxis
             type="category"
@@ -84,6 +91,9 @@ export const AppBarChart = (props: AppBarChartProps) => {
         <YAxis
           tickCount={6}
           tickFormatter={props.yAxisFormatter}
+          allowDecimals={props.allowDecimals}
+          domain={props.valueDomain}
+          allowDataOverflow={props.valueDomain !== undefined}
           width={props.yAxisWidth}
         />
         <ChartTooltip content={tooltip} />

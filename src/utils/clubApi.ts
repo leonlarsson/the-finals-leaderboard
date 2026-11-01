@@ -1,3 +1,6 @@
+import type { BaseUserWithExtras } from "@/types";
+import { LeaderboardId, webIdToApiId } from "./leaderboards";
+
 const API_BASE = "https://api.the-finals-leaderboard.com";
 
 export type ClubApiLeaderboardEntry = {
@@ -56,4 +59,25 @@ export const searchClubs = async (
   if (!res.ok) throw new Error("Failed to search clubs");
   const data = (await res.json()) as { clubs: ClubApiClub[] };
   return data.clubs;
+};
+
+/**
+ * One leaderboard's rows for a single club, filtered by the API.
+ * Much smaller than loading the whole leaderboard and filtering it here
+ */
+export const fetchClubLeaderboard = async (
+  leaderboardId: LeaderboardId,
+  clubTag: string,
+  options?: { signal?: AbortSignal },
+): Promise<BaseUserWithExtras[]> => {
+  const params = new URLSearchParams({ clubTag, exactClubTag: "true" });
+  const res = await fetch(
+    `${API_BASE}/v1/leaderboard/${webIdToApiId(leaderboardId)}/crossplay?${params}`,
+    { signal: options?.signal },
+  );
+  if (!res.ok) throw new Error("Failed to fetch club leaderboard");
+  const data = (await res.json()) as { data: BaseUserWithExtras[] };
+  // Leaderboards without club data ignore clubTag and return the whole top 10K
+  const tag = clubTag.toLowerCase();
+  return data.data.filter((user) => user.clubTag?.toLowerCase() === tag);
 };

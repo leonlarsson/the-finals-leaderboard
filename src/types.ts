@@ -47,13 +47,20 @@ export type LeaderboardFeature =
   | "statsPanel"
   | "clubsPanel"
   | "leagueFilter"
-  | "statsPanelMovers";
+  | "statsPanelMovers"
+  /** The base ranked leaderboard of a season, e.g. Season 12 but not Season 12 World Tour */
+  | "rankedSeason";
 
 export const panels = {
   LEADERBOARD: "leaderboard",
   STATS: "stats",
   CLUBS: "clubs",
 };
+
+export enum CompareMode {
+  Players = "players",
+  Clubs = "clubs",
+}
 
 export const platforms = {
   CROSSPLAY: "crossplay",

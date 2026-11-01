@@ -16,7 +16,7 @@ import LeagueImage from "@/components/LeagueImage";
 import { SponsorImage } from "@/components/SponsorImage";
 import { Button } from "@/components/ui/button";
 import type { BaseUserWithExtras } from "@/types";
-import { panels } from "@/types";
+import { CompareMode, panels } from "@/types";
 import {
   type ClubApiClub,
   type ClubApiLeaderboardEntry,
@@ -36,11 +36,6 @@ import {
   type PlayerApiResponse,
   searchPlayers,
 } from "@/utils/playerApi";
-
-enum CompareMode {
-  Players = "players",
-  Clubs = "clubs",
-}
 
 const searchSchema = z.object({
   players: z.string().array().optional(),

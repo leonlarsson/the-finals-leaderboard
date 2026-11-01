@@ -31,7 +31,8 @@ import {
 // Groups items by season (via seasonOrder/getSeasonGroup) so the long
 // "Older Leaderboards" list stays scannable instead of one flat list.
 export const LeaderboardCombobox: FC<{
-  group: "select1" | "select2";
+  /** Which dropdown this is. Without it, one dropdown lists the leaderboards from both */
+  group?: "select1" | "select2";
   currentLeaderboard: Leaderboard;
   onSelect: (id: LeaderboardId) => void;
   onHoverItem?: (id: LeaderboardId) => void;
@@ -44,7 +45,7 @@ export const LeaderboardCombobox: FC<{
 
   const items = Object.values(leaderboards).filter(
     (x) =>
-      x.group === group &&
+      (!group || x.group === group) &&
       x.enabled &&
       (!availableIds || availableIds.has(x.id as LeaderboardId)),
   );
@@ -106,7 +107,7 @@ export const LeaderboardCombobox: FC<{
           aria-expanded={open}
           className="h-9 w-max select-none justify-between gap-1.5 font-normal"
         >
-          {currentLeaderboard.group === group ? (
+          {!group || currentLeaderboard.group === group ? (
             <span className="font-medium">{currentLeaderboard.name}</span>
           ) : (
             triggerLabel
@@ -130,7 +131,8 @@ export const LeaderboardCombobox: FC<{
             {seasonGroups.map(({ season, items: seasonItems }) => (
               <CommandGroup
                 key={season}
-                heading={seasonGroups.length > 1 ? season : undefined}
+                // The combined dropdown is a plain list, its seasons would only repeat the item names
+                heading={group && seasonGroups.length > 1 ? season : undefined}
               >
                 {seasonItems.map((lb) => renderItem(lb))}
               </CommandGroup>
