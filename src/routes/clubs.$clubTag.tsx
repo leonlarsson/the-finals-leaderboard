@@ -26,7 +26,10 @@ import {
   playerRanksViews,
 } from "@/components/club/clubSearch";
 import { currentSeason } from "@/components/club/clubSeason";
-import { useClubLeaderboards } from "@/components/club/useClubLeaderboard";
+import {
+  useClubLeaderboard,
+  useClubLeaderboards,
+} from "@/components/club/useClubLeaderboard";
 import { DataFreshnessNote } from "@/components/DataFreshnessNote";
 import { ErrorState } from "@/components/ErrorState";
 import { PageWrapper } from "@/components/PageWrapper";
@@ -79,13 +82,6 @@ function RouteComponent() {
   const navigate = Route.useNavigate();
   const { isClubFavorite, toggleClubFavorite } = useClubFavorites();
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    document.title = `[${clubTag}] · Enhanced Leaderboard – THE FINALS`;
-    return () => {
-      document.title = "Enhanced Leaderboard – THE FINALS";
-    };
-  }, [clubTag]);
 
   const query = useQuery({
     queryKey: ["club", clubTag],
@@ -144,6 +140,32 @@ function RouteComponent() {
         ),
       ).size
     : undefined;
+
+  // Official esports orgs (e.g. VGG, Vanguard Gaming) have their name on the leaderboard rows, not in the club data.
+  // Clubs without this season's data use their first leaderboard, the same request as the By leaderboard view
+  const fallbackLbQuery = useClubLeaderboard(
+    seasonLbIds.length === 0 ? memberLbIds[0] : undefined,
+    clubTag,
+  );
+  const foundClubName = [...seasonQueries.data, fallbackLbQuery.data]
+    .flatMap((rows) => rows ?? [])
+    .find((user) => user.officialClubName)?.officialClubName;
+  // Some names are just the tag (e.g. TSM), which would show it twice
+  const officialClubName =
+    foundClubName?.toLowerCase() === clubTag.toLowerCase()
+      ? undefined
+      : foundClubName;
+
+  useEffect(() => {
+    const name = officialClubName
+      ? `${officialClubName} [${clubTag}]`
+      : `[${clubTag}]`;
+    document.title = `${name} · Enhanced Leaderboard – THE FINALS`;
+    return () => {
+      document.title = "Enhanced Leaderboard – THE FINALS";
+    };
+  }, [clubTag, officialClubName]);
+
   const memberLbId =
     selectedMemberLb && memberLbIds.includes(selectedMemberLb)
       ? selectedMemberLb
@@ -218,9 +240,19 @@ function RouteComponent() {
       <div className="flex flex-col gap-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <div className="truncate text-3xl font-medium sm:text-4xl">
-              {club.clubTag}
-            </div>
+            {officialClubName ? (
+              // Wraps instead of truncating, the name is the point on phones too
+              <div className="flex flex-wrap items-baseline gap-x-2 break-words text-3xl font-medium sm:text-4xl">
+                <span className="min-w-0">{officialClubName}</span>
+                <span className="font-normal text-neutral-500">
+                  {club.clubTag}
+                </span>
+              </div>
+            ) : (
+              <div className="truncate text-3xl font-medium sm:text-4xl">
+                {club.clubTag}
+              </div>
+            )}
             <div className="mt-1 text-sm text-neutral-500">
               <span className="font-medium text-foreground">
                 {club.members.length.toLocaleString("en")}
