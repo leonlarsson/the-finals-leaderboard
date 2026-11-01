@@ -25,7 +25,11 @@ import {
   formatClubValue,
   isRankedSeasonLeaderboard,
 } from "./clubValue";
-import { useClubLeaderboard, useClubLeaderboards } from "./useClubLeaderboard";
+import {
+  ClubLeaderboardsResult,
+  useClubLeaderboard,
+  useClubLeaderboards,
+} from "./useClubLeaderboard";
 
 type ClubStatsTabProps = {
   club: ClubApiClub;
@@ -54,7 +58,7 @@ export const ClubStatsTab = ({
     () =>
       memberLbIds.filter(
         (id) =>
-          isRankedSeasonLeaderboard(id, getSeasonGroup(id)) &&
+          isRankedSeasonLeaderboard(id) &&
           (leagues as Record<string, string[] | undefined>)[id] !== undefined,
       ),
     [memberLbIds],
@@ -79,7 +83,7 @@ const CurrentSeasonStats = ({
   queries,
 }: {
   seasonLbIds: LeaderboardId[];
-  queries: ReturnType<typeof useClubLeaderboards>;
+  queries: ClubLeaderboardsResult;
 }) => {
   if (seasonLbIds.length === 0) {
     return (
@@ -91,20 +95,16 @@ const CurrentSeasonStats = ({
     );
   }
 
-  if (queries.some((query) => query.isError)) {
+  if (queries.isError) {
     return (
       <ErrorState
         title="Failed to load leaderboard data"
-        onRetry={() => {
-          for (const query of queries) {
-            if (query.isError) query.refetch();
-          }
-        }}
+        onRetry={queries.refetchFailed}
       />
     );
   }
 
-  if (queries.some((query) => query.isLoading)) {
+  if (queries.isLoading) {
     return (
       <div className="flex flex-col gap-6">
         {[120, 320, 80].map((height, i) => (
@@ -125,7 +125,7 @@ const CurrentSeasonStats = ({
   }
 
   const rowsFor = (id: LeaderboardId | undefined) =>
-    id ? (queries[seasonLbIds.indexOf(id)]?.data ?? []) : [];
+    id ? (queries.data[seasonLbIds.indexOf(id)] ?? []) : [];
 
   const rankedRows = rowsFor(
     seasonLbIds.includes(defaultLeaderboardId)
@@ -329,9 +329,7 @@ const MiniStat = ({
 const ClubRankBySeason = ({ club }: { club: ClubApiClub }) => {
   const seasons = club.leaderboards
     .map((lb) => ({ ...lb, webId: apiIdToWebId(lb.leaderboardId) }))
-    .filter(({ webId }) =>
-      isRankedSeasonLeaderboard(webId, getSeasonGroup(webId)),
-    )
+    .filter(({ webId }) => isRankedSeasonLeaderboard(webId))
     .sort(
       (a, b) =>
         seasonOrder.indexOf(getSeasonGroup(b.webId)) -

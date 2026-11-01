@@ -53,20 +53,17 @@ export const ClubSeasonRanksView = ({
   clubTag,
   seasonLbIds,
 }: ClubSeasonRanksViewProps) => {
-  const queries = useClubLeaderboards(seasonLbIds, clubTag);
-
-  const isLoading = queries.some((query) => query.isLoading);
-  const hasError = queries.some((query) => query.isError);
-  // useQueries returns a new array every render, so key the rows on when the data last changed
-  const dataKey = queries.map((query) => query.dataUpdatedAt).join();
+  const { data, isLoading, isError, refetchFailed } = useClubLeaderboards(
+    seasonLbIds,
+    clubTag,
+  );
 
   // One row per member with their entry on each leaderboard, by best rank anywhere.
   // Sorting is stable, so members without a rank in the sorted column keep this order
-  // biome-ignore lint/correctness/useExhaustiveDependencies: dataKey tracks the query data
   const rows = useMemo(() => {
     const byName = new Map<string, SeasonRow>();
     seasonLbIds.forEach((id, i) => {
-      for (const user of queries[i]?.data ?? []) {
+      for (const user of data[i] ?? []) {
         const key = user.name.toLowerCase();
         if (!byName.has(key)) {
           byName.set(key, { name: user.name, entries: new Map() });
@@ -79,7 +76,7 @@ export const ClubSeasonRanksView = ({
     return Array.from(byName.values()).sort(
       (a, b) => bestRank(a) - bestRank(b),
     );
-  }, [seasonLbIds, dataKey]);
+  }, [seasonLbIds, data]);
 
   const columns = useMemo(
     () => [
@@ -179,15 +176,11 @@ export const ClubSeasonRanksView = ({
     );
   }
 
-  if (hasError) {
+  if (isError) {
     return (
       <ErrorState
         title="Failed to load leaderboard data"
-        onRetry={() => {
-          for (const query of queries) {
-            if (query.isError) query.refetch();
-          }
-        }}
+        onRetry={refetchFailed}
       />
     );
   }

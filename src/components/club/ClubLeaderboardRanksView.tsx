@@ -17,7 +17,7 @@ import { splitPlayerName } from "@/utils/playerName";
 import { ClubEmptyState } from "./ClubEmptyState";
 import { CLUB_MEMBERS_PAGE_SIZE_KEY } from "./clubSearch";
 import { currentSeason } from "./clubSeason";
-import { formatClubValue } from "./clubValue";
+import { formatClubValue, memberClubValue } from "./clubValue";
 import { useClubLeaderboard } from "./useClubLeaderboard";
 
 type ClubLeaderboardRanksViewProps = {
@@ -58,11 +58,8 @@ export const ClubLeaderboardRanksView = ({
   );
 
   const memberLbUsers = useMemo(
-    () =>
-      (memberLbQuery.data ?? []).filter(
-        (user) => user.clubTag?.toLowerCase() === clubTag.toLowerCase(),
-      ),
-    [memberLbQuery.data, clubTag],
+    () => memberLbQuery.data ?? [],
+    [memberLbQuery.data],
   );
 
   // Biggest 24h climber on the selected leaderboard
@@ -190,10 +187,6 @@ export const ClubLeaderboardRanksView = ({
   );
 };
 
-/** The value a member adds to the club's total on a leaderboard, whichever one the leaderboard has */
-const memberValue = (user: BaseUserWithExtras) =>
-  user.rankScore ?? user.fame ?? user.points ?? user.fans ?? user.cashouts ?? 0;
-
 /** One line on how the members' combined value is spread across them */
 const ContributionSummary = ({
   leaderboardId,
@@ -202,10 +195,12 @@ const ContributionSummary = ({
   leaderboardId: LeaderboardId;
   users: BaseUserWithExtras[];
 }) => {
-  const total = users.reduce((sum, user) => sum + memberValue(user), 0);
+  const value = (user: BaseUserWithExtras) =>
+    memberClubValue(leaderboardId, user);
+  const total = users.reduce((sum, user) => sum + value(user), 0);
   if (users.length < 2 || total === 0) return null;
 
-  const sorted = [...users].sort((a, b) => memberValue(b) - memberValue(a));
+  const sorted = [...users].sort((a, b) => value(b) - value(a));
   const combined = (
     <span className="font-medium text-foreground">
       {formatClubValue(leaderboardId, total)}
@@ -232,15 +227,15 @@ const ContributionSummary = ({
         >
           {splitPlayerName(top.name).name}
         </Link>{" "}
-        accounts for {percent(memberValue(top))} of these members' combined{" "}
-        {combined}.
+        accounts for {percent(value(top))} of these members' combined {combined}
+        .
       </p>
     );
   }
 
   const topFive = sorted
     .slice(0, 5)
-    .reduce((sum, user) => sum + memberValue(user), 0);
+    .reduce((sum, user) => sum + value(user), 0);
   return (
     <p className="text-sm text-neutral-500">
       The top 5 account for {percent(topFive)} of these members' combined{" "}

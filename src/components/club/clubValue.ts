@@ -1,25 +1,52 @@
+import { BaseUserWithExtras, LeaderboardFeature } from "@/types";
 import { LeaderboardId, leaderboards } from "@/utils/leaderboards";
 
+const clubMetrics = ["fame", "cashouts", "fans", "points"] as const;
+
 /**
- * A club total formatted for its leaderboard, the same metrics the main page's Clubs panel uses:
- * rank score on ranked leaderboards, fans on sponsor ones, $ cashouts on World Tour, points on the modes
+ * What a club's total is made of on a leaderboard, the same metrics the main page's Clubs panel uses:
+ * rank score on ranked leaderboards, $ cashouts on World Tour, fans on sponsor ones, points on the modes
  */
-export const formatClubValue = (leaderboardId: string, value: number) => {
+export const clubMetric = (leaderboardId: string) => {
   const columns = (leaderboards[leaderboardId as LeaderboardId]?.tableColumns ??
     []) as string[];
-  const amount = value.toLocaleString("en");
-  if (columns.includes("fame")) return `${amount} rank score`;
-  if (columns.includes("cashouts")) return `$${amount}`;
-  if (columns.includes("fans")) return `${amount} fans`;
-  if (columns.includes("points")) return `${amount} points`;
-  return amount;
+  return clubMetrics.find((metric) => columns.includes(metric));
 };
 
-/** The base ranked leaderboard of a season, e.g. "season12", which shares its name with the season */
-export const isRankedSeasonLeaderboard = (
+/** A club total formatted for its leaderboard, e.g. "70,374 rank score" or "$38,098,150" */
+export const formatClubValue = (leaderboardId: string, value: number) => {
+  const amount = value.toLocaleString("en");
+  switch (clubMetric(leaderboardId)) {
+    case "fame":
+      return `${amount} rank score`;
+    case "cashouts":
+      return `$${amount}`;
+    case "fans":
+      return `${amount} fans`;
+    case "points":
+      return `${amount} points`;
+    default:
+      return amount;
+  }
+};
+
+/** What one member adds to the club's total on a leaderboard */
+export const memberClubValue = (
   leaderboardId: string,
-  season: string,
-) => leaderboards[leaderboardId as LeaderboardId]?.name === season;
+  user: BaseUserWithExtras,
+) => {
+  const metric = clubMetric(leaderboardId);
+  if (metric === "fame") return user.rankScore ?? user.fame ?? 0;
+  return (metric && user[metric]) || 0;
+};
+
+/** The base ranked leaderboard of a season, e.g. Season 12 but not Season 12 World Tour */
+export const isRankedSeasonLeaderboard = (leaderboardId: string) =>
+  (
+    leaderboards[leaderboardId as LeaderboardId]?.features as
+      | LeaderboardFeature[]
+      | undefined
+  )?.includes("rankedSeason") ?? false;
 
 /**
  * A linear scale for bar charts of club ranks, zoomed to the club's own range, with better ranks as taller bars.

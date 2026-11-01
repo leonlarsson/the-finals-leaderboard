@@ -48,7 +48,12 @@ const searchParamsSchema = z.object({
   tab: z.enum(clubTabs).optional().catch(undefined),
   view: z.enum(playerRanksViews).optional().catch(undefined),
   lb: z
-    .enum(Object.values(leaderboards).map((x) => x.id) as [string, ...string[]])
+    .enum(
+      Object.values(leaderboards).map((x) => x.id) as [
+        LeaderboardId,
+        ...LeaderboardId[],
+      ],
+    )
     .optional()
     .catch(undefined),
 });
@@ -68,7 +73,7 @@ function RouteComponent() {
     select: ({ tab, view, lb }) => ({
       tab: tab ?? "club-rank",
       view,
-      lb: lb as LeaderboardId | undefined,
+      lb,
     }),
   });
   const navigate = Route.useNavigate();
@@ -124,10 +129,7 @@ function RouteComponent() {
     navigate({
       search: (prev) => ({
         ...prev,
-        view:
-          newView === defaultView(prev.lb as LeaderboardId | undefined)
-            ? undefined
-            : newView,
+        view: newView === defaultView(prev.lb) ? undefined : newView,
       }),
     });
 
@@ -135,10 +137,10 @@ function RouteComponent() {
   // Same requests as the Player ranks and Stats tabs, so they're shared
   const seasonQueries = useClubLeaderboards(seasonLbIds, clubTag);
   // Only shown when every request worked, a partial count would be wrong
-  const activeMemberCount = seasonQueries.every((query) => query.isSuccess)
+  const activeMemberCount = seasonQueries.isSuccess
     ? new Set(
-        seasonQueries.flatMap((query) =>
-          (query.data ?? []).map((user) => user.name.toLowerCase()),
+        seasonQueries.data.flatMap((rows) =>
+          (rows ?? []).map((user) => user.name.toLowerCase()),
         ),
       ).size
     : undefined;

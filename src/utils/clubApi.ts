@@ -77,5 +77,7 @@ export const fetchClubLeaderboard = async (
   );
   if (!res.ok) throw new Error("Failed to fetch club leaderboard");
   const data = (await res.json()) as { data: BaseUserWithExtras[] };
-  return data.data;
+  // Leaderboards without club data ignore clubTag and return the whole top 10K
+  const tag = clubTag.toLowerCase();
+  return data.data.filter((user) => user.clubTag?.toLowerCase() === tag);
 };

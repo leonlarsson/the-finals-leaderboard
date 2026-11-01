@@ -31,7 +31,7 @@ export const ClubSummaryCards = ({
   const bestStanding = club.leaderboards
     .filter((lb) => {
       const webId = apiIdToWebId(lb.leaderboardId);
-      return isRankedSeasonLeaderboard(webId, getSeasonGroup(webId));
+      return isRankedSeasonLeaderboard(webId);
     })
     .reduce<(typeof club.leaderboards)[number] | undefined>(
       // On a tie, the newest season
